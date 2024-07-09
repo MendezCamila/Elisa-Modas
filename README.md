@@ -26,16 +26,16 @@ cd ElisaModas
 composer install
 ```
 
-###Paso 3: Configurar la Base de Datos
+### Paso 3: Configurar la Base de Datos
 
 Crear una base de datos en MariaDB con el nombre deseado.
 Configurar las credenciales de la base de datos en el archivo .env.
 
-####Paso 4: Instalar Dependencias de Node.js (si es aplicable)
+### Paso 4: Instalar Dependencias de Node.js (si es aplicable)
 ```
 npm install
 ```
-###Paso 5: Ejecutar Migraciones y Semillas (si es aplicable)
+### Paso 5: Ejecutar Migraciones y Semillas (si es aplicable)
 ```
 php artisan migrate --seed
 ```
