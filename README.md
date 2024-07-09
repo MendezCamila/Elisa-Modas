@@ -27,9 +27,16 @@ composer install
 ```
 
 ### Paso 3: Configurar la Base de Datos
+Asegúrate de tener MariaDB instalado y configurado. Luego, crea una base de datos para el proyecto y actualiza las variables de entorno en el archivo .env:
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=elisamodas
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-Crear una base de datos en MariaDB con el nombre deseado.
-Configurar las credenciales de la base de datos en el archivo .env.
 
 ### Paso 4: Instalar Dependencias de Node.js (si es aplicable)
 ```
