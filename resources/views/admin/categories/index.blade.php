@@ -50,7 +50,7 @@
                             </td>
                             <td class="px-6 py-4">
                                 <a href="{{ route('admin.categories.edit', $category) }}">
-                                    Editar
+                                    Ver
                                 </a>
                             </td>
                         </tr>

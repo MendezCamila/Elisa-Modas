@@ -94,7 +94,7 @@ class CategoryController extends Controller
         ]);
 
         //Nos redirige a la lista de categorias
-        return redirect()->route('admin.categories.edit', $category);
+        return redirect()->route('admin.categories.index', $category);
 
     }
 

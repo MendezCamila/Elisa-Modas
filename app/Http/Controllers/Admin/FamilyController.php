@@ -61,6 +61,7 @@ class FamilyController extends Controller
     public function edit(Family $family)
     {
         return view('admin.families.edit', compact('family'));
+
     }
 
     /**
@@ -84,7 +85,7 @@ class FamilyController extends Controller
             'text'=>'Familia actualizada correctamente.'
         ]);
 
-        return redirect()->route('admin.families.edit',$family);
+        return redirect()->route('admin.families.index',$family);
     }
 
     /**
