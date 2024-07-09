@@ -31,7 +31,7 @@ composer install
 Crear una base de datos en MariaDB con el nombre deseado.
 Configurar las credenciales de la base de datos en el archivo .env.
 
-###Paso 4: Instalar Dependencias de Node.js (si es aplicable)
+####Paso 4: Instalar Dependencias de Node.js (si es aplicable)
 ```
 npm install
 ```
