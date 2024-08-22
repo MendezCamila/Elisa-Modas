@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('feature_variant', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('feature_id')
             ->constrained()
             ->onDelete('cascade');
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->foreignId('variant_id')
             ->constrained()
             ->onDelete('cascade');
+            
             $table->timestamps();
         });
     }

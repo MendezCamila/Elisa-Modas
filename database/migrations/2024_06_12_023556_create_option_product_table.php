@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('option_id')
-            ->constrained();
+            ->constrained()
+            ->onDelete('cascade');
 
             $table->foreignId('product_id')
-            ->constrained();
+            ->constrained()
+            ->onDelete('cascade');
 
             $table->json('features');
 

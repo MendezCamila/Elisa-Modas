@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\FamilyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
+use App\Models\Product;
+use App\Models\Variant;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -49,17 +51,27 @@ Route::middleware([
 
 Route::get('prueba', function () {
 
-    $array1 = ['a', 'b'];
+    $product = Product::find(99);
 
-    $array2 = ['a', 'b'];
+    $features = $product->options->pluck('pivot.features');
 
-    $array3 = ['a', 'b'];
+    $combinaciones = generarCombinaciones($features);
 
-    $arrays = [$array1, $array2, $array3];
+    //eliminamos todos los productos anteriores
+    $product->variants()->delete();
 
-    $combinaciones = generarCombinaciones($arrays);
+    foreach ($combinaciones as $combinacion) {
 
-    return $combinaciones;
+        //creamos la variante
+        $variant = Variant::create([
+            'product_id' => $product->id,
+        ]);
+
+        $variant->features()->attach($combinacion);
+    }
+
+    return "Variantes creadas";
+
 
 });
 
@@ -79,7 +91,7 @@ function  generarCombinaciones($arrays, $indice = 0, $combinacion = [])
 
         $combinacionesTemporal = $combinacion;
 
-        $combinacionesTemporal[] = $item;
+        $combinacionesTemporal[] = $item['id'];
 
         $resultado = array_merge($resultado, generarCombinaciones($arrays, $indice + 1, $combinacionesTemporal));
 
@@ -88,4 +100,5 @@ function  generarCombinaciones($arrays, $indice = 0, $combinacion = [])
     return  $resultado;
 
 }
+
 

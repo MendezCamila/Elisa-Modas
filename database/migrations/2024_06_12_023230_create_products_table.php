@@ -22,7 +22,8 @@ return new class extends Migration
 
 
             $table->foreignId('subcategory_id')
-            ->constrained();
+            ->constrained()
+            ->onDelete('cascade');
 
 
 
