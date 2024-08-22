@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('image_path');
             $table->float('price');
 
+            $table->integer('stock')
+                ->unsigned()//no permita valores negativos
+                ->default(0);
 
             $table->foreignId('subcategory_id')
             ->constrained()

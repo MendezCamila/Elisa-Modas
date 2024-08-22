@@ -44,6 +44,13 @@ Route::get('products/{product}/variants/{variant}', [ProductController::class, '
     ->name('admin.products.variants')
     ->scopeBindings();
 
+//Ruta actualizar variantes
+Route::put('products/{product}/variants/{variant}', [ProductController::class, 'variantsUpdate'])
+    ->name('admin.products.variantsUpdate')
+    ->scopeBindings();
+
+
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

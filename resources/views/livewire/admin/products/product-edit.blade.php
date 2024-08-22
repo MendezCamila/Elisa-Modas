@@ -126,6 +126,20 @@
                     class="w-full"
                     placeholder="Por favor ingrese el precio del producto"/>
             </div>
+
+            @if($product->variants->count() == 0)
+                <div class="mb-4">
+                    <x-label class="mb-1">
+                        Stock
+                    </x-label>
+
+                    <x-input
+                        type="number"
+                        wire:model="productEdit.stock"
+                        class="w-full"
+                        placeholder="Por favor ingrese el stock del producto"/>
+                </div>
+            @endif
         </div>
 
 

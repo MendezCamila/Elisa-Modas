@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('sku')->nullable();
             $table->string('image_path')->nullable();
 
+            $table->integer('stock')
+                ->unsigned()//no permita valores negativos
+                ->default(0);
+
 
             $table->foreignId('product_id')
             ->constrained()
