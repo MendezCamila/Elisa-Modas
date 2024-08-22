@@ -29,6 +29,10 @@ class ProductVariants extends Component
         ]
     ];
 
+    
+
+
+
     //que el usuario pueda elegir una opcion
     //recuperamos todas las opciones que tengamos en el sistema
     public function mount()
@@ -66,6 +70,8 @@ class ProductVariants extends Component
             'description' =>''
         ];
     }
+
+
 
     public function feature_change($index)
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Variant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage; // Añade esta línea para importar Storage
 
@@ -80,4 +81,10 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index');
     }
+
+    public function variants(Product $product, Variant $variant)
+    {
+        return $variant;
+    }
+
 }

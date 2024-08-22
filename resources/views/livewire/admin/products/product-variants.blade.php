@@ -1,5 +1,5 @@
 <div>
-    <section class="rounded-lg bg-white shadow-lg border border-gray-100">
+    <section class="rounded-lg bg-white shadow-lg border border-gray-100 mb-12">
 
         <header class="border-b border-gray-200 px-6 py-2">
             <div class="flex justify-between">
@@ -77,11 +77,7 @@
                                     </div>
                                 @endforeach
                             </div>
-
-
-
                         </div>
-
                     @endforeach
 
                 </div>
@@ -99,6 +95,53 @@
 
             @endif
 
+        </div>
+
+    </section>
+
+    <section class="rounded-lg bg-white shadow-lg border border-gray-100">
+        <header class="border-b border-gray-200 px-6 py-2">
+            <div class="flex justify-between">
+                {{-- IZQUIERZA --}}
+                <h1 class="text-lg font-semibold text-gray-700">
+                    Variantes
+                </h1>
+
+                {{-- DERECHA --}}
+
+            </div>
+        </header>
+
+
+        <div class="p-6">
+            <ul class="divide-y -my-4">
+                @foreach ($product->variants as $item)
+
+                    {{-- Imagen de la variante --}}
+                    <li class="py-4 flex items-center">
+                        {{--  {{ $item->image }}--}}
+                        <img src="{{ $item->image }}" class="w-12 h-12 object-cover object-center">
+
+                        <p class="divide-x">
+                            @foreach ($item->features as $feature)
+
+                                <span class="px-3">
+                                    {{ $feature->description }}
+                                </span>
+
+                            @endforeach
+                        </p>
+
+                        <a href="{{ route('admin.products.variants', [$product, $item]) }}" class="ml-auto btn btn-blue">
+                            Editar
+                        </a>
+
+
+                    </li>
+
+                @endforeach
+
+            </ul>
         </div>
 
     </section>

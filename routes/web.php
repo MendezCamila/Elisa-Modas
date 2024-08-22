@@ -39,6 +39,11 @@ Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(funct
     Route::resource('options', OptionController::class);
 });
 
+//Ruta de Editar variantes
+Route::get('products/{product}/variants/{variant}', [ProductController::class, 'variants'])
+    ->name('admin.products.variants')
+    ->scopeBindings();
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
