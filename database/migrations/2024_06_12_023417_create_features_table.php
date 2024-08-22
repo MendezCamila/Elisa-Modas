@@ -18,7 +18,8 @@ return new class extends Migration
 
 
             $table->foreignId('option_id')
-            ->constrained();
+            ->constrained()
+            ->onDelete('cascade');
 
             $table->timestamps();
         });

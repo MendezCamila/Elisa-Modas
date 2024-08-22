@@ -18,6 +18,7 @@ class Product extends Model
     ];
 
 
+
     //muchos productos pertenecen a una Subcategoria
     public function subcategory()
     {
@@ -36,7 +37,8 @@ class Product extends Model
     public function options()
     {
         return $this->belongsToMany(Option::class)
-        ->withPivot('value')
+        ->using(OptionProduct::class)
+        ->withPivot('features')
         ->withTimestamps();
 
     }
