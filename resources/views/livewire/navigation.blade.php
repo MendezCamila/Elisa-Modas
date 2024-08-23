@@ -32,14 +32,64 @@
 
                     <div class=" flex items-center space-x-4 md:space-x-8">
 
+
+                        {{-- Del carrito --}}
                         <button class="text-xl md:text-3xl">
                             <i class="fas fa-shopping-cart text-white"></i>
                         </button>
 
-                        <button class="text-xl md:text-3xl">
-                            <i class="fas fa-user text-white"></i>
-                        </button>
+                        {{-- Del Usuario --}}
+                        <x-dropdown>
 
+                            <x-slot name="trigger">
+
+                                @auth
+                                    <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
+                                        <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                                    </button>
+                                @else
+                                    <button class="text-xl md:text-3xl">
+                                        <i class="fas fa-user text-white"></i>
+                                    </button>
+                                @endauth
+                            </x-slot>
+
+
+                            <x-slot name="content">
+                                @guest
+                                    <div class="px-4 py-2">
+                                        <div class="flex justify-center">
+                                            <a href="{{ route('login') }}" class="btn btn-pink">
+                                                Iniciar sesión
+                                            </a>
+                                        </div>
+
+                                        <p class="text-sm text-center mt-2">
+                                            No tienes una cuenta? <a href="{{ route('register') }}" class="text-pink-500 hover:underline ">Regístrate</a>
+                                        </p>
+
+                                    </div>
+
+                                @else
+                                    <x-dropdown-link href="{{ route('profile.show') }}">
+                                        Mi perfil
+                                    </x-dropdown-link>
+
+                                    <div class="border-t border-gray-200">
+                                        <!-- Authentication -->
+                                        <form method="POST" action="{{ route('logout') }}" x-data>
+                                            @csrf
+
+                                            <x-dropdown-link href="{{ route('logout') }}"
+                                                    @click.prevent="$root.submit();">
+                                                {{ __('Log Out') }}
+                                            </x-dropdown-link>
+                                        </form>
+                                    </div>
+
+                                @endguest
+                            </x-slot>
+                        </x-dropdown>
                     </div>
 
                 </div>
@@ -64,7 +114,7 @@
                 <div class="bg-pink-500 px-4 py-3 text-white font-semibold">
                     <div class="flex justify-between items-center">
                         <span class="text-lg">
-                            Hola!
+                            ¡Hola!
                         </span>
 
                         <button x-on:click="open= false">
