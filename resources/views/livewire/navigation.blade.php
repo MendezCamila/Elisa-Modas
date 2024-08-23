@@ -49,4 +49,61 @@
 
     </header>
 
+    <div class="fixed top-0 left-0 inset-0 bg-black bg-opacity-25 z-10"></div>
+
+    <div class="fixed top-0 left-0 z-20">
+
+        <div class="flex">
+
+            <div class="w-80 h-screen bg-white">
+                {{-- Parte de arriba --}}
+                <div class="bg-pink-500 px-4 py-3 text-white font-semibold">
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg">
+                            Hola!
+                        </span>
+
+                        <button>
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="h-[calc(100vh-52px)] overflow-auto">
+
+                    <ul>
+                        @foreach ($families as $family)
+
+                            <li>
+                                <a href=""
+                                    class=" flex items-center justify-between px-4 py-4 text-gray-700 hover:bg-pink-200">
+                                    {{ $family->name }}
+
+                                    <i class="fa-solid fa-angle-right"></i>
+                                </a>
+
+                            </li>
+
+                        @endforeach
+
+
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+
 </div>
