@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CoverController;
 use App\Http\Controllers\Admin\FamilyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
@@ -37,6 +38,11 @@ Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(funct
 //Ruta de Opciones
 Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('options', OptionController::class);
+});
+
+//Ruta de portada
+Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('covers', CoverController::class);
 });
 
 //Ruta de Editar variantes

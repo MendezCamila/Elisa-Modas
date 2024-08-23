@@ -31,6 +31,7 @@
             <!-- Page Heading -->
             
 
+
             <!-- Page Content -->
             <main>
                 {{ $slot }}
