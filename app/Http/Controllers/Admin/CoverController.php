@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Cover;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CoverController extends Controller
 {
@@ -29,7 +30,31 @@ class CoverController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'image' => 'required|image|max:1024',
+            'title' => 'required|string|max:255',
+            'start_at' => 'required|date',
+            'end_at' => 'nullable|date|after_or_equal:start_at',
+            'is_active' => 'required|boolean',
+
+
+        ]);
+        //le agregamos un campo adicional
+        $data['image_path'] = Storage::put('covers', $data['image']); //guardamos la imagen en la carpeta covers
+
+        //creamos el cover
+        $cover = Cover::create($data);
+
+        //mostramos un mensaje de exito
+        session()->flash('swal',
+            [
+                'icon'=>'success',
+                'title'=>'Bien hecho!',
+                'text'=>'La portada se ha creado con correctamente.'
+            ]);
+
+        //redireccionamos
+        return redirect()->route('admin.covers.index');
     }
 
     /**
