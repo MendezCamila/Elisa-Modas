@@ -11,6 +11,9 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <!-- Para el slider de la portada -->
+        @stack('css')
+
         <!-- Font Awesome -->
         <script src="https://kit.fontawesome.com/3e00f6586e.js" crossorigin="anonymous"></script>
 
@@ -29,7 +32,7 @@
             @livewire('navigation')
 
             <!-- Page Heading -->
-            
+
 
 
             <!-- Page Content -->
@@ -41,5 +44,8 @@
         @stack('modals')
 
         @livewireScripts
+
+        @stack('js')
+
     </body>
 </html>

@@ -6,13 +6,13 @@ use App\Http\Controllers\Admin\FamilyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
+use App\Http\Controllers\WelcomeController;
 use App\Models\Product;
 use App\Models\Variant;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[WelcomeController::class, 'index'] )->name('welcome.index');
+
 //Ruta Administrador
 Route::get('/admin', function () {
     return view('admin.dashboard');
