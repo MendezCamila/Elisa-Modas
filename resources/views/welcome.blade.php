@@ -9,8 +9,8 @@
 
     @endpush
 
-        <!-- Slider main container -->
-    <div class="swiper">
+    <!-- Slider Portadas -->
+    <div class="swiper mb-12">
         <!-- Additional required wrapper -->
         <div class="swiper-wrapper">
         <!-- Slides -->
@@ -29,9 +29,42 @@
         <div class="swiper-button-prev"></div>
         <div class="swiper-button-next "></div>
 
-        <!-- If we need scrollbar -->
-        <div class="swiper-scrollbar"></div>
     </div>
+
+    <x-container>
+        <h1>
+            <span class="text-2xl font-bold text-gray-800 mb-4">Últimos Productos</span>
+        </h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            @foreach ($lastProducts as $product)
+                <article class="bg-white  shadow rounded overflow-hidden">
+                    <img src="{{ $product->image }}" class="w-full h-48 object-cover object-center">
+
+                    <div class="p-4">
+                        <h1 class="text-lg font-bold text-gray-700 line-clamp-2 mb-2 min-h-[56px]">
+                            {{ $product->name }}
+                        </h1>
+
+                        <p class="mb-4">
+                            <span class="text-gray-500">Precio:</span>
+                            <span class="text-gray-700 font-bold">{{ $product->price }}</span>
+                        </p>
+
+                        <a href="" class="btn btn-blue block w-full text-center">
+                            Ver más
+                        </a>
+
+                    </div>
+
+                </article>
+            @endforeach
+
+        </div>
+
+    </x-container>
+
+
 
     @push('js')
 
@@ -42,6 +75,10 @@
             // Optional parameters
             loop: true,
 
+            autoplay: {
+                delay: 5000,
+            },
+
             // If we need pagination
             pagination: {
                 el: '.swiper-pagination',
@@ -51,11 +88,6 @@
             navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
-            },
-
-            // And if we need scrollbar
-            scrollbar: {
-                el: '.swiper-scrollbar',
             },
             });
         </script>

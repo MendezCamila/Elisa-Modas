@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Cover;
+use App\Models\Product;
 
 use Illuminate\Http\Request;
 
@@ -18,8 +19,13 @@ class WelcomeController extends Controller
             })
             ->get();
 
+        //recuperamos los ultimos productos creados
+        $lastProducts = Product::orderBy('created_at', 'desc')
+            ->take(12)
+            ->get();
 
 
-        return view('welcome', compact('covers'));
+        //Retornamos la vista welcome con las portadas
+        return view('welcome', compact('covers', 'lastProducts'));
     }
 }
