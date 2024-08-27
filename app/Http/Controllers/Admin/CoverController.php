@@ -7,6 +7,7 @@ use App\Models\Cover;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+
 class CoverController extends Controller
 {
     /**
@@ -81,7 +82,32 @@ class CoverController extends Controller
      */
     public function update(Request $request, Cover $cover)
     {
-        //
+        $data = $request->validate([
+            'image' => 'nullable|image|max:1024',
+            'title' => 'required|string|max:255',
+            'start_at' => 'required|date',
+            'end_at' => 'nullable|date|after_or_equal:start_at',
+            'is_active' => 'required|boolean',
+        ]);
+
+        if (isset($data['image'])) {
+            Storage::delete($cover->image_path);
+            $data['image_path'] = Storage::put('covers', $data['image']);
+        }
+
+        $cover->update($data);
+
+        session()->flash('swal',
+            [
+                'icon'=>'success',
+                'title'=>'Bien hecho!',
+                'text'=>'La portada se ha actualizado con correctamente.'
+            ]);
+
+        return redirect()->route('admin.covers.edit', $cover);
+
+
+
     }
 
     /**
