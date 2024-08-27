@@ -15,7 +15,8 @@ class CoverController extends Controller
      */
     public function index()
     {
-        return view('admin.covers.index');
+        $covers = Cover::orderBy('order')->get();
+        return view('admin.covers.index', compact('covers'));
     }
 
     /**
@@ -39,7 +40,7 @@ class CoverController extends Controller
             'is_active' => 'required|boolean',
         ]);
 
-        //$data['order'] = Cover::max('order') + 1;
+        $data['order'] = Cover::max('order') + 1;
 
 
 
