@@ -36,9 +36,12 @@ class CoverController extends Controller
             'start_at' => 'required|date',
             'end_at' => 'nullable|date|after_or_equal:start_at',
             'is_active' => 'required|boolean',
-
-
         ]);
+
+        //$data['order'] = Cover::max('order') + 1;
+
+
+
         //le agregamos un campo adicional
         $data['image_path'] = Storage::put('covers', $data['image']); //guardamos la imagen en la carpeta covers
 

@@ -18,6 +18,7 @@ class Cover extends Model
         'start_at',
         'end_at',
         'is_active',
+        'order',
     ];
 
     protected $casts = [
