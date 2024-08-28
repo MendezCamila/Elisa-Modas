@@ -6,12 +6,16 @@ use App\Http\Controllers\Admin\FamilyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
+use App\Http\Controllers\FamiliaController;
 use App\Http\Controllers\WelcomeController;
 use App\Models\Product;
 use App\Models\Variant;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/',[WelcomeController::class, 'index'] )->name('welcome.index');
+
+//filtrar productos por familia
+Route::get('families/{family}', [FamiliaController::class, 'show'])->name('families.show');
 
 //Ruta Administrador
 Route::get('/admin', function () {
@@ -67,56 +71,6 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('prueba', function () {
 
-    $product = Product::find(99);
-
-    $features = $product->options->pluck('pivot.features');
-
-    $combinaciones = generarCombinaciones($features);
-
-    //eliminamos todos los productos anteriores
-    $product->variants()->delete();
-
-    foreach ($combinaciones as $combinacion) {
-
-        //creamos la variante
-        $variant = Variant::create([
-            'product_id' => $product->id,
-        ]);
-
-        $variant->features()->attach($combinacion);
-    }
-
-    return "Variantes creadas";
-
-
-});
-
-function  generarCombinaciones($arrays, $indice = 0, $combinacion = [])
-
-{
-
-    if ($indice == count($arrays)){
-
-        return [$combinacion];
-
-    }
-
-    $resultado= [];
-
-    foreach ($arrays[$indice] as $item){
-
-        $combinacionesTemporal = $combinacion;
-
-        $combinacionesTemporal[] = $item['id'];
-
-        $resultado = array_merge($resultado, generarCombinaciones($arrays, $indice + 1, $combinacionesTemporal));
-
-    }
-
-    return  $resultado;
-
-}
 
 
