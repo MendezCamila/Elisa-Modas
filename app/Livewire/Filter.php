@@ -3,11 +3,15 @@
 namespace App\Livewire;
 
 use App\Models\Option;
+use App\Models\Product;
 use Livewire\Component;
 use phpDocumentor\Reflection\Types\This;
+use Livewire\WithPagination;
 
 class Filter extends Component
 {
+    use WithPagination;
+
     public $family_id;
     public $options;
 
@@ -29,6 +33,12 @@ class Filter extends Component
 
     public function render()
     {
-        return view('livewire.filter');
+        //mostrar los productos
+
+        $products = Product::whereHas('subcategory.category', function($query){
+            $query->where('family_id', $this->family_id);
+        })->paginate();
+
+        return view('livewire.filter', compact('products'));
     }
 }

@@ -36,6 +36,7 @@
             <span class="text-2xl font-bold text-gray-800 mb-4">Últimos Productos</span>
         </h1>
 
+        {{-- Mostrar los productos --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach ($lastProducts as $product)
                 <article class="bg-white  shadow rounded overflow-hidden">
@@ -51,7 +52,7 @@
                             <span class="text-gray-700 font-bold">{{ $product->price }}</span>
                         </p>
 
-                        <a href="" class="btn btn-blue block w-full text-center">
+                        <a href="" class="btn btn-pink  block w-full text-center">
                             Ver más
                         </a>
 
