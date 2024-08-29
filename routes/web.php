@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\FamilyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\FamiliaController;
 use App\Http\Controllers\WelcomeController;
 use App\Models\Product;
@@ -16,6 +17,9 @@ Route::get('/',[WelcomeController::class, 'index'] )->name('welcome.index');
 
 //filtrar productos por familia
 Route::get('families/{family}', [FamiliaController::class, 'show'])->name('families.show');
+
+//filtrar productos por categoria
+Route::get('categories/{category}', [CategoriaController::class, 'show'])->name('categories.show');
 
 //Ruta Administrador
 Route::get('/admin', function () {
