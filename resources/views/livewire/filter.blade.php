@@ -1,9 +1,9 @@
 <div class=" bg-white py-12">
 
-    <x-container class=" px-4 flex ">
+    <x-container class=" px-4 md:flex ">
 
         @if ( count($options) )  {{-- Mostrar los filtros --}}
-            <aside class="w-52 flex-shrink-0 mr-8 ">
+            <aside class="md:w-52 md:flex-shrink-0 md:mr-8  mb-8 md:mb-0">
 
                 <ul class="space-y-4">
                     @foreach ($options as $option)
@@ -42,7 +42,7 @@
 
 
 
-        <div class="flex-1">
+        <div class="md:flex-1">
 
 
             <div class="flex items-center">{{-- div para el select de orden --}}
@@ -69,7 +69,7 @@
 
                 {{-- Mostrar los productos --}}
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach ($products as $product)
                     <article class="bg-white  shadow rounded overflow-hidden">
                         <img src="{{ $product->image }}" class="w-full h-48 object-cover object-center">
