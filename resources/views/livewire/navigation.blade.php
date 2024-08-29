@@ -172,10 +172,11 @@
 
                                 <ul class="mt-4 space-y-2">
 
+                                    {{-- Subcategorias --}}
                                     @foreach ($category->subcategories as $subcategory)
 
                                         <li>
-                                            <a href="" class="text-sm text-gray-700 hover:text-pink-500">
+                                            <a href="{{ route('subcategories.show', $subcategory) }}" class="text-sm text-gray-700 hover:text-pink-500">
                                                 {{ $subcategory->name }}
 
                                             </a>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\FamiliaController;
+use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\WelcomeController;
 use App\Models\Product;
 use App\Models\Variant;
@@ -20,6 +21,9 @@ Route::get('families/{family}', [FamiliaController::class, 'show'])->name('famil
 
 //filtrar productos por categoria
 Route::get('categories/{category}', [CategoriaController::class, 'show'])->name('categories.show');
+
+//filtrar productos por subcategoria
+Route::get('subcategories/{subcategory}', [SubcategoriaController::class, 'show'])->name('subcategories.show');
 
 //Ruta Administrador
 Route::get('/admin', function () {

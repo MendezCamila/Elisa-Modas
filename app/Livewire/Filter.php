@@ -20,6 +20,7 @@ class Filter extends Component
     public $family_id;
     public $category_id;
     public $options;
+    public $subcategory_id;
 
     //creamos una propiedad para guardar las features seleccionadas
     public $selected_features = [];
@@ -53,6 +54,17 @@ class Filter extends Component
                 }
             ]);
         })
+        ->when($this->subcategory_id, function($query){
+            $query->whereHas('products', function($query){
+                $query->where('subcategory_id', $this->subcategory_id);
+            })->with([
+                'features' => function($query){
+                    $query->whereHas('variants.product', function($query){
+                        $query->where('subcategory_id', $this->subcategory_id);
+                    });
+                }
+            ]);
+        })
         ->get()->toArray();
     }
 
@@ -75,6 +87,9 @@ class Filter extends Component
             $query->whereHas('subcategory', function($query){
                 $query->where('category_id', $this->category_id);
             });
+        })
+        ->when($this->subcategory_id, function($query){
+            $query->where('subcategory_id', $this->subcategory_id);
         })
         ->when($this->orderBy == 1, function($query){
             $query->orderBy('created_at', 'desc');
