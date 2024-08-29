@@ -8,6 +8,7 @@ use Livewire\Component;
 use phpDocumentor\Reflection\Types\This;
 use Livewire\WithPagination;
 use App\Models\Feature;
+use Livewire\Attributes\On;
 
 class Filter extends Component
 {
@@ -20,6 +21,8 @@ class Filter extends Component
     public $selected_features = [];
     //creamos una propiedad para guardar el orden del select
     public $orderBy = 1;
+
+    public $search;
 
     public function mount()
     {
@@ -35,6 +38,12 @@ class Filter extends Component
             }
         ])
         ->get()->toArray();
+    }
+
+    #[On('search')]
+    public function search($search)
+    {
+        $this->search = $search;
     }
 
     public function render()
@@ -57,6 +66,9 @@ class Filter extends Component
             $query->whereHas('variants.features', function($query){
                 $query->whereIn('features.id', $this->selected_features);
             });
+        })
+        ->when($this->search, function($query){
+            $query->where('name', 'like', '%'.$this->search.'%');
         })
         ->paginate(12);
 
