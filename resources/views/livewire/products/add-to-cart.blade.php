@@ -50,34 +50,23 @@
                     <span class="text-gray-700 font-bold">{{ $product->price }}</span>
                 </p>
 
-                {{--  <div class="flex space-x-6 items-center mb-6"
-                    x:data="{
-                        qty: 2,
-                    }">
 
-                    <button class="btn btn-gray">
+                <div x-data="{ qty: @entangle('qty') }" class="flex space-x-6 items-center mb-6">
+                    <button @click="qty > 1 ? qty-- : qty" class="btn btn-gray" x-bind:disabled="qty == 1">
                         -
                     </button>
 
-                    <span x-text="qty"></span>
+                    <span x-text="qty" class="inline-block w-2 text-center"></span>
 
-                    <button class="btn btn-gray">
-                        +
-                    </button>
-                </div>--}}
-                <div x-data="{ quantity: @entangle('quantity') }" class="flex space-x-6 items-center mb-6">
-                    <button @click="quantity > 1 ? quantity-- : quantity" class="btn btn-gray" x-bind:disabled="quantity == 1">
-                        -
-                    </button>
-
-                    <span x-text="quantity" class="inline-block w-2 text-center"></span>
-
-                    <button @click="quantity++" class="btn btn-gray">
+                    <button @click="qty++" class="btn btn-gray">
                         +
                     </button>
                 </div>
 
-                <button class="btn btn-pink w-full mb-6">
+                <button class="btn btn-pink w-full mb-6"
+                    wire:click="add_to_cart"
+                    wire:loading.attr="disabled">
+
                     Añadir al carrito
                 </button>
 

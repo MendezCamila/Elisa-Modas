@@ -13,6 +13,7 @@ use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\WelcomeController;
 use App\Models\Product;
 use App\Models\Variant;
+use CodersFree\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/',[WelcomeController::class, 'index'] )->name('welcome.index');
@@ -28,6 +29,11 @@ Route::get('subcategories/{subcategory}', [SubcategoriaController::class, 'show'
 
 //mostrar detalle de producto
 Route::get('products/{product}', [ProductoController::class, 'show'])->name('products.show');
+
+Route::get('prueba', function(){
+    Cart::instance('shopping');
+    return Cart::content();
+});
 
 //Ruta Administrador
 Route::get('/admin', function () {
