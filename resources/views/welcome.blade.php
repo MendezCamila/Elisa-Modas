@@ -52,7 +52,7 @@
                             <span class="text-gray-700 font-bold">{{ $product->price }}</span>
                         </p>
 
-                        <a href="" class="btn btn-pink  block w-full text-center">
+                        <a href="{{ route('products.show', $product) }}" class="btn btn-pink  block w-full text-center">
                             Ver más
                         </a>
 
