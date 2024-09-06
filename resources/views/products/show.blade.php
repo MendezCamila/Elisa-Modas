@@ -60,7 +60,14 @@
         </nav>
     </x-container>
 
-    {{-- Llamamos al componente y le pasamos el producto --}}
-    @livewire('products.add-to-cart', ['product' => $product])
+    {{-- Preguntamos si el producto tiene variantes --}}
+    @if ($product->variants->count())
+        @livewire('products.add-to-cart-variants', ['product' => $product])
+    @else
+        {{-- Llamamos al componente y le pasamos el producto --}}
+        @livewire('products.add-to-cart', ['product' => $product])
+    @endif
+
+
 
 </x-app-layout>

@@ -1,0 +1,29 @@
+
+    .feature-button {
+        background-color: #f0f0f0; /* Color de fondo */
+        border: 1px solid #7a7a7aee; /* Borde */
+        border-radius: 5px; /* Bordes redondeados */
+        padding: 10px 20px; /* Espaciado interno */
+        margin: 5px; /* Espaciado externo */
+        font-size: 14px; /* Tamaño de fuente */
+        color: #333; /* Color del texto */
+        cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+        transition: background-color 0.3s, color 0.3s; /* Transiciones suaves */
+    }
+
+    .feature-button:hover {
+        background-color: #ddd; /* Color de fondo al pasar el cursor */
+        color: #000; /* Color del texto al pasar el cursor */
+    }
+
+    .feature-button:active {
+        background-color: #bbb; /* Color de fondo al hacer clic */
+        color: #000; /* Color del texto al hacer clic */
+    }
+
+    .feature-button.selected {
+        background-color: #d734c4; /* Color de fondo cuando está seleccionado */
+        color: #fff; /* Color del texto cuando está seleccionado */
+        border-color: #ff00ea; /* Color del borde cuando está seleccionado */
+    }
+

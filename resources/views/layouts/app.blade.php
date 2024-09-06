@@ -23,6 +23,10 @@
 
     <!-- Styles -->
     @livewireStyles
+
+    <!-- Enlace al archivo CSS de características -->
+    <link rel="stylesheet" href="{{ asset('css/feature.css') }}">
+
 </head>
 
 <body class="font-sans antialiased">
@@ -34,8 +38,6 @@
         @livewire('navigation')
 
         <!-- Page Heading -->
-
-
 
         <!-- Page Content -->
         <main>

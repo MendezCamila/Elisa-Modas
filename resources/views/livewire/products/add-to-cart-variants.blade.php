@@ -58,6 +58,57 @@
                     </button>
                 </div>
 
+                {{-- Variantes a seleccionar --}}
+                <div class="flex flex-wrap">
+                    @foreach ($product->options as $option )
+
+                        <div class="mr-4 mb-4">
+                            <p class="font-semibold text-lg mb-2">
+                                {{ $option->name }}
+                            </p>
+
+                            <ul class="flex items-center space-x-4">
+                                @foreach ($option->pivot->features as $feature)
+                                    <li>
+
+                                        @switch($option->type)
+                                            @case(1) {{-- es de tipo texto --}}
+
+                                                <button class="w-20 h-8 font-semibold uppercase text-sm rounded-lg border-gray-200 text-gray-700 {{ $selectedFeatures[$option->id] == $feature['id'] ? ' bg-pink-500 text-white' : ' bg-gray-200'  }} "
+                                                    wire:click="$set('selectedFeatures.{{ $option->id }}', {{ $feature['id'] }})">
+
+                                                    {{ $feature['value'] }}
+                                                </button>
+
+                                                @break
+                                            @case(2) {{-- es de tipo color --}}
+
+                                                <div class="p-0.5 border-2 rounded-lg flex items-center -mt-1.5 {{ $selectedFeatures[$option->id] == $feature['id'] ? ' border-pink-500' : 'border-transparent'  }}">
+                                                    <button class="w-20 h-8 rounded-lg border border-gray-200 "
+                                                        style="background-color: {{ $feature['value'] }}"
+                                                        wire:click="$set('selectedFeatures.{{ $option->id }}', {{ $feature['id'] }})">
+                                                    </button>
+                                                </div>
+                                                @break
+                                            @default
+
+                                        @endswitch
+                                    </li>
+
+                                @endforeach
+                            </ul>
+
+
+                        </div>
+
+                    @endforeach
+
+                    @dump($selectedFeatures)
+
+
+                </div>
+
+
                 <div class="text-sm mb-4">
                     {{ $product->descripcion }}
                 </div>
