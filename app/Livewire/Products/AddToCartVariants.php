@@ -2,7 +2,10 @@
 
 namespace App\Livewire\Products;
 
+use App\Models\Feature;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
+use CodersFree\Shoppingcart\Facades\Cart;
 
 class AddToCartVariants extends Component
 {
@@ -20,8 +23,40 @@ class AddToCartVariants extends Component
             $this->selectedFeatures[$option->id] = $features->first()['id'];
 
         }
+    }
 
+    #[Computed]
+    public function variant()
+    {
+        //que nos retorne las variantes del producto
+        return $this->product->variants->filter(function($variant){
+            return !array_diff($variant->features->pluck('id')->toArray(), $this->selectedFeatures);
+        })->first();
+    }
 
+    public function add_to_cart()
+    {
+        Cart::instance('shopping');
+
+        Cart::add([
+            'id' => $this->product->id,
+            'name' => $this->product->name,
+            'qty' => $this->qty,
+            'price' => $this->product->price,
+            'options' => [
+                'image' => $this->variant->image,
+                'sku' => $this->variant->sku,
+                'features' => Feature::whereIn('id', $this->selectedFeatures)
+                    ->pluck('description', 'id')
+                    ->toArray(),
+            ],
+        ]);
+
+        $this->dispatch('swal', [
+            'title' => 'Bien hecho!',
+            'text' => 'Producto agregado al carrito de compras',
+            'icon' => 'success',
+        ]);
     }
 
     public function render()

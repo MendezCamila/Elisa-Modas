@@ -7,7 +7,7 @@
             <div class="col-span-1">
 
                 <figure>
-                    <img src="{{ $product->image }}" class="aspect-[1/1] w-full object-cover object-center" alt="">
+                    <img src="{{ $this->variant->image }}" class="aspect-[1/1] w-full object-cover object-center" alt="">
                 </figure>
             </div>
 
