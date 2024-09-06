@@ -52,6 +52,11 @@ class AddToCartVariants extends Component
             ],
         ]);
 
+        //solo si el usuario esta autenticado
+        if (auth()->check()){
+            Cart::store(auth()->id());
+        }
+
         $this->dispatch('swal', [
             'title' => 'Bien hecho!',
             'text' => 'Producto agregado al carrito de compras',

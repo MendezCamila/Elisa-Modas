@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Models\Cover;
 use App\Observers\CoverObserver;
+use CodersFree\Shoppingcart\Facades\Cart;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         'App\Events\SomeEvent' => [
             'App\Listeners\EventListener',
+        ],
+        Login::class => [
+            RestoreCartOnLogin::class,
         ],
     ];
 
