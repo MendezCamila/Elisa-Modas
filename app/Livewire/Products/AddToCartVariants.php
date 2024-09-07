@@ -57,6 +57,9 @@ class AddToCartVariants extends Component
             Cart::store(auth()->id());
         }
 
+        //emitimos el evento cartUpdated
+        $this->dispatch('cartUpdated', Cart::count());
+
         $this->dispatch('swal', [
             'title' => 'Bien hecho!',
             'text' => 'Producto agregado al carrito de compras',

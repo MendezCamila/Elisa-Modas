@@ -34,9 +34,15 @@
 
 
                         {{-- Del carrito --}}
-                        <button class="text-xl md:text-3xl">
-                            <i class="fas fa-shopping-cart text-white"></i>
-                        </button>
+                        <a href="#" class="relative">
+                            <i class="fas fa-shopping-cart text-white text-xl md:text-3xl"></i>
+
+                            <span
+                                id="cart-count"
+                                class="absolute -top-2 -end-4 inline-flex items-center justify-center w-6 h-6 bg-red-600 rounded-full text-xs text-white font-bold">
+                                {{ Cart::instance('shopping')->count() }}
+                            </span>
+                        </a>
 
                         {{-- Del Usuario --}}
                         <x-dropdown>
@@ -203,6 +209,11 @@
 
     @push('js')
         <script>
+
+            Livewire.on('cartUpdated', (count) => {
+                document.getElementById('cart-count').innerText = count;
+            });
+
             function search(value){
                 Livewire.dispatch('search', {
                     search: value
