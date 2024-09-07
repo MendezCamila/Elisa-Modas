@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\FamilyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\FamiliaController;
 use App\Http\Controllers\ProductoController;
@@ -15,6 +16,7 @@ use App\Models\Product;
 use App\Models\Variant;
 use CodersFree\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/',[WelcomeController::class, 'index'] )->name('welcome.index');
 
@@ -29,6 +31,11 @@ Route::get('subcategories/{subcategory}', [SubcategoriaController::class, 'show'
 
 //mostrar detalle de producto
 Route::get('products/{product}', [ProductoController::class, 'show'])->name('products.show');
+
+//Mostrar items del carrito de compras
+Route::get('cart', [CartController::class, 'index'])->name('cart.index');
+
+
 
 Route::get('prueba', function(){
     Cart::instance('shopping');

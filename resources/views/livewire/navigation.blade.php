@@ -34,7 +34,7 @@
 
 
                         {{-- Del carrito --}}
-                        <a href="#" class="relative">
+                        <a href="{{ route('cart.index') }}" class="relative">
                             <i class="fas fa-shopping-cart text-white text-xl md:text-3xl"></i>
 
                             <span
