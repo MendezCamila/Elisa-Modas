@@ -10,7 +10,8 @@
                     Carrito de compras ({{ Cart::count() }} productos )
                 </h1>
 
-                <button class="font-semibold text-gray-700 hover:text-pink-400 underline hover:no-underline ">
+                <button class="font-semibold text-gray-700 hover:text-pink-400 underline hover:no-underline "
+                    wire:click="destroy()">
                     Limpiar carrito
                 </button>
             </div>
@@ -29,7 +30,8 @@
                                     </a>
                                 </p>
                                 <button
-                                    class="bg-red-400 text-xs text-white font-semibold py-0.5 px-2.5 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-300">
+                                    class="bg-red-400 text-xs text-white font-semibold py-0.5 px-2.5 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-300"
+                                        wire:click="quitar('{{ $item->rowId }}')">
                                     <i class="fa-solid fa-xmark">
 
                                     </i>
@@ -46,7 +48,8 @@
 
                             <div class="ml-auto space-x-3">
 
-                                <button class="btn btn-gray">
+                                <button class="btn btn-gray"
+                                    wire:click="decrementar('{{ $item->rowId }}')">
                                     -
                                 </button>
 
@@ -54,7 +57,8 @@
                                     {{ $item->qty }}
                                 </span>
 
-                                <button class="btn btn-gray">
+                                <button class="btn btn-gray"
+                                    wire:click="incrementar('{{ $item->rowId }}')">
                                     +
                                 </button>
                             </div>
