@@ -8,13 +8,13 @@
 
         ],
 
-        [
+        /*[
             //Opciones
             'name'=>'Opciones',
             'icon'=>'fa-solid fa-cog',
             'route'=>route('admin.options.index'),
             'active'=> request()->routeIs('admin.options.*')
-        ],
+        ],*/
 
         [
             //familia o rama de productos
@@ -37,6 +37,7 @@
             'route'=>route('admin.subcategories.index'),
             'active'=> request()->routeIs('admin.subcategories.*')
         ],
+
         [
             //Productos
             'name'=>'Productos',
@@ -44,6 +45,7 @@
             'route'=>route('admin.products.index'),
             'active'=> request()->routeIs('admin.products.*')
         ],
+
         [
             //Portada
             'name'=>'Portadas',

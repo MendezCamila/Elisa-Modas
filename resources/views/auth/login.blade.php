@@ -1,8 +1,26 @@
 <x-guest-layout>
     <x-authentication-card>
+
+        {{--
         <x-slot name="logo">
             <x-authentication-card-logo />
+        </x-slot>--}}
+
+        <x-slot name="logo">
+            <h1 class="text-white">
+                <a href="/" class="inline-flex flex-col items-end">
+                    <span class="text-xl md:text-3xl leading-3 md:leading-6 font-semibold">
+                        Elisa Modas
+                    </span>
+
+                    <span class="text-xs">
+                        Tienda online
+                    </span>
+                </a>
+            </h1>
         </x-slot>
+
+
 
         <x-validation-errors class="mb-4" />
 
