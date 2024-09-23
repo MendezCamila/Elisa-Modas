@@ -11,13 +11,14 @@
             'header' => 'Administración',
         ],
 
+        /*
         [
             //Opciones
             'name'=>'Opciones',
             'icon'=>'fa-solid fa-cog',
             'route'=>route('admin.options.index'),
             'active'=> request()->routeIs('admin.options.*')
-        ],
+        ], */
 
         [
             //familia o rama de productos
@@ -49,13 +50,14 @@
             'active'=> request()->routeIs('admin.products.*')
         ],
 
+        /*
         [
             //Portada
             'name'=>'Portadas',
             'icon'=>'fa-solid fa-images',
             'route'=>route('admin.covers.index'),
             'active'=> request()->routeIs('admin.covers.*')
-        ],
+        ], */
 
         //Parte de informes y estadisticas
         [
