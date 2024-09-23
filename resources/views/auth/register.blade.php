@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <x-authentication-card width="sm:max-w-2xl">
+    <x-authentication-card >
 
         {{--  <x-slot name="logo">
             <x-authentication-card-logo />
@@ -24,7 +24,7 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
-            <div class="grid grid-cols-2 gap-4">
+            <div >
                 {{-- Nombre --}}
                 <div>
                     <x-label for="name" value="{{ __('Name') }}" />
