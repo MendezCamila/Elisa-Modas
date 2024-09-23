@@ -14,12 +14,18 @@
                         </path>
                     </svg>
                 </button>
-                <a href="https://flowbite.com" class="flex ms-2 md:me-24">
-                    <img src="{{ asset('img/ElisaModas.png') }}" class="h-8 me-3" alt="Elisa Modas Logo" />
-                    <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Elisa Modas</span>
+                <a href="/" class="flex  md:me-5">
+                    <h1 class="text-white">
+                        <a href="/" class="inline-flex flex-col items-end">
+                            <span class="text-xl md:text-3xl leading-3 md:leading-6 font-semibold">
+                                Elisa Modas
+                            </span>
+                            <span class="text-xs">
+                                Tienda online
+                            </span>
+                        </a>
+                    </h1>
                 </a>
-
-
             </div>
             <div class="flex items-center">
                 <div class="flex items-center ms-3">

@@ -6,6 +6,10 @@
             'route'=>route('admin.dashboard'),
             'active'=> request()->routeIs('admin.dashboard')
         ],
+        //Parte de administracion
+        [
+            'header' => 'Administración',
+        ],
 
         [
             //Opciones
@@ -52,6 +56,19 @@
             'route'=>route('admin.covers.index'),
             'active'=> request()->routeIs('admin.covers.*')
         ],
+
+        //Parte de informes y estadisticas
+        [
+            'header' => 'Informes y Estadisticas',
+        ],
+        //tengo que modificarlo para cuando tenga las rutas
+        [
+            'name'=>'Informes',
+            'icon'=>'fa-solid fa-chart-simple',
+            'route'=>route('admin.covers.index'),
+            'active'=> request()->routeIs('admin.covers.*')
+        ],
+
     ];
 @endphp
 
@@ -68,15 +85,23 @@
         <ul class="space-y-2 font-medium">
             @foreach ($links as $link )
                 <li>
-                    <a href="{{ $link['route']}} "
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ $link['active'] ? 'bg-blue-300' :'' }} ">
-                        <span class="inline-flex w-6 h-6 justify-center items-center">
-                            <i class=" {{ $link['icon'] }} text-gray-600"></i>
-                        </span>
-                        <span class="ms-2">
-                            {{ $link['name'] }}
-                        </span>
-                    </a>
+                    @isset($link['header'])
+                        <div class="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">
+                            {{ $link['header'] }}
+                        </div>
+
+                    @else
+                        <a href="{{ $link['route']}} "
+                            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ $link['active'] ? 'bg-blue-300' :'' }} ">
+                            <span class="inline-flex w-6 h-6 justify-center items-center">
+                                <i class=" {{ $link['icon'] }} text-gray-600"></i>
+                            </span>
+                            <span class="ms-2">
+                                {{ $link['name'] }}
+                            </span>
+                        </a>
+
+                    @endisset
                 </li>
             @endforeach
         </ul>
