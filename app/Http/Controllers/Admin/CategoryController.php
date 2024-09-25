@@ -37,30 +37,41 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //se valida
-        // Se valida con mensajes personalizados
+        // Validar los datos de entrada
         $request->validate([
             'family_id' => 'required|exists:families,id',
-            'name' => 'required|unique:categories,name',
-        ], [
-            'family_id.required' => 'Debe seleccionar una familia.',
-            'family_id.exists' => 'La familia seleccionada no existe.',
-            'name.required' => 'El campo nombre es obligatorio.',
-            'name.unique' => 'El nombre de la categoría ya ha sido registrado.',
+            'name' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) use ($request) {
+                    // Verificar si ya existe la categoría en la misma familia
+                    $exists = Category::where('family_id', $request->family_id)
+                        ->where('name', $value)
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('La categoría ya existe dentro de esta familia.');
+                    }
+                },
+            ],
+        ], [], [
+            'family_id' => 'familia',
+            'name' => 'nombre de categoría',
         ]);
 
+        // Crear la categoría si las validaciones pasan
         Category::create($request->all());
 
         session()->flash('swal', [
             'icon' => 'success',
             'title' => 'Bien hecho!',
-            'text' => 'Categoria creada correctamente.'
+            'text' => 'Categoría creada correctamente.'
         ]);
 
-        //Nos redirige a la lista de familias
+        // Redirigir a la lista de categorías
         return redirect()->route('admin.categories.index');
     }
-
+    
     /**
      * Display the specified resource.
      */
