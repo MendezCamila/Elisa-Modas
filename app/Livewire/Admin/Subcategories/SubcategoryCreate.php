@@ -19,20 +19,21 @@ class SubcategoryCreate extends Component
         'name' => '',
     ];
 
-    public function mount(){
+    public function mount()
+    {
 
-        $this->families= Family::all();
+        $this->families = Family::all();
     }
 
     public function updatedSubcategoryFamilyId()
     {
-        $this->subcategory['category_id']='';
+        $this->subcategory['category_id'] = '';
     }
 
     #[Computed()]
     public function categories()
     {
-        return Category::where('family_id',$this->subcategory['family_id'])->get();
+        return Category::where('family_id', $this->subcategory['family_id'])->get();
     }
 
     public function render()
@@ -53,14 +54,18 @@ class SubcategoryCreate extends Component
         ]);
         Subcategory::create($this->subcategory);
 
+
         session()->flash('swal',[
             'icon'=>'success',
             'title'=>'Bien hecho!',
             'text'=>'Subcategoria creada correctamente.'
         ]);
 
-        
+
+
         //Nos redirige a la lista de subcategorias
         return redirect()->route('admin.subcategories.index');
     }
+
+
 }

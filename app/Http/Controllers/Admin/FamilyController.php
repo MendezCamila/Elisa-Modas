@@ -30,21 +30,46 @@ class FamilyController extends Controller
      */
     public function store(Request $request)
     {
-        //Se valida
-        $request->validate([
-            'name'=>'required'
-        ]);
-        //Se crea la familia
+    // Se valida
+    $request->validate([
+        'name' => 'required|unique:families,name',
+    ], [
+        'name.unique' => 'El nombre de la familia ingresado ya existe.',
+        'name.required' => 'El campo nombre es obligatorio.',
+    ]);
+
+    try {
+        // Se crea la familia
         Family::create($request->all());
-
-        session()->flash('swal',[
-            'icon'=>'success',
-            'title'=>'Bien hecho!',
-            'text'=>'Familia creada correctamente.'
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien hecho!',
+            'text' => 'Familia creada correctamente.'
         ]);
 
-        //Nos redirige a la lista de familias
+        // Nos redirige a la lista de familias
         return redirect()->route('admin.families.index');
+    } catch (QueryException $e) {
+        if ($e->errorInfo[1] == 1062) {
+            // Código de error 1062 es para violación de restricción de unicidad
+            session()->flash('swal', [
+                'icon' => 'error',
+                'title' => 'Error!',
+                'text' => 'El nombre de la familia ya existe.'
+            ]);
+
+            return redirect()->back()->withInput();
+        }
+
+        // Manejo genérico de errores
+        session()->flash('swal', [
+            'icon' => 'error',
+            'title' => 'Error!',
+            'text' => 'Ocurrió un error al crear la familia.'
+        ]);
+
+        return redirect()->back()->withInput();
+    }
     }
 
     /**

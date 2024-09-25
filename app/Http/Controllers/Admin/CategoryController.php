@@ -16,10 +16,10 @@ class CategoryController extends Controller
     {
         //Listar categorias
         //Recuperar todas las categorias
-        $categories= Category::orderBy('id','desc')
-        ->with('family')
-        ->paginate(10);
-        return view('admin.categories.index',compact('categories'));
+        $categories = Category::orderBy('id', 'desc')
+            ->with('family')
+            ->paginate(10);
+        return view('admin.categories.index', compact('categories'));
     }
 
     /**
@@ -28,8 +28,8 @@ class CategoryController extends Controller
     public function create()
     {
         //recuperamos todo el listado de familia
-        $families= Family::all();
-        return view('admin.categories.create',compact('families'));
+        $families = Family::all();
+        return view('admin.categories.create', compact('families'));
     }
 
     /**
@@ -38,22 +38,27 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //se valida
+        // Se valida con mensajes personalizados
         $request->validate([
             'family_id' => 'required|exists:families,id',
-            'name' => 'required',
+            'name' => 'required|unique:categories,name',
+        ], [
+            'family_id.required' => 'Debe seleccionar una familia.',
+            'family_id.exists' => 'La familia seleccionada no existe.',
+            'name.required' => 'El campo nombre es obligatorio.',
+            'name.unique' => 'El nombre de la categoría ya ha sido registrado.',
         ]);
 
         Category::create($request->all());
 
-        session()->flash('swal',[
-            'icon'=>'success',
-            'title'=>'Bien hecho!',
-            'text'=>'Categoria creada correctamente.'
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien hecho!',
+            'text' => 'Categoria creada correctamente.'
         ]);
 
         //Nos redirige a la lista de familias
         return redirect()->route('admin.categories.index');
-
     }
 
     /**
@@ -70,8 +75,8 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         //recuperamos todo el listado de familia
-        $families= Family::all();
-        return view('admin.categories.edit', compact('category','families'));
+        $families = Family::all();
+        return view('admin.categories.edit', compact('category', 'families'));
     }
 
     /**
@@ -87,15 +92,14 @@ class CategoryController extends Controller
         //acceder a la categoria
         $category->update($request->all());
 
-        session()->flash('swal',[
-            'icon'=>'success',
-            'title'=>'Bien hecho!',
-            'text'=>'Categoria actualizada correctamente.'
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien hecho!',
+            'text' => 'Categoria actualizada correctamente.'
         ]);
 
         //Nos redirige a la lista de categorias
         return redirect()->route('admin.categories.index', $category);
-
     }
 
     /**
@@ -112,7 +116,7 @@ class CategoryController extends Controller
                 'text' => 'No se puede eliminar la categoria porque tiene Subcategorías asociadas.'
             ]);
             return redirect()->route('admin.categories.edit', $category);
-            }
+        }
 
         $category->delete();
 
@@ -121,7 +125,7 @@ class CategoryController extends Controller
             'icon' => 'success',
             'title' => 'Éxito',
             'text' => 'Categoria eliminada correctamente.'
-            ]);
+        ]);
 
         // Redireccionamos a la lista de categorias
         return redirect()->route('admin.categories.index');

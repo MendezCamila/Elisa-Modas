@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\UniqueConstraintViolationException;
+
 
 class SubcategoryController extends Controller
 {
@@ -14,15 +18,14 @@ class SubcategoryController extends Controller
      */
     public function index()
     {
-        $subcategories= Subcategory:: with('category.family')
-        -> orderBy('id','desc')
-        -> paginate(10);
+        $subcategories = Subcategory::with('category.family')
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
         //para comprobar
         //return $subcategories;
 
         return view('admin.subcategories.index', compact('subcategories'));
-
     }
 
     /**
@@ -30,7 +33,7 @@ class SubcategoryController extends Controller
      */
     public function create()
     {
-        return view ('admin.subcategories.create');
+        return view('admin.subcategories.create');
     }
 
     /**
@@ -43,7 +46,9 @@ class SubcategoryController extends Controller
             'name' => 'required',
         ]);
 
+
         Subcategory::create($request->all());
+
 
         session()->flash('swal',[
             'icon'=>'success',
@@ -51,9 +56,15 @@ class SubcategoryController extends Controller
             'text'=>'Subcategoria creada correctamente.'
         ]);
 
+
         //Nos redirige a la lista de subcategorias
         return redirect()->route('admin.subcategories.index');
     }
+
+
+
+
+
 
     /**
      * Display the specified resource.
@@ -93,7 +104,7 @@ class SubcategoryController extends Controller
                 'text' => 'No se puede eliminar la Subcategoria porque tiene productos asociados.'
             ]);
             return redirect()->route('admin.subcategories.edit', $subcategory);
-            }
+        }
 
         $subcategory->delete();
 
@@ -102,12 +113,9 @@ class SubcategoryController extends Controller
             'icon' => 'success',
             'title' => 'Éxito',
             'text' => 'Subcategoria eliminada correctamente.'
-            ]);
+        ]);
 
         // Redireccionamos a la lista de subcategorias
         return redirect()->route('admin.subcategories.index');
     }
-
-
-
 }

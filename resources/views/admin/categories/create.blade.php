@@ -22,6 +22,11 @@
             </x-label>
 
             <x-select name="family_id" class="w-full">
+
+                <option value="" disabled>
+                    Seleccione una familia
+                </option>
+
                 @foreach ($families as $family)
                 <option value="{{ $family->id }}"  @selected(old('family_id') == $family->id )>
                     {{ $family->name }}
