@@ -44,28 +44,24 @@ class SubcategoryCreate extends Component
     public function save()
     {
         $this->validate([
-            'subcategory.family_id'=>'required|exists:families,id',
-            'subcategory.category_id'=>'required|exists:categories,id',
-            'subcategory.name'=>'required'
-        ],[],[
-            'subcategory.family_id'=>'familia',
-            'subcategory.category_id'=>'categoria',
-            'subcategory.name'=>'Nombre'
+            'subcategory.family_id' => 'required|exists:families,id',
+            'subcategory.category_id' => 'required|exists:categories,id',
+            'subcategory.name' => 'required|unique:subcategories,name,NULL,id,category_id,' . $this->subcategory['category_id'], // Validación de unicidad
+        ], [], [
+            'subcategory.family_id' => 'familia',
+            'subcategory.category_id' => 'categoría',
+            'subcategory.name' => 'Nombre'
         ]);
+
         Subcategory::create($this->subcategory);
 
-
-        session()->flash('swal',[
-            'icon'=>'success',
-            'title'=>'Bien hecho!',
-            'text'=>'Subcategoria creada correctamente.'
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien hecho!',
+            'text' => 'Subcategoría creada correctamente.'
         ]);
 
-
-
-        //Nos redirige a la lista de subcategorias
+        // Nos redirige a la lista de subcategorías
         return redirect()->route('admin.subcategories.index');
     }
-
-
 }

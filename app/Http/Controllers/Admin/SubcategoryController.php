@@ -43,21 +43,20 @@ class SubcategoryController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required',
+            'name' => 'required|unique:subcategories,name,NULL,id,category_id,' . $request->category_id, // Validación de unicidad
+        ], [
+            'name.unique' => 'La subcategoría ya existe en esta categoría.',
         ]);
-
 
         Subcategory::create($request->all());
 
-
-        session()->flash('swal',[
-            'icon'=>'success',
-            'title'=>'Bien hecho!',
-            'text'=>'Subcategoria creada correctamente.'
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien hecho!',
+            'text' => 'Subcategoría creada correctamente.'
         ]);
 
-
-        //Nos redirige a la lista de subcategorias
+        // Nos redirige a la lista de subcategorías
         return redirect()->route('admin.subcategories.index');
     }
 
