@@ -42,35 +42,39 @@ Route::get('prueba', function(){
     return Cart::content();
 });
 
+
 //Ruta Administrador
 Route::get('/admin', function () {
     return view('admin.dashboard');
-})->name('admin.dashboard');
+})->middleware('can:acceso dashboard')
+->name('admin.dashboard');
+
 
 //Ruta Resource (agregar el prefijo admin ya que hago todo dentro de web.php)
-Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar familias'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('families', FamilyController::class);
 });
+
 //Ruta de Categorias
-Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar categorias'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('categories', CategoryController::class);
 });
 //Ruta de Subcategorias
-Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar subcategorias'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('subcategories', SubcategoryController::class);
 });
 //Ruta de Productos
-Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar productos'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', ProductController::class);
 });
 
-//Ruta de Opciones
-Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+//Ruta de Opciones de productos
+Route::middleware(['web', 'auth', 'can:administrar opciones'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('options', OptionController::class);
 });
 
 //Ruta de portada
-Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar portadas'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('covers', CoverController::class);
 });
 
