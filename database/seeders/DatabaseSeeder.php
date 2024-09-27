@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            PermissionSeeder::class,
             FamilySeeder::class,
             OptionSeeder::class,
         ]);
