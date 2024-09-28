@@ -6,12 +6,14 @@ use App\Http\Controllers\Admin\FamilyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\FamiliaController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\WelcomeController;
+use App\Livewire\Admin\UserComponent;
 use App\Models\Product;
 use App\Models\Variant;
 use CodersFree\Shoppingcart\Facades\Cart;
@@ -88,7 +90,10 @@ Route::put('products/{product}/variants/{variant}', [ProductController::class, '
     ->name('admin.products.variantsUpdate')
     ->scopeBindings();
 
-
+// Ruta crear crud para usuarios
+Route::middleware(['web', 'auth', 'can:administrar usuarios'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+});
 
 Route::middleware([
     'auth:sanctum',

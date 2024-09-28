@@ -6,6 +6,19 @@
             'route'=>route('admin.dashboard'),
             'active'=> request()->routeIs('admin.dashboard')
         ],
+        //Parte administracion de usuarios
+        [
+            'header' => 'Usuarios',
+        ],
+        [
+            //Usuarios
+            'name'=>'Usuarios',
+            'icon'=>'fas fa-users',
+            'route'=>route('admin.users.index'),
+            'active'=> request()->routeIs('admin.users.*')
+        ],
+
+
         //Parte de administracion
         [
             'header' => 'Administración',
@@ -18,7 +31,7 @@
             'icon'=>'fa-solid fa-cog',
             'route'=>route('admin.options.index'),
             'active'=> request()->routeIs('admin.options.*')
-        ], 
+        ],
 
         [
             //familia o rama de productos

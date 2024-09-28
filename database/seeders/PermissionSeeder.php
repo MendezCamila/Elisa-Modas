@@ -21,7 +21,8 @@ class PermissionSeeder extends Seeder
             'administrar categorias',
             'administrar subcategorias',
             'administrar productos',
-            'administrar portadas'
+            'administrar portadas',
+            'administrar usuarios',
         ];
 
         //recorremos el array y creamos los permisos

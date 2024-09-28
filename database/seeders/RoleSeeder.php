@@ -25,7 +25,8 @@ class RoleSeeder extends Seeder
             'administrar categorias',
             'administrar subcategorias',
             'administrar productos',
-            'administrar portadas'
+            'administrar portadas',
+            'administrar usuarios',
         ]);
 
         //recuperamos el usuario al cual le queremos dar el rol
@@ -34,7 +35,7 @@ class RoleSeeder extends Seeder
         $user->assignRole('admin');
 
         //creamos otro rol
-        
+
 
     }
 }
