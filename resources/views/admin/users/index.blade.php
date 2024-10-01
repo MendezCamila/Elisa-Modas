@@ -11,7 +11,7 @@
 ]">
 
     {{-- Llamo a mi componente livewire --}}
-    
+    @livewire('admin.users.manage-users')
 
 
 </x-admin-layout>
