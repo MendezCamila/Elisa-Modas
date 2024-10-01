@@ -63,10 +63,11 @@
             </div>
         @else
             <div class="p-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
-                <span class="font-medium">Info alert!</span> Todavía no hay usuarios registrados.
+                <span class="font-medium">No se encontraron coincidencias!</span> No hay usuarios que coincidan con "{{ $search }}".
             </div>
         @endif
 
         @dump($search)
     </section>
 </div>
+
