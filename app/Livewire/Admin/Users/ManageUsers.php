@@ -24,6 +24,7 @@ class ManageUsers extends Component
         // Recuperamos todos los usuarios que coincidan con la búsqueda
         $users = User::where('name', 'LIKE', '%' . $this->search . '%')
             ->orWhere('email', 'LIKE', '%' . $this->search . '%')
+            ->orWhere('last_name', 'LIKE', '%' . $this->search . '%')
             ->paginate(10);
 
         // Una vez recuperamos los usuarios, los pasamos a la vista

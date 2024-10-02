@@ -94,6 +94,10 @@ Route::put('products/{product}/variants/{variant}', [ProductController::class, '
 Route::middleware(['web', 'auth', 'can:administrar usuarios'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('users', [UserController::class, 'index'])->name('users.index');
 });
+// Ruta para editar usuarios
+Route::middleware(['web', 'auth', 'can:administrar usuarios'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('users/{user}', [UserController::class, 'edit'])->name('users.edit');
+});
 
 Route::middleware([
     'auth:sanctum',

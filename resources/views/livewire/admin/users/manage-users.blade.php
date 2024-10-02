@@ -27,7 +27,9 @@
                         <tr>
                             <th scope="col" class="px-6 py-3">ID</th>
                             <th scope="col" class="px-6 py-3">Nombre</th>
+                            <th scope="col" class="px-6 py-3">Apellido</th>
                             <th scope="col" class="px-6 py-3">Email</th>
+                            <th scope="col" class="px-6 py-3">Teléfono</th>
                             <th scope="col" class="px-6 py-3">Rol</th>
                             <th scope="col" class="px-6 py-3">Acciones</th>
                         </tr>
@@ -39,7 +41,9 @@
                                     {{ $user->id }}
                                 </th>
                                 <td class="px-6 py-4">{{ $user->name }}</td>
+                                <td class="px-6 py-4">{{ $user->last_name }}</td>
                                 <td class="px-6 py-4">{{ $user->email }}</td>
+                                <td class="px-6 py-4">{{ $user->phone }}</td>
                                 <td class="px-6 py-4">
                                     @if ($user->roles->count())
                                         {{ implode(', ', $user->roles->pluck('name')->toArray()) }}
@@ -48,7 +52,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="" class="text-blue-600">Editar</a>
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600">Editar</a>
                                     <a href="" class="text-red-600">Eliminar</a>
                                 </td>
                             </tr>
@@ -67,7 +71,7 @@
             </div>
         @endif
 
-        @dump($search)
+
     </section>
 </div>
 
