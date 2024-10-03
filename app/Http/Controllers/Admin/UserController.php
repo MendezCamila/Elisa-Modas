@@ -20,4 +20,11 @@ class UserController extends Controller
         $roles = Role::all();
         return view('admin.users.edit', compact('user', 'roles'));
     }
+
+    //crear usuario
+    public function create()
+    {
+        $roles = Role::all();
+        return view('admin.users.create', compact('roles'));
+    }
 }

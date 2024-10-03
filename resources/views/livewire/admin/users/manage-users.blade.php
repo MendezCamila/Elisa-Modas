@@ -9,7 +9,7 @@
 
         {{-- Botón para agregar un nuevo usuario --}}
         <x-slot name="action">
-            <a class="btn btn-blue" href="">
+            <a class="btn btn-blue" href="{{ route('admin.users.create') }}">
                 Nuevo Usuario
             </a>
         </x-slot>

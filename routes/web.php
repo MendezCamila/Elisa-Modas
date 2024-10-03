@@ -90,12 +90,20 @@ Route::put('products/{product}/variants/{variant}', [ProductController::class, '
     ->name('admin.products.variantsUpdate')
     ->scopeBindings();
 
-// Ruta crear crud para usuarios
+
+
+// Rutas para edministrar usuarios
 Route::middleware(['web', 'auth', 'can:administrar usuarios'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
-});
-// Ruta para editar usuarios
-Route::middleware(['web', 'auth', 'can:administrar usuarios'])->prefix('admin')->name('admin.')->group(function () {
+    // Ruta para listar usuarios
+    Route::get('users', [UserController::class, 'index'])->name('users.index'); 
+    
+    // Ruta para crear un usuario
+    Route::get('users/create', [UserController::class, 'create'])->name('users.create');
+    
+    // Ruta para almacenar un nuevo usuario
+    Route::post('users', [UserController::class, 'store'])->name('users.store');
+    
+    // Ruta para editar un usuario
     Route::get('users/{user}', [UserController::class, 'edit'])->name('users.edit');
 });
 
