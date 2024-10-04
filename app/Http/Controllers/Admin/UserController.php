@@ -11,7 +11,8 @@ class UserController extends Controller
 {
     //retornamos la vista index
     public function index(){
-        return view('admin.users.index');
+        $users = User::paginate(10);
+        return view('admin.users.index', compact('users'));
     }
 
     //retornamos la vista edit
@@ -27,4 +28,22 @@ class UserController extends Controller
         $roles = Role::all();
         return view('admin.users.create', compact('roles'));
     }
+
+    //eliminado logico de un usuario
+    public function destroy(User $user)
+    {
+        //eliminamos
+        $user->delete();
+
+        //mensaje de exito
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Usuario eliminado!',
+            'text' => 'El usuario ha sido eliminado correctamente.'
+        ]);
+
+        //redireccionamos
+        return redirect()->route('admin.users.index');
+    }
+
 }

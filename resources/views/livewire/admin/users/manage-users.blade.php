@@ -53,7 +53,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600">Editar</a>
-                                    <a href="" class="text-red-600">Eliminar</a>
+                                    <a href="" class="text-red-600" wire:click.prevent="deleteUser({{ $user->id }})">Eliminar</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -71,7 +71,5 @@
             </div>
         @endif
 
-
     </section>
 </div>
-
