@@ -51,9 +51,21 @@
                                         No tiene rol
                                     @endif
                                 </td>
-                                <td class="px-6 py-4">
-                                    <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600">Editar</a>
-                                    <a href="" class="text-red-600" wire:click.prevent="deleteUser({{ $user->id }})">Eliminar</a>
+                                {{--  <td class="px-6 py-4 flex space-x-2">
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600">
+                                        <x-button class="text-xs px-2 py-1">Editar</x-button>
+                                    </a>
+                                    <x-danger-button onclick="confirmDelete({{ $user->id }})" class="text-xs px-2 py-1 text-red-600">Eliminar</x-danger-button>
+                                </td>--}}
+                                <td class="px-6 py-4 flex space-x-2">
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 text-xs flex items-center space-x-1">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                        <span>Editar</span>
+                                    </a>
+                                    <a href="javascript:void(0);" onclick="confirmDelete({{ $user->id }})" class="text-red-600 text-xs flex items-center space-x-1">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                        <span>Eliminar</span>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
@@ -72,4 +84,32 @@
         @endif
 
     </section>
+
+    <form action="" method="POST" id="delete-form">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    @push('js')
+        <script>
+            function confirmDelete(userId) {
+                Swal.fire({
+                    title: "Estas seguro?",
+                    text: "No podras revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si, borralo!",
+                    cancelButtonText: "Cancelar"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let form = document.getElementById('delete-form');
+                        form.action = `/admin/users/${userId}`;
+                        form.submit();
+                    }
+                });
+            }
+        </script>
+    @endpush
 </div>

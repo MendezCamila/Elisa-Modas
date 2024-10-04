@@ -92,7 +92,7 @@ Route::put('products/{product}/variants/{variant}', [ProductController::class, '
 
 
 
-// Rutas para edministrar usuarios
+// Rutas para administrar usuarios
 Route::middleware(['web', 'auth', 'can:administrar usuarios'])->prefix('admin')->name('admin.')->group(function () {
     // Ruta para listar usuarios
     Route::get('users', [UserController::class, 'index'])->name('users.index'); 
@@ -105,6 +105,9 @@ Route::middleware(['web', 'auth', 'can:administrar usuarios'])->prefix('admin')-
     
     // Ruta para editar un usuario
     Route::get('users/{user}', [UserController::class, 'edit'])->name('users.edit');
+
+    // **Ruta para eliminar un usuario**
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
 Route::middleware([
