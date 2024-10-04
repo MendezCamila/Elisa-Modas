@@ -12,7 +12,7 @@ class ManageUsers extends Component
 
     public $search;
 
-    protected $paginationTheme = 'bootstrap';
+    
 
     public function updatingSearch()
     {
@@ -25,7 +25,9 @@ class ManageUsers extends Component
         $users = User::where('name', 'LIKE', '%' . $this->search . '%')
             ->orWhere('email', 'LIKE', '%' . $this->search . '%')
             ->orWhere('last_name', 'LIKE', '%' . $this->search . '%')
+            ->orderBy('id', 'desc') // Ordenar por id en orden descendente
             ->paginate(10);
+            
 
         // Una vez recuperamos los usuarios, los pasamos a la vista
         return view('livewire.admin.users.manage-users', compact('users'));
