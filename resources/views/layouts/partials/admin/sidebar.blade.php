@@ -17,14 +17,14 @@
             'route'=>route('admin.users.index'),
             'active'=> request()->routeIs('admin.users.*')
         ],
-        /*
+
         [
             //Roles
             'name'=>'Roles',
             'icon'=>'fas fa-users-cog',
-            'route'=>route('admin.users.index'),
-            'active'=> request()->routeIs('admin.users.*')
-        ],*/
+            'route'=>route('admin.roles.index'),
+            'active'=> request()->routeIs('admin.roles.*')
+        ],
 
 
         //Parte de administracion

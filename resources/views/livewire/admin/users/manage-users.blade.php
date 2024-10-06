@@ -51,12 +51,6 @@
                                         No tiene rol
                                     @endif
                                 </td>
-                                {{--  <td class="px-6 py-4 flex space-x-2">
-                                    <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600">
-                                        <x-button class="text-xs px-2 py-1">Editar</x-button>
-                                    </a>
-                                    <x-danger-button onclick="confirmDelete({{ $user->id }})" class="text-xs px-2 py-1 text-red-600">Eliminar</x-danger-button>
-                                </td>--}}
                                 <td class="px-6 py-4 flex space-x-2">
                                     <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 text-xs flex items-center space-x-1">
                                         <i class="fa-solid fa-pen-to-square"></i>

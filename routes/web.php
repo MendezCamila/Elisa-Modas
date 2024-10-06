@@ -18,6 +18,7 @@ use App\Models\Product;
 use App\Models\Variant;
 use CodersFree\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\RoleController;
 
 
 Route::get('/',[WelcomeController::class, 'index'] )->name('welcome.index');
@@ -95,19 +96,40 @@ Route::put('products/{product}/variants/{variant}', [ProductController::class, '
 // Rutas para administrar usuarios
 Route::middleware(['web', 'auth', 'can:administrar usuarios'])->prefix('admin')->name('admin.')->group(function () {
     // Ruta para listar usuarios
-    Route::get('users', [UserController::class, 'index'])->name('users.index'); 
-    
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+
     // Ruta para crear un usuario
     Route::get('users/create', [UserController::class, 'create'])->name('users.create');
-    
+
     // Ruta para almacenar un nuevo usuario
     Route::post('users', [UserController::class, 'store'])->name('users.store');
-    
+
     // Ruta para editar un usuario
     Route::get('users/{user}', [UserController::class, 'edit'])->name('users.edit');
 
     // **Ruta para eliminar un usuario**
     Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+});
+
+// Rutas para administrar roles
+Route::middleware(['web', 'auth'/*, 'can:administrar roles'*/])->prefix('admin')->name('admin.')->group(function () {
+    // Ruta para listar roles
+    Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+
+    // Ruta para crear un rol
+    Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
+
+    // Ruta para almacenar un nuevo rol
+    Route::post('roles', [RoleController::class, 'store'])->name('roles.store');
+
+    // Ruta para editar un rol
+    //Route::get('roles/{role}', [RoleController::class, 'edit'])->name('roles.edit');
+
+    // Ruta para actualizar un rol
+    //Route::put('roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+
+    // Ruta para eliminar un rol
+    //Route::delete('roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 });
 
 Route::middleware([
