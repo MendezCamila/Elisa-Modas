@@ -11,14 +11,16 @@
 
             <!-- Listado de roles -->
             <h2 class="mt-4 mb-2">Listado de roles</h2>
-            @foreach ($roles as $role)
-                <div>
-                    <label>
-                        <input type="checkbox" wire:model="selectedRoles" value="{{ $role->id }}" class="mr-1">
-                        {{ $role->name }}
-                    </label>
-                </div>
-            @endforeach
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                @foreach ($roles as $role)
+                    <div>
+                        <label class="inline-flex items-center space-x-2">
+                            <x-checkbox wire:model="selectedRoles" value="{{ $role->id }}" />
+                            <span>{{ $role->name }}</span>
+                        </label>
+                    </div>
+                @endforeach
+            </div>
 
             <!-- Contenedor para alinear el botón a la derecha -->
             <div class="flex justify-end mt-4">

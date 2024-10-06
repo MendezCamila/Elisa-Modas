@@ -28,6 +28,13 @@ class ManageRoles extends Component
     public function delete($id)
     {
         Role::findOrFail($id)->delete();
-        session()->flash('message', 'El rol se eliminó con éxito');
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Rol eliminado!',
+            'text' => 'El rol ha sido eliminado correctamente',
+        ]);
+
+        return redirect()->route('admin.roles.index');
     }
 }
