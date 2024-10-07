@@ -122,8 +122,8 @@ Route::middleware(['web', 'auth'/*, 'can:administrar roles'*/])->prefix('admin')
     // Ruta para almacenar un nuevo rol
     Route::post('roles', [RoleController::class, 'store'])->name('roles.store');
 
-    // Ruta para editar un rol
-    //Route::get('roles/{role}', [RoleController::class, 'edit'])->name('roles.edit');
+    //Ruta para editar un rol
+    Route::get('roles/{role}', [RoleController::class, 'edit'])->name('roles.edit');
 
     // Ruta para actualizar un rol
     //Route::put('roles/{role}', [RoleController::class, 'update'])->name('roles.update');

@@ -39,7 +39,7 @@
                                 <td class="px-6 py-4">{{ $role->name }}</td>
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex justify-end space-x-2">
-                                        <a href="" class="text-blue-600 text-xs flex items-center space-x-1">
+                                        <a href="{{ route('admin.roles.edit', ['role' => $role->id]) }}" class="text-blue-600 text-xs flex items-center space-x-1">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                             <span>Editar</span>
                                         </a>

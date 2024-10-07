@@ -10,7 +10,7 @@
 
         <div class="px-6 py-4">
             <form wire:submit.prevent="createUser">
-                
+
                 <div class="mb-4">
                     <x-label for="name" value="Nombre" />
                     <x-input id="name" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm" type="text" wire:model="name" required autofocus />
@@ -43,12 +43,14 @@
 
                 <div class="mb-4">
                     <x-label for="roles" value="Roles" />
-                    @foreach ($roles as $role)
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" wire:model="selectedroles" value="{{ $role->id }}" class="form-checkbox">
-                            <span class="ml-2">{{ $role->name }}</span>
-                        </label>
-                    @endforeach
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                        @foreach ($roles as $role)
+                            <label class="inline-flex items-center space-x-2">
+                                <x-checkbox wire:model="selectedroles" value="{{ $role->id }}" />
+                                <span class="ml-2">{{ $role->name }}</span>
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
 
                 <div class="flex justify-end mt-4">
