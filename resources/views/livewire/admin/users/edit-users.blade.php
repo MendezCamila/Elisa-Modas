@@ -1,35 +1,57 @@
 <div>
-    <form wire:submit.prevent="updateRoles">
-        <div class="card">
-            <x-validation-errors class="mb-4" />
+    <x-validation-errors class="mb-4" />
+    <section class="card">
 
-            <x-label for="name" class="mb-4">Nombre</x-label>
-            <x-input id="name" name="name" class="w-full mb-2" value="{{ $user->name }}" readonly />
+        <header class="border-b px-6 py-2 border-gray-200">
+            <h1>
+                <span class="text-lg font-semibold text-gray-700 dark:text-gray-300">Editar Usuario</span>
+            </h1>
+        </header>
 
-            <x-label for="last_name" class="mb-4">Apellido</x-label>
-            <x-input id="last_name" name="last_name" class="w-full mb-2" value="{{ $user->last_name }}" readonly />
+        <div class="px-6 py-4">
+            <form wire:submit.prevent="updateUser">
 
-            <!-- Listado de roles -->
-            <h2 class="mt-4 mb-2">Listado de roles</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                @foreach ($roles as $role)
-                    <div>
-                        <label class="inline-flex items-center space-x-2">
-                            <x-checkbox wire:model="selectedRoles" value="{{ $role->id }}" />
-                            <span>{{ $role->name }}</span>
-                        </label>
+                <div class="mb-4">
+                    <x-label for="name" value="Nombre" />
+                    <x-input id="name" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm" type="text" wire:model="name" required autofocus />
+                </div>
+
+                <div class="mb-4">
+                    <x-label for="last_name" value="Apellido" />
+                    <x-input id="last_name" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm" type="text" wire:model="last_name" required />
+                </div>
+
+                <div class="mb-4">
+                    <x-label for="email" value="Email" />
+                    <x-input id="email" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm" type="email" wire:model="email" required />
+                </div>
+
+                <div class="mb-4">
+                    <x-label for="phone" value="Teléfono" />
+                    <x-input id="phone" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm" type="text" wire:model="phone" required />
+                </div>
+
+                <div class="mb-4">
+                    <x-label for="roles" value="Roles" />
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                        @foreach ($roles as $role)
+                            <label class="inline-flex items-center space-x-2">
+                                <x-checkbox wire:model="selectedRoles" value="{{ $role->id }}" />
+                                <span class="ml-2">{{ $role->name }}</span>
+                            </label>
+                        @endforeach
                     </div>
-                @endforeach
-            </div>
+                </div>
 
-            <!-- Contenedor para alinear el botón a la derecha -->
-            <div class="flex justify-end mt-4">
-                <x-button>
-                    Asignar Rol
-                </x-button>
-            </div>
+                <div class="flex justify-end mt-4">
+                    <x-button>
+                        Actualizar Usuario
+                    </x-button>
+                </div>
+            </form>
         </div>
-    </form>
+
+    </section>
 </div>
 
 
