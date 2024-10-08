@@ -30,7 +30,12 @@ class ProductVariants extends Component
     ];
 
 
-
+    public $variantEdit = [
+        'open' => false,
+        'id' => null,
+        'stock' => null,
+        'sku' => null,
+    ];
 
 
     //que el usuario pueda elegir una opcion
@@ -178,7 +183,43 @@ class ProductVariants extends Component
         }
         return  $resultado;
 
-}
+    }
+
+    public function editVariant(Variant $variant)
+    {
+        $this->variantEdit = [
+            'open' => true,
+            'id' => $variant->id,
+            'stock' => $variant->stock,
+            'sku' => $variant->sku,
+        ];
+    }
+
+    public function updateVariant()
+    {
+        $this->validate([
+            'variantEdit.stock' => 'required|numeric',
+            'variantEdit.sku' => 'required',
+        ]);
+
+        $variant = Variant::find($this->variantEdit['id']);
+
+        $variant->update([
+            'stock' => $this->variantEdit['stock'],
+            'sku' => $this->variantEdit['sku'],
+        ]);
+
+
+
+        $this->reset('variantEdit');
+        $this->product = $this->product->fresh();
+        //mensaje swal de actualizado correctamente
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Variante actualizada!',
+            'text' => 'La variante ha sido actualizada correctamente',
+        ]);
+    }
 
     public function render()
     {

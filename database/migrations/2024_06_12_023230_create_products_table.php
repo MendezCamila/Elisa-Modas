@@ -16,13 +16,13 @@ return new class extends Migration
 
             $table->string('sku');
             $table->string('name');
-            $table->text('descripcion')->nullable();
+            $table->text('descripcion');
             $table->string('image_path');
             $table->float('price');
 
-            $table->integer('stock')
+            /* $table->integer('stock')
                 ->unsigned()//no permita valores negativos
-                ->default(0);
+                ->default(0);*/
 
             $table->foreignId('subcategory_id')
             ->constrained()
