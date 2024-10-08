@@ -16,7 +16,7 @@ class ProductVariants extends Component
 
     public $openModal = false;
 
-    public $options;
+    // public $options;
 
     public $variant =[
         'option_id' => '',
@@ -38,13 +38,6 @@ class ProductVariants extends Component
     ];
 
 
-    //que el usuario pueda elegir una opcion
-    //recuperamos todas las opciones que tengamos en el sistema
-    public function mount()
-    {
-        $this->options = Option::all();
-    }
-
     public function updatedVariantOptionId()
     {
         $this->variant['features']=[
@@ -54,6 +47,14 @@ class ProductVariants extends Component
                 'description' =>''
             ],
         ];
+    }
+
+    #[Computed()]
+    public function options()
+    {
+        return Option::whereDoesntHave('products', function ($query){
+            $query->where('product_id', $this->product->id);
+        })->get();
     }
 
 
@@ -107,8 +108,16 @@ class ProductVariants extends Component
             })
         ]);
 
+        //obtenemos las variantes que tiene el producto, pero que estas variantes tengan alguna relacion
+        //con el feature que estoy por eliminar
+        Variant::where('product_id', $this->product->id)
+            ->whereHas('features', function ($query) use ($feature_id){
+                $query->where('features.id', $feature_id);
+            })->delete();
+
         $this->product= $this->product->fresh();
-        $this->generarVariantes();
+
+        //$this->generarVariantes();
 
 
     }
@@ -117,6 +126,8 @@ class ProductVariants extends Component
     {
         $this->product->options()->detach($option_id);
         $this->product = $this->product->fresh();
+
+        $this->product->variants()->delete();
 
         $this->generarVariantes();
     }
@@ -131,11 +142,19 @@ class ProductVariants extends Component
             'variant.features.*.description' => 'required',
         ]);
 
+        //recuperamos todos los features seleccionados por el usuario
+        $features = collect($this->variant['features']);
+        //recuperamos aquellos features que sean unicos
+        $features = $features->unique('id')->values()->all();
+
+
+
         $this->product->options()->attach($this->variant['option_id'],[
-            'features' => $this->variant['features']
+            'features' => $features
         ]);
 
-        $this->product= $this->product->fresh();
+        //$this->product= $this->product->fresh();
+        $this->product->variants()->delete();
 
         $this->generarVariantes();
 
@@ -148,7 +167,7 @@ class ProductVariants extends Component
         $features = $this->product->options->pluck('pivot.features');
         $combinaciones = $this->generarCombinaciones($features);
 
-        $this->product->variants()->delete();
+
 
         foreach ($combinaciones as $combinacion) {
 
