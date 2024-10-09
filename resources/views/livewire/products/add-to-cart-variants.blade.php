@@ -95,7 +95,7 @@
             </div>
         @endforeach
 
-        @dump($selectedFeatures)
+        {{--  @dump($selectedFeatures)--}}
 
 
     </div>
