@@ -16,13 +16,7 @@ class AddToCartVariants extends Component
 
     public function mount()
     {
-        //inicializamos las opciones seleccionadas
-        foreach ($this->product->options as $option) {
-            $features = collect($option->pivot->features);
-
-            $this->selectedFeatures[$option->id] = $features->first()['id'];
-
-        }
+        $this->selectedFeatures = $this->product->variants->first()->features->pluck('id', 'option_id')->ToArray();
     }
 
     #[Computed]

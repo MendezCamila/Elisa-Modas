@@ -60,14 +60,26 @@
         </nav>
     </x-container>
 
-    {{-- Preguntamos si el producto tiene variantes --}}
-    @if ($product->variants->count())
-        @livewire('products.add-to-cart-variants', ['product' => $product])
-    @else
-        {{-- Llamamos al componente y le pasamos el producto --}}
-        @livewire('products.add-to-cart', ['product' => $product])
-    @endif
 
+    <x-container>
+        <div class="card">
+            <div class="grid md:grid-cols-2 gap-6">
 
+                {{-- Lado producto --}}
+                <div class="col-span-1">
+
+                    <figure>
+                        <img src="{{ $product->image }}" class="aspect-[1/1] w-full object-cover object-center" alt="">
+                    </figure>
+                </div>
+
+                <div class="col-span-1">
+                    @livewire('products.add-to-cart-variants', ['product' => $product])
+                </div>
+
+            </div>
+
+        </div>
+    </x-container>
 
 </x-app-layout>
