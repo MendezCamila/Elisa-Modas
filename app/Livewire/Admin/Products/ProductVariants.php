@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Products;
 use App\Models\Feature;
 use App\Models\Option;
 use App\Models\Variant;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use phpDocumentor\Reflection\Types\This;
@@ -29,7 +30,6 @@ class ProductVariants extends Component
         ]
     ];
 
-
     public $variantEdit = [
         'open' => false,
         'id' => null,
@@ -37,6 +37,12 @@ class ProductVariants extends Component
         'sku' => null,
     ];
 
+    public $new_feature = [
+        /* estructura que quiero que tenga
+        $option->id => $feature->id
+        */
+
+    ];
 
     public function updatedVariantOptionId()
     {
@@ -63,6 +69,49 @@ class ProductVariants extends Component
     {
         //retorna todos aquells features cuyos option id coincidan con lo que hemos seleccionado previamente
         return Feature::where('option_id', $this->variant['option_id'])->get();
+    }
+
+
+    public function addNewFeature( $option_id )
+    {
+        $this->validate([
+            'new_feature.'.$option_id => 'required',
+        ]);
+
+        $feature = Feature::find($this->new_feature[$option_id]);
+
+        $this->product->options()->updateExistingPivot($option_id,[
+            'features' => array_merge($this->product->options->find($option_id)->pivot->features, [
+                [
+                    'id' => $feature->id,
+                    'value' => $feature->value,
+                    'description' => $feature->description,
+                ]
+            ])
+        ]);
+
+        $this->product = $this->product->fresh();
+
+        $this->new_feature[ $option_id ] = '';
+
+        $this->generarVariantes();
+    }
+
+
+    public function getFeatures($option_id )
+    {
+        $features = DB::table('option_product')
+            ->where('product_id', $this->product->id)
+            ->where('option_id', $option_id)
+            ->first()
+            ->features;
+
+        $features = collect(json_decode($features))->pluck('id');
+
+
+        return Feature::where('option_id', $option_id )
+            ->whereNotIn('id', $features)
+            ->get();
     }
 
     public function addFeature()
@@ -171,6 +220,19 @@ class ProductVariants extends Component
 
         foreach ($combinaciones as $combinacion) {
 
+            $variant = Variant::where('product_id', $this->product->id)
+                ->has('features', count($combinacion))
+                ->whereHas('features', function ($query) use ($combinacion){
+                    $query->whereIn('feature_id', $combinacion);
+                })
+                ->whereDoesntHave('features', function ($query) use ($combinacion){
+                    $query->whereNotIn('feature_id', $combinacion);
+                })->first();
+
+            if ($variant) {
+                continue;
+            }
+
             //creamos la variante
             $variant = Variant::create([
                 'product_id' => $this->product->id,
@@ -179,6 +241,7 @@ class ProductVariants extends Component
             $variant->features()->attach($combinacion);
         }
         $this->dispatch('variant-generate');
+
     }
 
     function  generarCombinaciones($arrays, $indice = 0, $combinacion = [])

@@ -77,7 +77,39 @@
                                         @endswitch
                                     </div>
                                 @endforeach
+
                             </div>
+
+                            {{-- Nuevos valores --}}
+                            <div class="flex space-x-4">
+
+                                <div class="flex-1">
+
+                                    <x-label>
+                                        Valor
+                                    </x-label>
+
+                                    <x-select class="w-full" wire:model="new_feature.{{ $option->id }}">
+                                        <option value="" >
+                                            Seleccione un valor
+                                        </option>
+                                        @foreach ($this->getFeatures($option->id) as $feature)
+                                            <option value="{{ $feature->id }}">
+                                                {{ $feature->description }}
+                                            </option>
+                                        @endforeach
+                                    </x-select>
+
+                                </div>
+
+                                <div class="pt-6">
+                                    <x-button wire:click="addNewFeature({{ $option->id }})">
+                                        Agregar
+                                    </x-button>
+                                </div>
+
+                            </div>
+
                         </div>
                     @endforeach
 
