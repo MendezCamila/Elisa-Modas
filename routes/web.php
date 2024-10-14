@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\FamiliaController;
@@ -130,6 +131,25 @@ Route::middleware(['web', 'auth'/*, 'can:administrar roles'*/])->prefix('admin')
 
     // Ruta para eliminar un rol
     //Route::delete('roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+});
+
+// Rutas para administrar proveedores
+Route::middleware(['web', 'auth', /*'can:administrar proveedores'*/])->prefix('admin')->name('admin.')->group(function () {
+    // Ruta para listar proveedores
+    Route::get('suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+
+
+    // Ruta para crear un proveedor
+    Route::get('suppliers/create', [SupplierController::class, 'create'])->name('suppliers.create');
+
+
+    // Ruta para editar un proveedor
+    Route::get('suppliers/{supplier}', [SupplierController::class, 'edit'])->name('suppliers.edit');
+
+
+    // Ruta para eliminar un proveedor
+    Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+    
 });
 
 Route::middleware([

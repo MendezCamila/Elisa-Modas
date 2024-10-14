@@ -26,6 +26,15 @@
             'active'=> request()->routeIs('admin.roles.*')
         ],
 
+        [
+            //proveedores
+            'name'=>'Proveedores',
+            'icon'=>'fas fa-truck',
+            'route'=>route('admin.suppliers.index'),
+            'active'=> request()->routeIs('admin.suppliers.*')
+
+        ],
+
 
         //Parte de administracion
         [
