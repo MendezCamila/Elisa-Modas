@@ -16,7 +16,7 @@
 
         {{-- Buscador de proveedores --}}
         <div class="px-6 py-4">
-            <x-input wire:model.live="search" type="text" class="w-full rounded-md border-gray-300 shadow-sm" placeholder="Buscar proveedor por nombre o email" />
+            <x-input wire:model.live="search" type="text" class="w-full rounded-md border-gray-300 shadow-sm" placeholder="Buscar proveedor por nombre, email o CUIT" />
         </div>
 
         {{-- Tabla de proveedores --}}
@@ -28,6 +28,7 @@
                             <th scope="col" class="px-6 py-3">ID</th>
                             <th scope="col" class="px-6 py-3">Nombre</th>
                             <th scope="col" class="px-6 py-3">Apellido</th>
+                            <th scope="col" class="px-6 py-3">CUIT</th>
                             <th scope="col" class="px-6 py-3">Email</th>
                             <th scope="col" class="px-6 py-3">Teléfono</th>
                             <th scope="col" class="px-6 py-3">Acciones</th>
@@ -41,6 +42,7 @@
                                 </th>
                                 <td class="px-6 py-4">{{ $supplier->name }}</td>
                                 <td class="px-6 py-4">{{ $supplier->last_name }}</td>
+                                <td class="px-6 py-4">{{ $supplier->cuit }}</td>
                                 <td class="px-6 py-4">{{ $supplier->email }}</td>
                                 <td class="px-6 py-4">{{ $supplier->phone }}</td>
                                 <td class="px-6 py-4 flex space-x-2">

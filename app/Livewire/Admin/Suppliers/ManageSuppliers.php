@@ -23,6 +23,7 @@ class ManageSuppliers extends Component
     {
         $suppliers = Supplier::where('name', 'like', '%' . $this->search . '%')
             ->orWhere('email', 'like', '%' . $this->search . '%')
+            ->orWhere('cuit', 'like', '%' . $this->search . '%')
             ->orderBy('id', 'desc') // Ordenar por id en orden descendente
             ->paginate(10);
 

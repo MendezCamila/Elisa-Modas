@@ -22,6 +22,11 @@
                 </div>
 
                 <div class="mb-4">
+                    <x-label for="cuit" value="CUIT" />
+                    <x-input id="cuit" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm" type="text" wire:model="cuit" required />
+                </div>
+
+                <div class="mb-4">
                     <x-label for="email" value="Email" />
                     <x-input id="email" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm" type="email" wire:model="email" required />
                 </div>

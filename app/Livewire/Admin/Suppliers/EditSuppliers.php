@@ -12,6 +12,7 @@ class EditSuppliers extends Component
     public $last_name;
     public $email;
     public $phone;
+    public $cuit;
 
     public function mount(Supplier $supplier)
     {
@@ -20,6 +21,7 @@ class EditSuppliers extends Component
         $this->last_name = $supplier->last_name;
         $this->email = $supplier->email;
         $this->phone = $supplier->phone;
+        $this->cuit = $supplier->cuit;
     }
 
     public function rules()
@@ -29,6 +31,7 @@ class EditSuppliers extends Component
             'last_name' => 'required|string|max:255',
             'email' => ['required', 'email', 'max:255', Rule::unique('suppliers')->ignore($this->supplierId)],
             'phone' => 'nullable|string|max:20',
+            'cuit' => ['required', 'string', 'size:11', Rule::unique('suppliers')->ignore($this->supplierId)],
         ];
     }
 
@@ -41,6 +44,7 @@ class EditSuppliers extends Component
             'name' => strtoupper($this->name),
             'last_name' => strtoupper($this->last_name),
             'phone' => strtoupper($this->phone),
+            'cuit' => $this->cuit,
         ]);
 
         // Emitir evento para mostrar la alerta

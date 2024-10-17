@@ -11,12 +11,14 @@ class CreateSuppliers extends Component
     public $last_name;
     public $phone;
     public $email;
+    public $cuit;
 
     protected $rules = [
         'name' => 'required|string|max:255',
         'last_name' => 'required|string|max:255',
         'email' => 'required|email|max:255|unique:suppliers,email',
         'phone' => 'nullable|string|max:20',
+        'cuit' => 'required|string|size:11|unique:suppliers,cuit',
     ];
 
     public function createSupplier()
@@ -28,6 +30,7 @@ class CreateSuppliers extends Component
             'last_name' => $this->last_name,
             'email' => $this->email,
             'phone' => $this->phone,
+            'cuit' => $this->cuit,
         ]);
 
         // Mensaje de éxito
