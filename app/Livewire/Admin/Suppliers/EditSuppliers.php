@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Livewire\Admin\Suppliers;
 
 use Livewire\Component;
 use App\Models\Supplier;
 use Illuminate\Validation\Rule;
+use App\Rules\ValidCuit;
 
 class EditSuppliers extends Component
 {
@@ -31,9 +33,10 @@ class EditSuppliers extends Component
             'last_name' => 'required|string|max:255',
             'email' => ['required', 'email', 'max:255', Rule::unique('suppliers')->ignore($this->supplierId)],
             'phone' => 'nullable|string|max:20',
-            'cuit' => ['required', 'string', 'size:11', Rule::unique('suppliers')->ignore($this->supplierId)],
+            'cuit' => ['required', 'string', 'size:11', Rule::unique('suppliers')->ignore($this->supplierId), new ValidCuit],
         ];
     }
+
 
     public function updateSupplier()
     {
@@ -44,6 +47,7 @@ class EditSuppliers extends Component
             'name' => strtoupper($this->name),
             'last_name' => strtoupper($this->last_name),
             'phone' => strtoupper($this->phone),
+            'email' => strtoupper($this->email),
             'cuit' => $this->cuit,
         ]);
 

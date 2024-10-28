@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Livewire\Admin\Suppliers;
-use App\Models\Supplier;
 
 use Livewire\Component;
+use App\Models\Supplier;
+use App\Rules\ValidCuit;
 
 class CreateSuppliers extends Component
 {
@@ -13,23 +13,26 @@ class CreateSuppliers extends Component
     public $email;
     public $cuit;
 
-    protected $rules = [
-        'name' => 'required|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'email' => 'required|email|max:255|unique:suppliers,email',
-        'phone' => 'nullable|string|max:20',
-        'cuit' => 'required|string|size:11|unique:suppliers,cuit',
-    ];
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:suppliers,email',
+            'phone' => 'nullable|string|max:20',
+            'cuit' => ['required', 'string', 'size:11', 'unique:suppliers,cuit', new ValidCuit],
+        ];
+    }
 
     public function createSupplier()
     {
         $this->validate();
 
         Supplier::create([
-            'name' => $this->name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'phone' => $this->phone,
+            'name' => strtoupper($this->name),
+            'last_name' => strtoupper($this->last_name),
+            'email' => strtoupper($this->email),
+            'phone' => strtoupper($this->phone),
             'cuit' => $this->cuit,
         ]);
 
@@ -41,10 +44,7 @@ class CreateSuppliers extends Component
         ]);
 
         return redirect()->route('admin.suppliers.index');
-
     }
-
-
 
     public function render()
     {
