@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use App\Models\DetalleCotizacion;
+use App\Models\DetalleOrdenCompra;
 
 
 
@@ -42,5 +44,17 @@ class Variant extends Model
         return $this->belongsToMany(Feature::class)
         ->withTimestamps();
 
+    }
+
+    //relacion de uno a muchos con detalle cotizacion
+    public function detalleCotizaciones()
+    {
+        return $this->hasMany(DetalleCotizacion::class);
+    }
+
+    //relacion uno a muchos con detalle orden compra
+    public function detalleOrdenCompras()
+    {
+        return $this->hasMany(DetalleOrdenCompra::class);
     }
 }

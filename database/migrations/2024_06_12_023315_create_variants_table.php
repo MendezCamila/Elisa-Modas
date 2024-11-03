@@ -20,10 +20,17 @@ return new class extends Migration
                 ->unsigned()//no permita valores negativos
                 ->default(0);
 
+            //stock minimo
+            $table->integer('stock_min')
+                ->unsigned()//no permita valores negativos
+                ->default(0);
+
 
             $table->foreignId('product_id')
             ->constrained()
             ->onDelete('cascade');
+
+
 
 
 

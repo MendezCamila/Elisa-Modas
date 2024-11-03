@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Category;
+use App\Models\Supplier;
 
 class Subcategory extends Model
 {
@@ -24,5 +26,12 @@ class Subcategory extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    //relacion muchos a muchos con proveedores
+    public function proveedores()
+    {
+        return $this->belongsToMany(Supplier::class)
+                    ->withTimestamps();
     }
 }
