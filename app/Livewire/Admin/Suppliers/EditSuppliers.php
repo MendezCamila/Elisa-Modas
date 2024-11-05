@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Supplier;
 use Illuminate\Validation\Rule;
 use App\Rules\CuitCuilRule;
+use App\Models\Subcategory;
 
 class EditSuppliers extends Component
 {
@@ -16,6 +17,9 @@ class EditSuppliers extends Component
     public $phone;
     public $cuit;
 
+    public $subcategory_ids = []; // Para almacenar las subcategorías seleccionadas
+    public $subcategories = [];
+
     public function mount(Supplier $supplier)
     {
         $this->supplierId = $supplier->id;
@@ -24,6 +28,16 @@ class EditSuppliers extends Component
         $this->email = $supplier->email;
         $this->phone = $supplier->phone;
         $this->cuit = $supplier->cuit;
+
+        $this->subcategory_ids = $supplier->subcategories->pluck('id')->toArray(); // Cargar subcategorías actuales del proveedor
+        $this->subcategories = Subcategory::with('category.family')->get();
+
+        $this->dispatch('initializeSelect2');
+    }
+
+    public function hydrate()
+    {
+        $this->dispatch('initializeSelect2');
     }
 
     public function rules()
@@ -34,9 +48,22 @@ class EditSuppliers extends Component
             'email' => ['required', 'email', 'max:255', Rule::unique('suppliers')->ignore($this->supplierId)],
             'phone' => 'nullable|string|max:20',
             'cuit' => ['required', Rule::unique('suppliers')->ignore($this->supplierId), new CuitCuilRule],
+            'subcategory_ids' => 'required|array|min:1',
         ];
     }
 
+    protected function messages()
+    {
+        return [
+            'subcategory_ids.required' => 'Debe seleccionar al menos una subcategoría.',
+            'subcategory_ids.min' => 'Debe seleccionar al menos una subcategoría.',
+        ];
+    }
+
+    public function updatedSubcategoryIds($value)
+    {
+        $this->subcategory_ids = $value;
+    }
 
     public function updateSupplier()
     {
@@ -47,9 +74,12 @@ class EditSuppliers extends Component
             'name' => strtoupper($this->name),
             'last_name' => strtoupper($this->last_name),
             'phone' => strtoupper($this->phone),
-            'email' =>$this->email,
+            'email' => $this->email,
             'cuit' => $this->cuit,
         ]);
+
+        // Sincronizar las subcategorías seleccionadas en la tabla intermedia
+        $supplier->subcategories()->sync($this->subcategory_ids);
 
         // Emitir evento para mostrar la alerta
         session()->flash('swal', [
