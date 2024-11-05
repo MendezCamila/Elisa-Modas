@@ -1,12 +1,13 @@
 <div class=" bg-white py-12">
     <x-container class=" px-4 md:flex ">
 
+        
         @if ( count($options) )  {{-- Mostrar los filtros --}}
             <aside class="md:w-52 md:flex-shrink-0 md:mr-8  mb-8 md:mb-0">
 
                 <ul class="space-y-4">
                     @foreach ($options as $option)
-                        {{-- ocultar y mostrar las caracteristicas --}}
+                        {{-- ocultar y mostrar las caracteristicas--}}
                         <li x-data="{
                             open: true,
                         }">
@@ -20,7 +21,7 @@
                                     }"></i>
 
                             </button>
-                            {{-- Lista las features --}}
+                            {{-- Lista las features--}}
                             <ul class="mt-2 space-y-2" x-show="open">
                                 @foreach ($option['features'] as $feature)
                                     <li>
@@ -40,7 +41,7 @@
                 </ul>
 
             </aside>
-        @endif
+        @endif 
 
 
 
@@ -86,6 +87,7 @@
                                 <span class="text-gray-700 font-bold">{{ $product->price }}</span>
                             </p>
 
+                            
                             <a href="{{ route('products.show', $product) }}" class="btn btn-pink block w-full text-center">
                                 Ver más
                             </a>

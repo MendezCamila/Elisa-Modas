@@ -11,7 +11,7 @@
 ]">
 
 
-    {{-- Llamo a mi componente livewire le paso los roles--}}
+    {{-- Llamo a mi componente livewire--}}
     @livewire('admin.suppliers.create-suppliers')
 
 

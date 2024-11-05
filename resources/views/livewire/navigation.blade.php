@@ -33,7 +33,7 @@
                     <div class=" flex items-center space-x-4 md:space-x-8">
 
 
-                        {{-- Del carrito --}}
+                        {{-- Del carrito--}}
                         <a href="{{ route('cart.index') }}" class="relative">
                             <i class="fas fa-shopping-cart text-white text-xl md:text-3xl"></i>
 
@@ -42,7 +42,7 @@
                                 class="absolute -top-2 -end-4 inline-flex items-center justify-center w-6 h-6 bg-red-600 rounded-full text-xs text-white font-bold">
                                 {{ Cart::instance('shopping')->count() }}
                             </span>
-                        </a>
+                        </a> 
 
                         {{-- Del Usuario --}}
                         <x-dropdown>

@@ -20,11 +20,21 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <!-- CSS de Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- JS de Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    
+
     <!-- Styles -->
     @livewireStyles
 
     <!-- Enlace al archivo CSS de características -->
     <link rel="stylesheet" href="{{ asset('css/feature.css') }}">
+
+
 </head>
 
 <body class="font-sans antialiased"
@@ -61,6 +71,8 @@
 
         </div>
     </div>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @livewireScripts

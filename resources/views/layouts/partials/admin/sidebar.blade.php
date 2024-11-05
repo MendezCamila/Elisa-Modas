@@ -80,7 +80,7 @@
             'active'=> request()->routeIs('admin.products.*')
         ],
 
-
+        
         [
             //Portada
             'name'=>'Portadas',
