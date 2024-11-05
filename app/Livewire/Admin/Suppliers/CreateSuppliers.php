@@ -41,9 +41,18 @@ class CreateSuppliers extends Component
             'email' => 'required|email|max:255|unique:suppliers,email',
             'phone' => 'nullable|string|max:20',
             'cuit' => ['required', new CuitCuilRule],
-            'subcategory_ids' => 'array', // Regla de validación para los IDs seleccionados
+            'subcategory_ids' => 'required|array|min:1', // Regla de validación para los IDs seleccionados
         ];
     }
+
+    protected function messages()
+    {
+        return [
+            'subcategory_ids.required' => 'Debe seleccionar al menos una subcategoría.',
+            'subcategory_ids.min' => 'Debe seleccionar al menos una subcategoría.',
+        ];
+    }
+
 
     public function updatedSubcategoryIds($value)
     {
@@ -56,7 +65,7 @@ class CreateSuppliers extends Component
     {
         $this->validate();
 
-        Supplier::create([
+        $supplier = Supplier::create([
             'name' => strtoupper($this->name),
             'last_name' => strtoupper($this->last_name),
             'email' => $this->email,
@@ -64,7 +73,7 @@ class CreateSuppliers extends Component
             'cuit' => $this->cuit,
         ]);
 
-        // Guarda las subcategorías seleccionadas (asumiendo que hay una relación con subcategorías)
+        // Sincroniza las subcategorías seleccionadas en la tabla intermedia
         $supplier->subcategories()->sync($this->subcategory_ids);
 
         // Mensaje de éxito
