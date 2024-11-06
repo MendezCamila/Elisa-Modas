@@ -20,6 +20,9 @@ class EditSuppliers extends Component
     public $subcategory_ids = []; // Para almacenar las subcategorías seleccionadas
     public $subcategories = [];
 
+    public  $estado; // Inicializamos como booleano
+
+
     public function mount(Supplier $supplier)
     {
         $this->supplierId = $supplier->id;
@@ -33,6 +36,8 @@ class EditSuppliers extends Component
         $this->subcategories = Subcategory::with('category.family')->get();
 
         $this->dispatch('initializeSelect2');
+
+        $this->estado = $supplier->estado === 'activo'; // true si está activo
     }
 
     public function hydrate()
@@ -68,14 +73,19 @@ class EditSuppliers extends Component
     public function updateSupplier()
     {
         $this->validate();
+        //dd($this->estado);
+
+
 
         $supplier = Supplier::find($this->supplierId);
+
         $supplier->update([
             'name' => strtoupper($this->name),
             'last_name' => strtoupper($this->last_name),
             'phone' => strtoupper($this->phone),
             'email' => $this->email,
             'cuit' => $this->cuit,
+            'estado' => $this->estado ? 'activo' : 'no activo', // Convertir explícitamente
         ]);
 
         // Sincronizar las subcategorías seleccionadas en la tabla intermedia

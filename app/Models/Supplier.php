@@ -18,6 +18,7 @@ class Supplier extends Model
         'cuit',
         'email',
         'phone',
+        'estado',
     ];
 
     //relacion uno a muchos con orden compra

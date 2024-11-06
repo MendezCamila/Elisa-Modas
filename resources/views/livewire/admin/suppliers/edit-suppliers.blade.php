@@ -48,6 +48,14 @@
                     </select>
                 </div>
 
+                <div class="mb-4">
+                    <label for="estado" class="flex items-center">
+                        <input wire:model="estado" type="checkbox" id="estado" class="rounded border-gray-300 text-blue-600 shadow-sm" />
+                        <span class="ml-2 text-sm font-medium text-gray-700">Activo</span>
+                    </label>
+                </div>
+
+
                 <div class="flex justify-end mt-4">
                     <x-button>
                         Actualizar Proveedor
