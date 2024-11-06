@@ -19,6 +19,7 @@ class SupplierController extends Controller
         return view('admin.supplier.create');
     }
 
+    /*
     //eliminado logico de un usuario
     public function destroy(Supplier $supplier)
     {
@@ -34,7 +35,7 @@ class SupplierController extends Controller
 
         //redireccionamos
         return redirect()->route('admin.suppliers.index');
-    }
+    }...*/
 
     public function edit(Supplier $supplier)
     {

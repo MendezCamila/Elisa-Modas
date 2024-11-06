@@ -16,41 +16,50 @@
 
         {{-- Buscador de proveedores --}}
         <div class="px-6 py-4">
-            <x-input wire:model.live="search" type="text" class="w-full rounded-md border-gray-300 shadow-sm" placeholder="Buscar proveedor por nombre, email o CUIT" />
+            <x-input wire:model.live="search" type="text" class="w-full rounded-md border-gray-300 shadow-sm"
+                placeholder="Buscar proveedor por nombre, email o CUIT" />
         </div>
 
         {{-- Tabla de proveedores --}}
         @if ($suppliers->count())
-            <div class="relative overflow-x-auto">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <div class="overflow-x-auto">
+                <table class="min-w-full w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" class="px-6 py-3">ID</th>
-                            <th scope="col" class="px-6 py-3">Nombre</th>
-                            <th scope="col" class="px-6 py-3">Apellido</th>
-                            <th scope="col" class="px-6 py-3">CUIT</th>
-                            <th scope="col" class="px-6 py-3">Email</th>
-                            <th scope="col" class="px-6 py-3">Teléfono</th>
-                            <th scope="col" class="px-6 py-3">Acciones</th>
+                            <th class="px-4 py-2 w-1/12">ID</th>
+                            <th class="px-4 py-2 w-2/12">Nombre</th>
+                            <th class="px-4 py-2 w-2/12">Apellido</th>
+                            <th class="px-4 py-2 w-2/12">CUIT</th>
+                            <th class="px-4 py-2 w-3/12">Email</th>
+                            <th class="px-4 py-2 w-2/12">Teléfono</th>
+                            <th class="px-4 py-2 w-1/12">Estado</th>
+                            <th class="px-4 py-2 w-2/12">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($suppliers as $supplier)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ $supplier->id }}
-                                </th>
-                                <td class="px-6 py-4">{{ $supplier->name }}</td>
-                                <td class="px-6 py-4">{{ $supplier->last_name }}</td>
-                                <td class="px-6 py-4">{{ $supplier->cuit }}</td>
-                                <td class="px-6 py-4">{{ $supplier->email }}</td>
-                                <td class="px-6 py-4">{{ $supplier->phone }}</td>
+                            <tr
+                                class="{{ $supplier->estado === 'no activo' ? 'bg-red-100' : 'bg-white' }} border-b dark:bg-gray-800 dark:border-gray-700">
+                                <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">{{ $supplier->id }}</td>
+                                <td class="px-4 py-2">{{ $supplier->name }}</td>
+                                <td class="px-4 py-2">{{ $supplier->last_name }}</td>
+                                <td class="px-4 py-2">{{ $supplier->cuit }}</td>
+                                <td class="px-4 py-2 truncate">{{ $supplier->email }}</td>
+                                <td class="px-4 py-2">{{ $supplier->phone }}</td>
+                                <td class="px-4 py-2">
+                                    <span
+                                        class="{{ $supplier->estado === 'activo' ? 'text-green-600' : 'text-red-600' }}">
+                                        {{ ucfirst($supplier->estado) }}
+                                    </span>
+                                </td>
                                 <td class="px-6 py-4 flex space-x-2">
-                                    <a href="{{ route('admin.suppliers.edit', $supplier) }}" class="text-blue-600 text-xs flex items-center space-x-1">
+                                    <a href="{{ route('admin.suppliers.edit', $supplier) }}"
+                                        class="text-blue-600 text-xs flex items-center space-x-1">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                         <span>Editar</span>
                                     </a>
-                                    <a href="javascript:void(0);" onclick="confirmDelete({{ $supplier->id }})" class="text-red-600 text-xs flex items-center space-x-1">
+                                    <a href="javascript:void(0);" onclick="confirmDelete({{ $supplier->id }})"
+                                        class="text-red-600 text-xs flex items-center space-x-1">
                                         <i class="fa-solid fa-trash-can"></i>
                                         <span>Eliminar</span>
                                     </a>
@@ -66,38 +75,37 @@
                 {{ $suppliers->links() }}
             </div>
         @else
-            <div class="p-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
-                <span class="font-medium">No se encontraron coincidencias!</span> No hay proveedores que coincidan con "{{ $search }}".
+            <div class="p-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+                role="alert">
+                <span class="font-medium">No se encontraron coincidencias!</span> No hay proveedores que coincidan con
+                "{{ $search }}".
             </div>
         @endif
 
     </section>
 
-    <form action="" method="POST" id="delete-form">
-        @csrf
-        @method('DELETE')
-    </form>
+
 
     @push('js')
         <script>
             function confirmDelete(supplierId) {
                 Swal.fire({
-                    title: "Estas seguro?",
-                    text: "No podras revertir esto!",
+                    title: "¿Estás seguro?",
+                    text: "Este proveedor será marcado como no activo.",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Si, borralo!",
+                    confirmButtonText: "Sí, desactivar",
                     cancelButtonText: "Cancelar"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        let form = document.getElementById('delete-form');
-                        form.action = `/admin/suppliers/${supplierId}`;
-                        form.submit();
+                        // Llama al método de Livewire para desactivar el proveedor
+                        @this.call('desactivarSupplier', supplierId);
                     }
                 });
             }
         </script>
     @endpush
+
 </div>
