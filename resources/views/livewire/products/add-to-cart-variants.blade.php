@@ -8,7 +8,9 @@
         {{ $product->name }}
     </h1>
 
-    {{-- Estrellas/puntuacion producto --}}
+
+    {{-- Estrellas/puntuacion producto--}}
+    {{--
     <div class="flex items-center space-x-2 mb-4">
         <ul class="flex space-x-1 text-sm">
             <li>
@@ -30,6 +32,7 @@
 
         <p class="text-sm text-gray-500">4.7 (45)</p>
     </div>
+    --}}
 
     <p class="mb-4 text-2xl">
         <span class="text-gray-500">Precio:</span>
