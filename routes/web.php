@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\CotizacionController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\FamiliaController;
@@ -149,7 +150,12 @@ Route::middleware(['web', 'auth', /*'can:administrar proveedores'*/])->prefix('a
 
     // Ruta para eliminar un proveedor
     Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
-    
+
+});
+
+//Ruta para administrar Cotizaciones
+Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('cotizaciones', [CotizacionController::class, 'index'])->name('cotizaciones.index');
 });
 
 Route::middleware([

@@ -80,7 +80,7 @@
             'active'=> request()->routeIs('admin.products.*')
         ],
 
-        
+
         [
             //Portada
             'name'=>'Portadas',
@@ -88,6 +88,20 @@
             'route'=>route('admin.covers.index'),
             'active'=> request()->routeIs('admin.covers.*')
         ],
+
+        //Parte de administracion
+        [
+            'header' => 'Ordenes',
+        ],
+
+        [
+            //Cotizaciones
+            'name'=>'Cotizaciones',
+            'icon'=>'fa-solid fa-file-invoice',
+            'route'=>route('admin.cotizaciones.index'),
+            'active'=> request()->routeIs('admin.cotizaciones.*')
+        ],
+
 
         //Parte de informes y estadisticas
         [
