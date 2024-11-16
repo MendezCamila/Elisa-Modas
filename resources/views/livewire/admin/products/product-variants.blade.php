@@ -343,12 +343,17 @@
                         class="absolute top-2 right-2 flex items-center px-4 py-2 rounded-lg bg-white cursor-pointer text-gray-600">
                         <i class="fas fa-camera mr-2"></i>
                         Cambiar imagen
-                        <input type="file" class="hidden" accept="image/*" wire:model="variantEdit.image">
+                        <input type="file" class="hidden" accept="image/*" wire:model="variantEdit.image_path">
                     </label>
 
-                    <!-- Mostrar imagen -->
+                    {{--
                     <img class="aspect-[1/1] object-cover object-center w-full rounded-lg shadow-lg"
                         src="{{ $variantEdit['image_path'] ? Storage::url($variantEdit['image_path']) : asset('img/sinimagen.png') }}" />
+                    --}}
+                    <img class="aspect-[1/1] object-cover object-center w-full rounded-lg shadow-lg"
+                        src="{{ $variantEdit['image_path'] ? (is_string($variantEdit['image_path']) ? Storage::url($variantEdit['image_path']) : $variantEdit['image_path']->temporaryUrl()) : asset('img/sinimagen.png') }}" />
+
+
                 </div>
 
                 <!-- Validación -->
