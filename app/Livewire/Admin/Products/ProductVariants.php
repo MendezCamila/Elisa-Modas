@@ -35,6 +35,7 @@ class ProductVariants extends Component
         'id' => null,
         'stock' => null,
         'sku' => null,
+        'stock_min' => null,
     ];
 
     public $new_feature = [
@@ -274,6 +275,7 @@ class ProductVariants extends Component
             'id' => $variant->id,
             'stock' => $variant->stock,
             'sku' => $variant->sku,
+            'stock_min' => $variant->stock_min,
         ];
     }
 
@@ -282,6 +284,7 @@ class ProductVariants extends Component
         $this->validate([
             'variantEdit.stock' => 'required|numeric',
             'variantEdit.sku' => 'required',
+            'variantEdit.stock_min' => 'required|numeric',
         ]);
 
         $variant = Variant::find($this->variantEdit['id']);
@@ -289,6 +292,7 @@ class ProductVariants extends Component
         $variant->update([
             'stock' => $this->variantEdit['stock'],
             'sku' => $this->variantEdit['sku'],
+            'stock_min' => $this->variantEdit['stock_min'],
         ]);
 
 

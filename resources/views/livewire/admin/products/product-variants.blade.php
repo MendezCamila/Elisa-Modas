@@ -318,6 +318,15 @@
                 <x-validation-errors for="variantEdit.stock" />
             </div>
 
+            {{-- Stock minimo --}}
+            <div class="mt-4">
+                <x-label>
+                    Stock minimo
+                </x-label>
+                <x-input wire:model="variantEdit.stock_min" class="w-full" />
+
+                <x-validation-errors for="variantEdit.stock_min" />
+
             {{-- Aquí puedes agregar más campos según sea necesario --}}
         </x-slot>
 
