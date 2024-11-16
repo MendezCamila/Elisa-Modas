@@ -329,23 +329,33 @@
 
             </div>
 
-            {{-- Añadir imagen de la variante
-            <div class="relative">
-                <figure>
-                    <img class="aspect-[16/9] w-full object-cover object-center" src=""{{ $item->image }}"" alt="">
-                </figure>
 
-                <div class="absolute top-8 right-8">
-                    <label class="flex items-center bg-white px-4 py-2 rounded-lg cursor-pointer">
+            {{-- Añadir imagen de la variante --}}
+            <div class="mt-4">
+                <x-label>
+                    Imagen de la variante
+                </x-label>
+
+                <!-- Contenedor para subir imagen -->
+                <div class="relative group">
+                    <!-- Botón para subir imagen -->
+                    <label
+                        class="absolute top-2 right-2 flex items-center px-4 py-2 rounded-lg bg-white cursor-pointer text-gray-600">
                         <i class="fas fa-camera mr-2"></i>
-                        Actualizar imagen
-
+                        Cambiar imagen
                         <input type="file" class="hidden" accept="image/*" wire:model="variantEdit.image">
                     </label>
+
+                    <!-- Mostrar imagen -->
+                    <img class="aspect-[1/1] object-cover object-center w-full rounded-lg shadow-lg"
+                        src="{{ $variantEdit['image_path'] ? Storage::url($variantEdit['image_path']) : asset('img/sinimagen.png') }}" />
                 </div>
 
+                <!-- Validación -->
+                <x-validation-errors for="variantEdit.image" />
             </div>
-            --}}
+
+
 
 
             {{-- Aquí puedes agregar más campos según sea necesario --}}

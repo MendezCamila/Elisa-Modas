@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use phpDocumentor\Reflection\Types\This;
+use Livewire\WithFileUploads;
 
 class ProductVariants extends Component
 {
+    use WithFileUploads;
 
     public $product;
 
@@ -36,6 +38,8 @@ class ProductVariants extends Component
         'stock' => null,
         'sku' => null,
         'stock_min' => null,
+        'image' => null,        // Para la nueva imagen cargada
+        'image_path' => 'null', // Para la ruta de la imagen existente
     ];
 
     public $new_feature = [
@@ -276,8 +280,10 @@ class ProductVariants extends Component
             'stock' => $variant->stock,
             'sku' => $variant->sku,
             'stock_min' => $variant->stock_min,
+            'image_path' => $variant->image_path,
         ];
     }
+
 
     public function updateVariant()
     {
@@ -285,14 +291,23 @@ class ProductVariants extends Component
             'variantEdit.stock' => 'required|numeric',
             'variantEdit.sku' => 'required',
             'variantEdit.stock_min' => 'required|numeric',
+            'variantEdit.image' => 'nullable|image|max:1024',
         ]);
 
         $variant = Variant::find($this->variantEdit['id']);
+
+        if ($this->variantEdit['image']) {
+            if ($variant->image_path) {
+                Storage::delete($variant->image_path);
+            }
+            $this->variantEdit['image_path'] = $this->variantEdit['image']->store('products');
+        }
 
         $variant->update([
             'stock' => $this->variantEdit['stock'],
             'sku' => $this->variantEdit['sku'],
             'stock_min' => $this->variantEdit['stock_min'],
+            'image_path' => $this->variantEdit['image_path'],
         ]);
 
 
@@ -311,4 +326,6 @@ class ProductVariants extends Component
     {
         return view('livewire.admin.products.product-variants');
     }
+
+
 }
