@@ -90,7 +90,7 @@
                                     </x-label>
 
                                     <x-select class="w-full" wire:model="new_feature.{{ $option->id }}">
-                                        <option value="" >
+                                        <option value="">
                                             Seleccione un valor
                                         </option>
                                         @foreach ($this->getFeatures($option->id) as $feature)
@@ -327,7 +327,30 @@
 
                 <x-validation-errors for="variantEdit.stock_min" />
 
+            </div>
+
+            {{-- Añadir imagen de la variante
+            <div class="relative">
+                <figure>
+                    <img class="aspect-[16/9] w-full object-cover object-center" src=""{{ $item->image }}"" alt="">
+                </figure>
+
+                <div class="absolute top-8 right-8">
+                    <label class="flex items-center bg-white px-4 py-2 rounded-lg cursor-pointer">
+                        <i class="fas fa-camera mr-2"></i>
+                        Actualizar imagen
+
+                        <input type="file" class="hidden" accept="image/*" wire:model="variantEdit.image">
+                    </label>
+                </div>
+
+            </div>
+            --}}
+
+
             {{-- Aquí puedes agregar más campos según sea necesario --}}
+
+
         </x-slot>
 
         <x-slot name="footer">
@@ -383,6 +406,28 @@
                         @this.call('deleteOption', option_id);
                     }
                 });
+            }
+
+            function previewImage(event, querySelector) {
+
+                //Recuperamos el input que desencadeno la acción
+                const input = event.target;
+
+                //Recuperamos la etiqueta img donde cargaremos la imagen
+                $imgPreview = document.querySelector(querySelector);
+
+                // Verificamos si existe una imagen seleccionada
+                if (!input.files.length) return
+
+                //Recuperamos el archivo subido
+                file = input.files[0];
+
+                //Creamos la url
+                objectURL = URL.createObjectURL(file);
+
+                //Modificamos el atributo src de la etiqueta img
+                $imgPreview.src = objectURL;
+
             }
         </script>
     @endpush

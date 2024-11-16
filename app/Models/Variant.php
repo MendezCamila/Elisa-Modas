@@ -22,6 +22,7 @@ class Variant extends Model
         'stock',
         'stock_min',
         'product_id',
+        'image_path',
     ];
 
     protected function image():Attribute
