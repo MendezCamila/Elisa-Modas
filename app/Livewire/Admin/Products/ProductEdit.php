@@ -87,7 +87,6 @@ class ProductEdit extends Component
             'productEdit.name' => 'required|max:255',
             'productEdit.descripcion' => 'nullable',
             'productEdit.price' => 'required|numeric|min:0',
-            'productEdit.stock' => 'required|numeric|min:0',
             'productEdit.subcategory_id' => 'required|exists:subcategories,id',
         ]);
 

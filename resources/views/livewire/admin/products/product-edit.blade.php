@@ -127,6 +127,7 @@
                     placeholder="Por favor ingrese el precio del producto"/>
             </div>
 
+            {{-- STOCK EN PRODUCTOS SIN VARIANTES PERO NO SE
             @if($product->variants->count() == 0)
                 <div class="mb-4">
                     <x-label class="mb-1">
@@ -140,6 +141,8 @@
                         placeholder="Por favor ingrese el stock del producto"/>
                 </div>
             @endif
+            --}}
+
         </div>
 
 
