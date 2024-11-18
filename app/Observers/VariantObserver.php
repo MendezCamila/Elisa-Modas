@@ -10,6 +10,8 @@ class VariantObserver
     /**
      * Handle the Variant "created" event.
      */
+
+    /* CODIGO QUE FUNCIONA
     public function created(Variant $variant): void
     {
         //Preguntamos si el producto no tiene opciones
@@ -22,6 +24,29 @@ class VariantObserver
 
         }
 
+    }*/
+
+    /* CODIGO QUE FUNCIONA UN POQUITO MEJOR
+    public function created(Variant $variant): void
+    {
+        // Verificamos si la variante creada es la primera (la principal) para este producto
+        if ($variant->product->variants->count() == 1) {
+            // Asignamos el SKU y la imagen del producto a esta variante principal
+            $variant->sku = $variant->product->sku;
+            $variant->image_path = $variant->product->image_path; // Asignamos la imagen del producto
+            $variant->save();
+        }
+    }*/
+
+    public function created(Variant $variant): void
+    {
+        // Verificamos si el producto no tiene opciones y esta es la primera variante
+        if ($variant->product->options->count() == 0 && $variant->product->variants->count() == 1) {
+            // Asignamos el SKU y la imagen del producto solo si no tiene opciones
+            $variant->sku = $variant->product->sku;
+            $variant->image_path = $variant->product->image_path; // Asignamos la imagen del producto
+            $variant->save();
+        }
     }
 
     /**

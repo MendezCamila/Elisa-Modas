@@ -291,7 +291,7 @@ class ProductVariants extends Component
         ]);
     }
 
-
+    /*
     public function updateVariant()
     {
         $this->validate([
@@ -327,7 +327,57 @@ class ProductVariants extends Component
             'title' => 'Variante actualizada!',
             'text' => 'La variante ha sido actualizada correctamente',
         ]);
+    }*/
+
+    public function updateVariant()
+{
+    // Validación: solo aplicamos la validación de imagen si hay una nueva imagen
+    $validationRules = [
+        'variantEdit.stock' => 'required|numeric',
+        'variantEdit.sku' => 'required',
+        'variantEdit.stock_min' => 'required|numeric',
+    ];
+
+    // Si hay una nueva imagen, validamos que sea una imagen
+    if ($this->variantEdit['image_path'] && is_object($this->variantEdit['image_path'])) {
+        $validationRules['variantEdit.image_path'] = 'nullable|image|max:1024';
     }
+
+    // Validamos los datos
+    $this->validate($validationRules);
+
+    $variant = Variant::find($this->variantEdit['id']);
+
+    // Si se sube una nueva imagen
+    if ($this->variantEdit['image_path'] && is_object($this->variantEdit['image_path'])) {
+        if ($variant->image_path) {
+            Storage::delete($variant->image_path); // Elimina la imagen anterior si existe
+        }
+        $this->variantEdit['image_path'] = $this->variantEdit['image_path']->store('products');
+    } elseif (!$this->variantEdit['image_path']) {
+        // Si no hay imagen nueva, mantener la imagen existente
+        $this->variantEdit['image_path'] = $variant->image_path;
+    }
+
+    // Actualización de la variante
+    $variant->update([
+        'stock' => $this->variantEdit['stock'],
+        'sku' => $this->variantEdit['sku'],
+        'stock_min' => $this->variantEdit['stock_min'],
+        'image_path' => $this->variantEdit['image_path'], // Aquí se guarda la imagen (puede ser la imagen anterior)
+    ]);
+
+    $this->reset('variantEdit');
+    $this->product = $this->product->fresh();
+    // Mensaje swal de actualización exitosa
+    session()->flash('swal', [
+        'icon' => 'success',
+        'title' => 'Variante actualizada!',
+        'text' => 'La variante ha sido actualizada correctamente',
+    ]);
+}
+
+
 
     public function render()
     {
