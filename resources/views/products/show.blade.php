@@ -61,25 +61,8 @@
     </x-container>
 
 
-    <x-container>
-        <div class="card">
-            <div class="grid md:grid-cols-2 gap-6">
 
-                {{-- Lado producto --}}
-                <div class="col-span-1">
+    @livewire('products.add-to-cart-variants', ['product' => $product])
 
-                    <figure>
-                        <img src="{{ $product->image }}" class="aspect-[1/1] w-full object-cover object-center" alt="">
-                    </figure>
-                </div>
-
-                <div class="col-span-1">
-                    @livewire('products.add-to-cart-variants', ['product' => $product])
-                </div>
-
-            </div>
-
-        </div>
-    </x-container>
 
 </x-app-layout>
