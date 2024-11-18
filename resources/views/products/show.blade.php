@@ -60,7 +60,7 @@
         </nav>
     </x-container>
 
-
+    
 
     @livewire('products.add-to-cart-variants', ['product' => $product])
 

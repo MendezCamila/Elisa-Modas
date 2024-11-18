@@ -7,7 +7,7 @@
                 <div class="col-span-1">
 
                     <figure>
-                        <img src="{{ $product->image }}" class="aspect-[1/1] w-full object-cover object-center"
+                        <img src="{{ $this->currentImage }}" class="aspect-[1/1] w-full object-cover object-center"
                             alt="">
                     </figure>
                 </div>
@@ -27,6 +27,11 @@
                             <span class="text-gray-500">Precio:</span>
                             <span class="text-gray-700 font-bold">{{ $product->price }}</span>
                             <span class="text-gray-500">pesos</span>
+                        </p>
+
+                        {{-- Stock dinamico --}}
+                        <p class="text-sm mb-4 text-gray-600">
+                            <span class="font-bold">Stock disponible:</span> {{ $this->currentStock }}
                         </p>
 
 

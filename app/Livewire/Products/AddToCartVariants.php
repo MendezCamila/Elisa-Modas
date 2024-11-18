@@ -14,6 +14,7 @@ class AddToCartVariants extends Component
     public $qty = 1;
     public $selectedFeatures = [];
 
+    //Inicializamos las caracteristicas seleccionadas con las caracteristicas de la primera variante
     public function mount()
     {
         $this->selectedFeatures = $this->product->variants->first()->features->pluck('id', 'option_id')->ToArray();
@@ -26,6 +27,18 @@ class AddToCartVariants extends Component
         return $this->product->variants->filter(function($variant){
             return !array_diff($variant->features->pluck('id')->toArray(), $this->selectedFeatures);
         })->first();
+    }
+
+    #[Computed]
+    public function currentImage(){
+        //imagen de la variante seleccionada o del producto general si no hay variante
+        return $this->variant ? $this->variant->image : $this->product->image;
+    }
+
+    #[Computed]
+    public function currentStock(){
+        //stock de la variante seleccionada o del producto general si no hay variante
+        return $this->variant ? $this->variant->stock : $this->product->stock;
     }
 
     public function add_to_cart()
