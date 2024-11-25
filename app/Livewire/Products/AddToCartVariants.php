@@ -69,13 +69,34 @@ class AddToCartVariants extends Component
     {
         Cart::instance('shopping');
 
+        //existe algun producto cuyo sku sea igual al sku de la variante
+        $cartItem = Cart::search(function ($cartItem, $rowId) {
+            return $cartItem->options->sku === $this->variant->sku;
+        })->first();
+
+        if($cartItem){
+            $stock = $this->stock - $cartItem->qty;
+
+            if ($stock < $this->qty) {
+                $this->dispatch('swal', [
+                    'title' => 'Lo siento!',
+                    'text' => 'No hay suficiente stock para agregar esa cantidad al carrito',
+                    'icon' => 'error',
+                ]);
+
+                return;
+            }
+        }
+
         Cart::add([
             'id' => $this->product->id,
             'name' => $this->product->name,
             'qty' => $this->qty,
             'price' => $this->product->price,
             'options' => [
+                'sku' => $this->variant->sku,
                 'image' => $this->variant->image,
+                'stock' => $this->variant->stock,
                 'sku' => $this->variant->sku,
                 'features' => Feature::whereIn('id', $this->selectedFeatures)
                     ->pluck('description', 'id')
