@@ -6,33 +6,51 @@ use App\Models\Feature;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use CodersFree\Shoppingcart\Facades\Cart;
+use phpDocumentor\Reflection\Types\This;
 
 class AddToCartVariants extends Component
 {
     //recibimos el producto de la vist
     public $product;
+
+    public $variant;
+
     public $qty = 1;
     public $selectedFeatures = [];
+
+    public $stock;
+
+
 
 
     //Inicializamos las caracteristicas seleccionadas con las caracteristicas de la primera variante
     public function mount()
     {
         $this->selectedFeatures = $this->product->variants->first()->features->pluck('id', 'option_id')->ToArray();
+
+        $this->getVariant();
     }
 
-    #[Computed]
-    public function variant()
+    public function updatedSelectedFeatures($name, $value)
+    {
+        $this->getVariant();
+    }
+
+    public function getVariant()
     {
         //que nos retorne las variantes del producto
-        return $this->product->variants->filter(function ($variant) {
+        $this->variant = $this->product->variants->filter(function ($variant) {
             return !array_diff($variant->features->pluck('id')->toArray(), $this->selectedFeatures);
         })->first();
+
+        $this->stock = $this->variant->stock;
+        $this->qty = 1;
     }
 
 
     #[Computed]
-    public function currentImage(){
+    public function currentImage()
+    {
         //imagen de la variante seleccionada o del producto general si no hay variante
 
         return $this->variant ? $this->variant->image : $this->product->image;
@@ -79,6 +97,7 @@ class AddToCartVariants extends Component
             'icon' => 'success',
         ]);
     }
+
 
     public function render()
     {
