@@ -33,7 +33,7 @@ class GenerarCotizacion extends Command
                 foreach ($product->variants as $variant) {
                     // Comprobamos si el stock actual es menor que el stock mínimo
                     if ($variant->stock < $variant->stock_min) {
-                        $this->info("    Variante con stock bajo detectada: " . $variant->sku);
+                        //$this->info("    Variante con stock bajo detectada: " . $variant->sku);
 
                         // Calculamos el 50% del stock mínimo para reponer
                         $cantidadSolicitada = ceil(($variant->stock_min - $variant->stock) * 0.5);
@@ -47,7 +47,7 @@ class GenerarCotizacion extends Command
                         foreach ($suppliers as $supplier) {
                             // Mostramos la información en consola solo para variantes con stock bajo
                             $this->info("      Producto: " . $product->name);
-                            $this->info("      Variante con stock bajo: " . $variant->sku);
+                            $this->info("      Codigo Variante con stock bajo: " . $variant->sku);
                             $this->info("      Stock mínimo: " . $variant->stock_min);
                             $this->info("      Cantidad a solicitar: " . $cantidadSolicitada);
                             $this->info("      Proveedor: " . $supplier->name);

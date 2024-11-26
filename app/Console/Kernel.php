@@ -16,6 +16,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('cotizaciones:generar')->mondays()->at('07:00');
     }
 
+    
+
     /**
      * Registra los comandos disponibles.
      */

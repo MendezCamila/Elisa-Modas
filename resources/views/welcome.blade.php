@@ -17,7 +17,9 @@
             @foreach ($covers as $cover)
 
                 <div class="swiper-slide">
-                    <img src="{{ $cover->image }}" alt="" class="w-full aspect-[3/1] object-cover object-center">
+                    {{--  <img src="{{ $cover->image }}" alt="" class="w-full aspect-[3/1] object-cover object-center">--}}
+                    <img src="{{ $cover->image }}" alt="" class="w-full aspect-[3/1] object-contain bg-white">
+
                 </div>
             @endforeach
 
@@ -52,7 +54,7 @@
                             <span class="text-gray-700 font-bold">{{ $product->price }}</span>
                         </p>
 
-                        
+
                         <a href="{{ route('products.show', $product) }}" class="btn btn-pink  block w-full text-center">
                             Ver más
                         </a>

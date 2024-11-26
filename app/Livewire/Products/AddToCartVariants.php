@@ -96,7 +96,7 @@ class AddToCartVariants extends Component
             'options' => [
                 'sku' => $this->variant->sku,
                 'image' => $this->variant->image,
-                'stock' => $this->variant->stock,
+                'stock' => $this->stock,
                 'sku' => $this->variant->sku,
                 'features' => Feature::whereIn('id', $this->selectedFeatures)
                     ->pluck('description', 'id')
