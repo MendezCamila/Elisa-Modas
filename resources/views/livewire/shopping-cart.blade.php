@@ -103,9 +103,7 @@
                     </p>
                 </div>
 
-                <a href="" class="btn btn-pink block w-full text-center">
-                    Continuar compra
-                </a>
+                <div id="wallet_container"></div>
 
             </div>
         </div>
@@ -113,4 +111,31 @@
     </div>
 
 
+
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+
+    <script>
+
+        // Inicializa el SDK de MercadoPago con tu clave pública
+        const mp = new MercadoPago('APP_USR-0aa68677-d975-402d-ba8a-5032d9064624'); // Reemplaza con tu clave pública de Mercado Pago
+        const bricksBuilder = mp.bricks();
+
+        // Obtén el ID de la preferencia generada desde el backend
+        const preferenceId = "{{ $preferenceId }}"; // Usa el ID de la preferencia aquí
+
+        // Crea el botón de pago en el contenedor especificado
+        mp.bricks().create("wallet", "wallet_container", {
+            initialization: {
+                preferenceId: preferenceId, // Usa el ID de la preferencia aquí
+            },
+            customization: {
+                texts: {
+                    valueProp: 'smart_option', // Personaliza el texto que aparece en el botón si lo deseas
+                },
+            },
+        });
+    </script>
+
 </div>
+
+

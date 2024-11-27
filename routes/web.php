@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CotizacionController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\FamiliaController;
 use App\Http\Controllers\ProductoController;
@@ -157,6 +158,13 @@ Route::middleware(['web', 'auth', /*'can:administrar proveedores'*/])->prefix('a
 Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('admin')->name('admin.')->group(function () {
     Route::get('cotizaciones', [CotizacionController::class, 'index'])->name('cotizaciones.index');
 });
+
+
+//Rutas para pagar con MercadoPago
+Route::get('/payment/create', [PaymentController::class, 'createPreference'])->name('payment.create');
+Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('/payment/failure', [PaymentController::class, 'failure'])->name('payment.failure');
+Route::get('/payment/pending', [PaymentController::class, 'pending'])->name('payment.pending');
 
 Route::middleware([
     'auth:sanctum',

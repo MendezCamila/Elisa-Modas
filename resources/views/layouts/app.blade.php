@@ -53,9 +53,12 @@
     @stack('modals')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
     @livewireScripts
 
     @stack('js')
+
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
 
     @if (session('swal'))
         <script>
