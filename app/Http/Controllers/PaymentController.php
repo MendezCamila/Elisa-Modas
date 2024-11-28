@@ -8,76 +8,64 @@ use MercadoPago\Preference;
 use MercadoPago\Item;
 use CodersFree\Shoppingcart\Facades\Cart;
 use MercadoPago\MercadoPagoConfig;
+use MercadoPago\Resources\Payment;
 use MercadoPago\Client\Preference\PreferenceClient;
+
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use MercadoPago\Exceptions\MPApiException;
+
 
 
 class PaymentController extends Controller
 {
 
-    public function createPreference()
+    public function success(Request $request)
 {
-    // Inicializa el SDK de MercadoPago
-    MercadoPagoConfig::setAccessToken(config('services.mercadopago.access_token'));
-
-    Cart::instance('shopping');
-    // Obtiene los productos del carrito
-    $cartItems = Cart::content();
-
-    // Depuración
-    if ($cartItems->isEmpty()) {
-        dd($cartItems); // Muestra el contenido del carrito si está vacío
-        throw new \Exception('El carrito está vacío.');
-    }
-
-    // Construye el array de items en el formato correcto
-    $items = [];
-    foreach ($cartItems as $item) {
-        $items[] = [
-            "id" => $item->rowId,                   // Asignar el rowId cdel carrito como ID unico
-            "title" => $item->name,               // Nombre del producto
-            "quantity" => (int)$item->qty,       // Cantidad (entero)
-            "unit_price" => (float)$item->price,  // Precio unitario (flotante)
-            "currency_id" => "ARS"  ,             // Moneda (ISO 4217)
-            "picture_url" => $item->options['image'] // URL de la imagen
-        ];
-    }
-
-    // Crea un cliente de preferencias
-    $client = new PreferenceClient();
+    $accessToken = config('services.mercadopago.access_token');
+    $paymentId = $request->input('payment_id');
 
     try {
-        $preference = $client->create([
-            "items" => $items,
-            "statement_descriptor" => "Elisa Modas",
-            "back_urls" => [
-                "success" => route('payment.success'),
-                "failure" => route('payment.failure'),
-                "pending" => route('payment.pending')
+        $client = new Client();
+        $response = $client->request('GET', "https://api.mercadopago.com/v1/payments/{$paymentId}", [
+            'headers' => [
+                'Authorization' => "Bearer {$accessToken}",
             ],
-            "auto_return" => "approved",
         ]);
 
-        // Redirige al usuario al link de pago
-        //return redirect()->to($preference->init_point);  // Redirigir a la URL de MercadoPago
+        $payment = json_decode($response->getBody()->getContents());
 
-        $preference->save();
+        if ($payment->status == 'approved') {
+            // Aquí puedes realizar acciones como actualizar la base de datos, notificar al usuario, etc.
+            // Redirigir a una vista de éxito o una página personalizada
+            return view('payment.success', compact('payment'));
+        }
 
-        //Pasa el id de la preferencia a la vista
-        //return view('livewire.shopping-cart', compact('preference'));
-        return redirect()->route('livewire.shopping-cart', ['preferenceId' => $preference->id]);
-
-    } catch (\MercadoPago\Exceptions\MPApiException $e) {
-        dd($e->getMessage(), $e->getCode());
+        return 'Pago rechazado';
+    } catch (RequestException $e) {
+        // Maneja la excepción y muestra el mensaje de error
+        $response = $e->getResponse();
+        $responseBodyAsString = $response ? $response->getBody()->getContents() : 'No response body';
+        return response()->json([
+            'error' => 'Error al obtener el pago de MercadoPago',
+            'message' => $responseBodyAsString,
+        ], 500);
+    } catch (MPApiException $e) {
+        // Maneja la excepción específica de MercadoPago
+        return response()->json([
+            'error' => 'Error de API de MercadoPago',
+            'message' => $e->getMessage(),
+        ], 500);
+    } catch (\Exception $e) {
+        // Maneja cualquier otra excepción
+        return response()->json([
+            'error' => 'Error inesperado',
+            'message' => $e->getMessage(),
+        ], 500);
     }
 }
 
-
-
-
-    public function success()
-    {
-        return 'Pago aprobado';
-    }
 
     public function failure()
     {

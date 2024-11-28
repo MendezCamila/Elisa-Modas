@@ -129,13 +129,13 @@ class ShoppingCart extends Component
     try {
         $preference = $client->create([
             "items" => $items,
-            "statement_descriptor" => "Elisa Modas",
             "back_urls" => [
                 "success" => route('payment.success'),
                 "failure" => route('payment.failure'),
                 "pending" => route('payment.pending')
             ],
             "auto_return" => "approved",
+            "statement_descriptor" => "Elisa Modas",
         ]);
 
         // Redirige al usuario al link de pago
@@ -143,6 +143,9 @@ class ShoppingCart extends Component
 
         $this->preferenceId = $preference->id; // Establece el ID de la preferencia
         //$preference->save();
+
+        //mostrar los detalles de la preferencia
+        //dd($preference);
 
 
     } catch (\MercadoPago\Exceptions\MPApiException $e) {
