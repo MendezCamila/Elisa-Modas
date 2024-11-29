@@ -23,7 +23,8 @@ use App\Models\Variant;
 use CodersFree\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoleController;
-
+use App\Models\Ventas;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 Route::get('/',[WelcomeController::class, 'index'] )->name('welcome.index');
 
@@ -45,8 +46,18 @@ Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 
 
 Route::get('prueba', function(){
-    Cart::instance('shopping');
-    return Cart::content();
+    $venta = Ventas::first();
+
+    $pdf = Pdf:: loadView('ventas.ticket', compact('venta')) -> setPaper('a5');
+
+    //visualiza el pdf
+    //return $pdf->stream();
+
+    //almacena el pdf
+    $pdf->save(storage_path('app/public/tickets/ticket-'. $venta->id . '.pdf'));
+
+    $venta->pdf_path = 'tickets/ticket-'. $venta->id . '.pdf';
+    $venta->save();
 });
 
 
