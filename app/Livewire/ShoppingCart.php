@@ -136,7 +136,10 @@ class ShoppingCart extends Component
             ],
             "auto_return" => "approved",
             "statement_descriptor" => "Elisa Modas",
+            "external_reference" =>
+                auth()->check() ? auth()->id() : session()->getId(),
         ]);
+
 
         // Redirige al usuario al link de pago
         //return redirect()->to($preference->init_point);  // Redirigir a la URL de MercadoPago

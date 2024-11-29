@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Ventas;
 use Illuminate\Http\Request;
 use MercadoPago\Preference;
 use MercadoPago\Item;
@@ -39,6 +39,30 @@ class PaymentController extends Controller
         if ($payment->status == 'approved') {
             // Aquí puedes realizar acciones como actualizar la base de datos, notificar al usuario, etc.
             // Redirigir a una vista de éxito o una página personalizada
+            //dd('Pago aprobado', $payment);
+
+
+            $idCart = $payment->external_reference;
+
+
+            //obtener la instancia del carrito con el idCart
+            Cart::instance('shopping');
+
+            //imprimir el contenido del carrito
+            //dd(Cart::content());
+
+            //Crear instancia de  tabla venta
+            Ventas::create([
+                'user_id' => auth()->id(),
+                'content' => Cart::content(),
+                'payment_id' => $payment->id,
+                'total' => floatval(str_replace(',', '', Cart::subtotal())), // Convertimos a número flotante
+            ]);
+
+            //crear una instancia de la tabla Itemventa, recorrer el contenido del carrito y guardar cada item en la tabla Itemventa
+
+            //vaciar el carrito
+            Cart::destroy();
             return view('payment.success', compact('payment'));
         }
 
