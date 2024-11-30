@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Ventas;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Ventas;
+use Illuminate\Support\Facades\Storage;
 
 class VentaTable extends DataTableComponent
 {
@@ -47,4 +48,11 @@ class VentaTable extends DataTableComponent
                 })
         ];
     }
+
+    public function descargarComprobante(Ventas $venta)
+    {
+        //dd($venta);
+        return Storage::download($venta->pdf_path);
+    }
+
 }
