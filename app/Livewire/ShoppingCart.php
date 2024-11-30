@@ -105,10 +105,11 @@ class ShoppingCart extends Component
     $cartItems = Cart::content();
 
     // Depuración
+    /*
     if ($cartItems->isEmpty()) {
         dd($cartItems); // Muestra el contenido del carrito si está vacío
         throw new \Exception('El carrito está vacío.');
-    }
+    }*/
 
     // Construye el array de items en el formato correcto
     $items = [];

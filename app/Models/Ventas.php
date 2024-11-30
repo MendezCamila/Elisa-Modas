@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Observers\VentaObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Ventas extends Model
 {
+    //registrar el observer
+    //#[ObservedBy([VentaObserver::class])]
+
     //fillable
     protected $fillable = [
         'user_id',     // ID del usuario
