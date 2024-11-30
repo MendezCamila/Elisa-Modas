@@ -52,7 +52,7 @@ Route::get('prueba', function(){
     $pdf = Pdf:: loadView('ventas.ticket', compact('venta')) -> setPaper('a5');
 
     //visualiza el pdf
-    //return $pdf->stream();
+    return $pdf->stream();
 
     //almacena el pdf
     $pdf->save(storage_path('app/public/tickets/ticket-'. $venta->id . '.pdf'));
