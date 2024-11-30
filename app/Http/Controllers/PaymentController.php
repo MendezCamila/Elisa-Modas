@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Variant;
 use App\Models\Ventas;
 use Illuminate\Http\Request;
 use MercadoPago\Preference;
@@ -48,34 +49,39 @@ class PaymentController extends Controller
 
                 //obtener la instancia del carrito con el idCart
                 Cart::instance('shopping');
+                $content = Cart::content()->filter(function($item){
+                    return $item->qty <= $item->options['stock'];
+                }) ;
 
-                //imprimir el contenido del carrito
-                //dd(Cart::content());
+                //descontar el stock de los productos
 
                 //Crear instancia de  tabla venta
                 $venta = Ventas::create([
                     'user_id' => auth()->id(),
-                    'content' => Cart::content(),
+                    'content' => $content ,
                     'payment_id' => $payment->id,
                     'total' => floatval(str_replace(',', '', Cart::subtotal())), // Convertimos a número flotante
                 ]);
 
                 //pdf comprobante e la venta
                 $pdf = Pdf::loadView('ventas.ticket', compact('venta'))->setPaper('a5');
-
                 // Visualiza el pdf
                 // return $pdf->stream();
-
                 // Almacena el pdf
                 $pdf->save(storage_path('app/public/tickets/ticket-' . $venta->id . '.pdf'));
-
                 $venta->pdf_path = 'tickets/ticket-' . $venta->id . '.pdf';
                 $venta->save();
 
-                //crear una instancia de la tabla Itemventa, recorrer el contenido del carrito y guardar cada item en la tabla Itemventa
+                //vaciar el carrito y descontar stock
+                foreach ($content as $item) {
+                    Variant::where('sku', $item->options['sku'])
+                    ->decrement('stock', $item->qty);
 
-                //vaciar el carrito
-                Cart::destroy();
+                    Cart::remove($item->rowId);
+                }
+
+
+
                 return view('payment.success', compact('payment'));
             }
 
