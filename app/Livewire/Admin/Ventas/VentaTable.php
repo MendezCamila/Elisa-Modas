@@ -19,28 +19,45 @@ class VentaTable extends DataTableComponent
     public function columns(): array
     {
         return [
+            //Nº venta
             Column::make("Nº venta", "id")
                 ->sortable(),
-            Column::make("User id", "user_id")
-                ->sortable(),
-            Column::make("Payment id", "payment_id")
-                ->sortable(),
-            Column::make("Total", "total")
-                ->format(function($value){
-                    return "$".number_format($value, 2);
-                })
-                ->sortable(),
+
+            //Fecha de venta
             Column::make("F. venta", "created_at")
                 ->format(function($value){
                     return $value->format('d/m/Y');
                 })
                 ->sortable(),
 
+            //Usuario que realizó la compra
+            Column::make("id cliente", "user_id")
+                ->sortable(),
+
+             // Columna "User ID" que muestra el nombre del usuario
+            Column::make("Cliente", "user.name")
+                ->label(function($row){
+                return $row->user ? $row->user->name . ' ' . $row->user->last_name : 'No asignado';
+            })
+            ->sortable(),
+
+            //Nº de operación (payment_id)
+            Column::make("Nº de operación", "payment_id")
+                ->sortable(),
+
+            //Total de la venta
+            Column::make("Total", "total")
+                ->format(function($value){
+                    return "$".number_format($value, 2);
+                })
+                ->sortable(),
+
+            /*
             Column::make("Cantidad", "content")
                 ->format(function($value){
                     return count($value);
                 })
-                ->sortable(),
+                ->sortable(),*/
 
             Column::make("Comprobante")
                 ->label(function($row){

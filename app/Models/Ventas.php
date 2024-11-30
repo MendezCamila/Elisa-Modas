@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Observers\VentaObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Ventas extends Model
 {
@@ -24,4 +25,10 @@ class Ventas extends Model
     protected $casts = [
         'content' => 'array'
     ];
+
+    //definir relacion con el modelo User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
