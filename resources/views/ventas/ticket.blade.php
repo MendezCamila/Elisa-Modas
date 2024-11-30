@@ -137,7 +137,7 @@
         <div class="info">
             <h3>Datos del cliente</h3>
             <div><span class="bold">Nombre:</span> {{ $venta->user->name }}</div>
-            <div><span class="bold">Apellido:</span> {{ $venta->user->surname }}</div>
+            <div><span class="bold">Apellido:</span> {{ $venta->user->last_name }}</div>
             <div><span class="bold">Teléfono:</span> {{ $venta->user->phone }}</div>
             <div><span class="bold">Email:</span> {{ $venta->user->email }}</div>
         </div>
