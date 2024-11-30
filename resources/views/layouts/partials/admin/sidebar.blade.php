@@ -95,6 +95,15 @@
         ],
 
         [
+            //Tickets de ventas
+            'name'=>'Ventas',
+            'icon'=>'fa-solid fa-receipt',
+            'route'=> route('admin.ventas.index'),
+            'active'=> request()->routeIs('admin.ventas.*')
+
+        ],
+
+        [
             //Cotizaciones
             'name'=>'Cotizaciones',
             'icon'=>'fa-solid fa-file-invoice',

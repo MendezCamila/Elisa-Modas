@@ -23,6 +23,7 @@ use App\Models\Variant;
 use CodersFree\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\VentasController;
 use App\Models\Ventas;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -169,6 +170,11 @@ Route::middleware(['web', 'auth', /*'can:administrar proveedores'*/])->prefix('a
 //Ruta para administrar Cotizaciones
 Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('admin')->name('admin.')->group(function () {
     Route::get('cotizaciones', [CotizacionController::class, 'index'])->name('cotizaciones.index');
+});
+
+//Ruta para administrar las ventas
+Route::middleware(['web', 'auth', /*'can:administrar ventas'*/])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('ventas', [VentasController::class, 'index'])->name('ventas.index');
 });
 
 
