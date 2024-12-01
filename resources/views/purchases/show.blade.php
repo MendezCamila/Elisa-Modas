@@ -1,7 +1,7 @@
 <x-app-layout>
-    <div>
+    <div class="mt-6">
         <x-container>
-            <div class="card">
+            <div class="card p-6 bg-white shadow-md rounded-lg">
                 <h1 class="text-2xl font-bold mb-4">Detalles de la compra</h1>
 
                 <div class="mb-4">

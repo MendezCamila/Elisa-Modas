@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div>
+    <div class="mt-6">
         <x-container>
             <div class="card bg-white shadow-md rounded-lg">
                 <h1 class="text-2xl font-bold mb-4">Mis compras</h1>
