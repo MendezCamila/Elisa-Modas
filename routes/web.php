@@ -184,6 +184,7 @@ Route::middleware(['web', 'auth', /*'can:administrar ventas'*/])->prefix('admin'
 Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
 Route::get('/payment/failure', [PaymentController::class, 'failure'])->name('payment.failure');
 Route::get('/payment/pending', [PaymentController::class, 'pending'])->name('payment.pending');
+Route::get('/download/ticket/{id}', [PaymentController::class, 'downloadTicket'])->name('download.ticket');
 
 
 //Ruta para ver "mis compras" (parte cliente)
@@ -191,6 +192,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mis-compras', [PurchaseController::class, 'index'])->name('purchases.index');
     Route::get('/mis-compras/{id}', [PurchaseController::class, 'show'])->name('purchases.show');
 });
+
+Route::get('/ventas/{id}/descargar-comprobante', [PaymentController::class, 'descargarComprobante'])
+    ->name('ventas.descargarComprobante');
 
 
 

@@ -17,6 +17,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use MercadoPago\Exceptions\MPApiException;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -63,7 +64,7 @@ class PaymentController extends Controller
                     'total' => floatval(str_replace(',', '', Cart::subtotal())), // Convertimos a número flotante
                 ]);
 
-                //pdf comprobante e la venta
+                //pdf comprobante de la venta
                 $pdf = Pdf::loadView('ventas.ticket', compact('venta'))->setPaper('a5');
                 // Visualiza el pdf
                 // return $pdf->stream();
@@ -82,7 +83,7 @@ class PaymentController extends Controller
 
 
 
-                return view('payment.success', compact('payment'));
+                return view('payment.success', compact('payment', 'venta'));
             }
 
             return 'Pago rechazado';
@@ -108,6 +109,19 @@ class PaymentController extends Controller
             ], 500);
         }
     }
+
+    public function descargarComprobante($id)
+{
+    $venta = Ventas::findOrFail($id);
+
+    // Verifica si el archivo existe
+    if ($venta->pdf_path && Storage::exists($venta->pdf_path)) {
+        return Storage::download($venta->pdf_path);
+    }
+
+    // Si no existe, maneja el error
+    return redirect()->back()->withErrors('El comprobante no está disponible.');
+}
 
 
     public function failure()
