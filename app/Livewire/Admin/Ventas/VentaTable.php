@@ -14,6 +14,8 @@ class VentaTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        // Ordenar por fecha de creación en orden descendente
+        $this->setDefaultSort('created_at', 'desc');
     }
 
     public function columns(): array
