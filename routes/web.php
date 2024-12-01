@@ -24,6 +24,7 @@ use CodersFree\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\VentasController;
+use App\Http\Controllers\PurchaseController;
 use App\Models\Ventas;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -183,6 +184,14 @@ Route::middleware(['web', 'auth', /*'can:administrar ventas'*/])->prefix('admin'
 Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
 Route::get('/payment/failure', [PaymentController::class, 'failure'])->name('payment.failure');
 Route::get('/payment/pending', [PaymentController::class, 'pending'])->name('payment.pending');
+
+
+//Ruta para ver "mis compras" (parte cliente)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/mis-compras', [PurchaseController::class, 'index'])->name('purchases.index');
+    Route::get('/mis-compras/{id}', [PurchaseController::class, 'show'])->name('purchases.show');
+});
+
 
 
 

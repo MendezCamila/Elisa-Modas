@@ -42,7 +42,7 @@
                                 class="absolute -top-2 -end-4 inline-flex items-center justify-center w-6 h-6 bg-red-600 rounded-full text-xs text-white font-bold">
                                 {{ Cart::instance('shopping')->count() }}
                             </span>
-                        </a> 
+                        </a>
 
                         {{-- Del Usuario --}}
                         <x-dropdown>
@@ -79,6 +79,11 @@
                                 @else
                                     <x-dropdown-link href="{{ route('profile.show') }}">
                                         Mi perfil
+                                    </x-dropdown-link>
+
+                                    {{-- Mis compras (parte cliente)--}}
+                                    <x-dropdown-link href="{{ route('purchases.index') }}">
+                                        Mis compras
                                     </x-dropdown-link>
 
                                     <div class="border-t border-gray-200">
