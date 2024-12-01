@@ -12,63 +12,68 @@
             margin: 0;
             padding: 0;
             font-size: 14px;
+            color #333;
         }
 
         .ticket {
             max-width: 400px;
-            margin: 20px auto;
+            margin: 0 auto;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         h1, h2, h3, h4 {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 10px 0;
         }
 
-        .info, .products, .total, .footer {
-            margin-bottom: 10px;
+        .section {
+            margin-bottom: 20px;
         }
 
-        .info div, .products div, .total div, .footer div {
+        .section-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .info div {
             margin-bottom: 5px;
         }
 
         .products table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
         .products th, .products td {
-            border: 1px solid #ccc;
-            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
             text-align: left;
         }
 
         .products th {
-            background-color: #f2f2f2;
+            background-color:#f9f9f9;
         }
 
         .total {
             text-align: right;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
+            margin-top: 10px;
         }
+
 
         .footer {
             text-align: center;
             font-size: 12px;
+            margin-top: 20px;
         }
 
-        .page-break {
-            page-break-after: always;
-        }
 
-        .page-number:after {
-            content: counter(page);
-        }
+
 
         @page {
             margin: 20px;
@@ -99,11 +104,6 @@
             top: 100%;
         }
 
-        .separator {
-            border-top: 1px solid #ccc;
-            margin: 10px 0;
-        }
-
         .bold {
             font-weight: bold;
         }
@@ -120,34 +120,34 @@
         <h4 class="bold">Número de venta: {{ $venta->id }}</h4>
         <div class="bold">Fecha: {{ $venta->created_at->format('d/m/Y') }}</div>
 
-        <div class="separator"></div>
+
 
         {{-- Info de la empresa --}}
-        <div class="info">
-            <h3>Información de la empresa</h3>
-            <div><span class="bold">Nombre:</span> Elisa Modas</div>
-            <div><span class="bold">Dirección:</span> Juan Manuel de Rosas 669</div>
-            <div><span class="bold">Teléfono:</span> 3756458015</div>
-            <div><span class="bold">Email:</span> info@elisamodas.com</div>
+        <div class="section">
+            <div class="section-header">Información de la empresa</div>
+            <div><strong>Nombre:</strong> Elisa Modas</div>
+            <div><strong>Dirección:</strong> Juan Manuel de Rosas 669</div>
+            <div><strong>Teléfono:</strong> 3756458015</div>
+            <div><strong>Email:</strong> info@elisamodas.com</div>
         </div>
 
-        <div class="separator"></div>
+
 
         {{-- Info del cliente --}}
-        <div class="info">
-            <h3>Datos del cliente</h3>
-            <div><span class="bold">Nombre:</span> {{ $venta->user->name }}</div>
-            <div><span class="bold">Apellido:</span> {{ $venta->user->last_name }}</div>
-            <div><span class="bold">Teléfono:</span> {{ $venta->user->phone }}</div>
-            <div><span class="bold">Email:</span> {{ $venta->user->email }}</div>
+        <div class="section">
+            <div class="section-header">Datos del cliente</div>
+            <div><strong>Nombre:</strong> {{ $venta->user->name }}</div>
+            <div><strong>Apellido:</strong> {{ $venta->user->last_name }}</div>
+            <div><strong>Teléfono:</strong> {{ $venta->user->phone }}</div>
+            <div><strong>Email:</strong> {{ $venta->user->email }}</div>
         </div>
 
         <div class="separator"></div>
 
         {{-- Productos comprados --}}
-        <div class="products">
-            <h3>Productos comprados</h3>
-            <table>
+        <div class="section">
+            <div class="section-header">Productos comprados</div>
+            <table class="products">
                 <thead>
                     <tr>
                         <th>Producto</th>
@@ -161,30 +161,28 @@
                         <tr>
                             <td>{{ $item['name'] }}</td>
                             <td>{{ $item['qty'] }}</td>
-                            <td>{{ number_format($item['price'], 2) }}</td>
-                            <td>{{ number_format($item['subtotal'], 2) }}</td>
+                            <td>${{ number_format($item['price'], 2) }}</td>
+                            <td>${{ number_format($item['subtotal'], 2) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
 
-        <div class="separator"></div>
+
 
         {{-- Total de la venta --}}
-        <div class="total">
-            <span class="bold">Total:</span> ${{ number_format($venta->total, 2) }}
+        <div class="section total">
+            Total: ${{ number_format($venta->total, 2) }}
         </div>
 
         <div class="separator"></div>
 
+        <!-- Footer -->
         <div class="footer">
-            ¡Gracias por tu compra!
+            ¡Gracias por tu compra!<br>
+            Página 1
         </div>
-    </div>
-
-    <div class="footer">
-        Página <span class="page-number"></span>
     </div>
 </body>
 </html>
