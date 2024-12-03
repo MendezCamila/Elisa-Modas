@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use App\Observers\ProductObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use OwenIt\Auditing\Contracts\Auditable;
 
 
 #[ObservedBy([ProductObserver::class])]
-class Product extends Model
+class Product extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     use HasFactory;
     protected $fillable=[
         'sku',

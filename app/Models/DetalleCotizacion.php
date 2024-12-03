@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Cotizacion;
 use App\Models\Variant;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class DetalleCotizacion extends Model
+class DetalleCotizacion extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasFactory;
 
     protected $fillable = [

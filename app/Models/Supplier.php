@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\OrdenCompra;
 use App\Models\Cotizacion;
 use App\Models\Subcategory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Supplier extends Model
+class Supplier extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasFactory;
 
     protected $fillable = [

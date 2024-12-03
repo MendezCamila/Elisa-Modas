@@ -12,7 +12,8 @@
 
     {{-- Llamo a mi componente de livewire que cree con php artisan make:datatable admin.ventas.venta-table Ventas --}}
     @livewire('admin.ventas.VentaTable')
-
     
+
+
 
 </x-admin-layout>

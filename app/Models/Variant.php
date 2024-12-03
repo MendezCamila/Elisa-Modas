@@ -10,12 +10,13 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use App\Models\DetalleCotizacion;
 use App\Models\DetalleOrdenCompra;
-
+use OwenIt\Auditing\Contracts\Auditable;
 
 
 #[ObservedBy([VariantObserver::class])]
-class Variant extends Model
+class Variant extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasFactory;
     protected $fillable=[
         'sku',
