@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CotizacionController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MercadoPagoWebhookController;
@@ -167,6 +168,12 @@ Route::middleware(['web', 'auth', /*'can:administrar proveedores'*/])->prefix('a
     Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
 
 });
+
+//Ruta para administrar la auditoria
+Route::middleware(['web', 'auth', /*'can:administrar auditoria'*/])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('auditorias', [AuditController::class, 'index'])->name('auditorias.index');
+});
+
 
 //Ruta para administrar Cotizaciones
 Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('admin')->name('admin.')->group(function () {

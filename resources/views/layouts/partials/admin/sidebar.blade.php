@@ -124,6 +124,17 @@
             'active'=> request()->routeIs('admin.covers.*')
         ],
 
+        //Parte de auditorias
+        [
+            'header' => 'Auditorias',
+        ],
+        [
+            'name'=>'Auditorias',
+            'icon'=>'fa-solid fa-clipboard-list',
+            'route'=>route('admin.auditorias.index'),
+            'active'=> request()->routeIs('admin.auditorias.*')
+        ],
+
     ];
 @endphp
 
