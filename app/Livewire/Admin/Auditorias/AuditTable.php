@@ -32,16 +32,17 @@ class AuditTable extends DataTableComponent
 
         $this->setSearchVisibilityStatus(true);
         $this->setSearchVisibilityEnabled();
-        $this->setSearchDisabled();
+        //$this->setSearchDisabled();
     }
 
     public function columns(): array
     {
         return [
             Column::make('ID', 'id')
-                ->sortable(),
-            Column::make('Usuario', 'user_id')
-                ->sortable(),
+                ->searchable()
+                ->collapseOnTablet() ,
+
+            Column::make('Usuario', 'user_id')->searchable(),
 
             Column::make('Nombre y Apellido', 'user_id')
                 ->format(function ($value) {
@@ -51,14 +52,12 @@ class AuditTable extends DataTableComponent
                         return $user->name . ' ' . $user->last_name; // Concatenar nombre y apellido
                     }
                     return 'Usuario no encontrado'; // En caso de que no se encuentre el usuario
-                })
-                ->sortable(),
+                })->searchable(),
 
-            Column::make('Evento', 'event')
-                ->sortable(),
-            Column::make('Modelo', 'auditable_type')
-                ->sortable(),
-                
+            Column::make('Evento', 'event')->searchable(),
+
+            Column::make('Modelo', 'auditable_type'),
+
             Column::make('Valores Nuevos', 'new_values')
                 ->format(function ($value) {
                     if (empty($value)) {
@@ -117,30 +116,26 @@ class AuditTable extends DataTableComponent
                 ->format(function ($value) {
                     // Formatear la fecha en el formato día/mes/año
                     return \Carbon\Carbon::parse($value)->format('j/n/Y');
-                })
-                ->sortable(),
+                }),
+
+            Column::make("Actions")
+                ->label(function ($row) {
+                    return view('admin.auditorias.actions', ['auditoria' => $row]);
+                }),
+
+            Column::make("Exportar")
+                ->label(function ($row) {
+                    return view('admin.auditorias.auditoria_pdf', ['auditoria' => $row]);
+                }),
+
         ];
     }
 
     public function filters(): array
     {
         return [
-            // Filtro de búsqueda por múltiple campos
-            TextFilter::make('Buscar')
-                ->filter(function ($query, $value) {
-                    $query->where(function ($query) use ($value) {
-                        $query->where('id', 'like', "%$value%")
-                            ->orWhere('event', 'like', "%$value%")
-                            ->orWhere('auditable_type', 'like', "%$value%")
-                            ->orWhereHas('user', function ($query) use ($value) {
-                                $query->where('name', 'like', "%$value%")
-                                    ->orWhere('last_name', 'like', "%$value%");
-                            });
-                    });
-                }),
-
             // Filtro por ID de usuario
-            SelectFilter::make('ID de Usuario', 'user_id')
+            SelectFilter::make('Nombre usuario', 'user_id')
                 ->options(\App\Models\User::all()->pluck('name', 'id')->toArray())
                 ->filter(function ($query, $value) {
                     if ($value) {
@@ -189,6 +184,14 @@ class AuditTable extends DataTableComponent
                     }
                 }),
         ];
+    }
+
+
+    //imprimir la auditoria
+    public function descargarComprobante(Audit $auditoria)
+    {
+        dd($auditoria);
+        //return Storage::download($auditoria->pdf_path);
     }
 
     public function query()

@@ -8,7 +8,6 @@
         'route' => route('admin.dashboard'),
     ],
 ]">
-    
     @livewire('admin.auditorias.audit-table')
 
 </x-admin-layout>

@@ -15,6 +15,7 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
 //pdf
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 
 class VentaTable extends DataTableComponent
@@ -35,12 +36,12 @@ class VentaTable extends DataTableComponent
         $this->setSearchVisibilityEnabled();
 
         //$this->setSearchEnabled();
-        //$this->setSearchEnabled();  // Habilita la búsqueda
+        $this->setSearchEnabled();  // Habilita la búsqueda
         //$this->setSearchVisibilityEnabled();  // Muestra el cuadro de búsqueda
         $this->setSearchPlaceholder('Buscar');  // Cambia el placeholder
         //$this->setSearchLive();  // Realiza la búsqueda de inmediato
 
-        $this->setSearchDisabled();
+        //$this->setSearchDisabled();
 
 
         $this->setEmptyMessage('No se encontraron resultados'); // Mensaje de tabla vacía
@@ -51,36 +52,34 @@ class VentaTable extends DataTableComponent
         return [
             //Nº venta
             Column::make("Nº venta", "id")
-                ->sortable(),
+                ->searchable(),
 
             //Fecha de venta
             Column::make("F. venta", "created_at")
                 ->format(function ($value) {
                     return $value->format('d/m/Y');
-                })
-                ->sortable(),
+                }),
 
             //Usuario que realizó la compra
             Column::make("id cliente", "user_id")
-                ->sortable(),
+                ->searchable(),
 
             // Columna "User ID" que muestra el nombre del usuario
             Column::make("Cliente", "user.name")
                 ->label(function ($row) {
                     return $row->user ? $row->user->name . ' ' . $row->user->last_name : 'No asignado';
                 })
-                ->sortable(),
+                ->searchable(),
 
             //Nº de operación (payment_id)
             Column::make("Nº de operación", "payment_id")
-                ->sortable(),
+                ->searchable(),
 
             //Total de la venta
             Column::make("Total", "total")
                 ->format(function ($value) {
                     return "$" . number_format($value, 2);
-                })
-                ->sortable(),
+                }),
 
             Column::make("Comprobante")
                 ->label(function ($row) {
@@ -94,23 +93,6 @@ class VentaTable extends DataTableComponent
         //dd(request()->query('table-search'));
 
         return [
-            //Filtro busqueda
-            // Filtro por búsqueda en múltiples campos
-            TextFilter::make('Buscar')
-                ->filter(function ($query, $value) {
-
-                    //dd($query->toSql(), $query->getBindings());
-
-                    // Asegúrate de que el valor del filtro esté siendo utilizado en la consulta correctamente
-                    $query->where(function ($query) use ($value) {
-                        $query->where('id', 'like', "%$value%")
-                            ->orWhereHas('user', function ($query) use ($value) {
-                                $query->where('name', 'like', "%$value%")
-                                    ->orWhere('last_name', 'like', "%$value%");
-                            })
-                            ->orWhere('payment_id', 'like', "%$value%");
-                    });
-                }),
 
             // Filtro por cliente (id cliente)
             SelectFilter::make('ID Cliente', 'user_id')
@@ -170,6 +152,7 @@ class VentaTable extends DataTableComponent
 
         ];
     }
+
 
 
     public function descargarComprobante(Ventas $venta)
