@@ -1,3 +1,5 @@
+<!-- Incluye la biblioteca de ApexCharts -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <x-admin-layout :breadcrumbs="[
     [
         'name'=> 'Dashboard',
@@ -34,11 +36,11 @@
 
     {{-- Estadisticas --}}
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        <!-- Ingresos mensuales -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <!-- Ventas -->
         <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
             <h3 class="text-lg font-semibold">Ventas</h3>
-            <div id="chart"></div> <!-- Contenedor del gráfico -->
+            <div id="chart" style="height: 400px;"></div>
         </div>
 
         <!-- Productos más vendidos -->
@@ -49,70 +51,74 @@
             </ul>
         </div>
 
-        <!-- Productos con stock bajo -->
+        <!-- Productos con stock bajo
         <div class="bg-white rounded-lg shadow-lg p-6">
             <h3 class="text-lg font-semibold">Stock bajo</h3>
             <ul>
 
             </ul>
-        </div>
+        </div>-->
     </div>
 
 
 </x-admin-layout>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Obtener las ventas desde PHP y pasarlas a JS
-        var ventas = @json($ventas); // Esto convierte los datos de ventas en formato JS
+    // Verifica que los datos de ventas no estén vacíos
+    var ventasData = @json($ventas);  // Los datos pasan desde PHP a JavaScript
+    var promedioVentas = @json($promedioVentas);  // El promedio global de ventas
 
-        // Extraer los días y los totales de ventas
-        var days = ventas.map(function(venta) {
-            return venta.day; // Día de la venta
-        });
-
-        var totals = ventas.map(function(venta) {
-            return venta.total; // Total de la venta
-        });
-
-        // Configurar el gráfico
+    if (!ventasData || ventasData.length === 0) {
+        console.error('No hay datos de ventas disponibles.');
+    } else {
+        // Configuración del gráfico
         var options = {
             chart: {
-                type: 'line'
+                type: 'bar',  // Tipo de gráfico: columna
             },
             series: [{
                 name: 'Ventas',
-                data: totals // Datos de ventas
+                data: ventasData.map(function (item) {
+                    return {
+                        x: 'Mes ' + item.month,  // Usamos el mes como categoría
+                        y: item.total  // Total de ventas
+                    };
+                })
             }],
             xaxis: {
-                categories: days, // Días del mes
+                type: 'category',  // El eje X es de tipo categoría
                 title: {
-                    text: 'Días del Mes' // Título del eje X
+                    text: 'Meses'
                 }
             },
             yaxis: {
                 title: {
-                    text: 'Total de Ventas (en $)' // Título del eje Y
-                }
+                    text: 'Ventas Totales'
+                },
+                // Para agregar una línea horizontal en el gráfico para el promedio
+                min: 0,  // Establecemos un mínimo en 0
             },
-            title: {
-                text: 'Ventas Diarias del Mes', // Título principal del gráfico
-                align: 'center',
-                margin: 20, // Espacio entre el título y el gráfico
-                offsetY: 20 // Ajuste adicional para mover el título hacia abajo
-            },
-            tooltip: {
-                y: {
-                    formatter: function(val) {
-                        return "$" + val.toFixed(2); // Formato para el valor de las ventas
+            annotations: {
+                yaxis: [{
+                    y: promedioVentas,
+                    borderColor: '#FF0000',
+                    label: {
+                        text: 'Promedio Anual: ' + promedioVentas,
+                        style: {
+                            color: '#FF0000',
+                            background: '#FFFFFF',
+                            fontSize: '14px',
+                            fontWeight: 600
+                        }
                     }
-                }
+                }]
             }
         };
 
+        // Crear e iniciar el gráfico
         var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
-    });
+        chart.render();  // Renderiza el gráfico
+    }
 </script>
 
 

@@ -57,9 +57,11 @@ class AuditTable extends DataTableComponent
                     return 'Usuario no encontrado'; // En caso de que no se encuentre el usuario
                 })->searchable(),
 
-            Column::make('Evento', 'event')->searchable(),
+
 
             Column::make('Modelo', 'auditable_type'),
+
+            Column::make('Evento', 'event')->searchable(),
 
             Column::make('Valores Nuevos', 'new_values')
                 ->format(function ($value) {
