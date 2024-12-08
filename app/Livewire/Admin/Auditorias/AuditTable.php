@@ -121,11 +121,11 @@ class AuditTable extends DataTableComponent
                     return \Carbon\Carbon::parse($value)->format('j/n/Y');
                 }),
 
-
+            /*
             Column::make("Exportar")
                 ->label(function ($row) {
                     return view('admin.auditorias.auditoria_pdf', ['auditoria' => $row]);
-                }),
+                }),*/
 
         ];
     }

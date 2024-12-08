@@ -25,6 +25,7 @@ use CodersFree\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\VentasController;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\PurchaseController;
 use App\Models\Ventas;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -65,10 +66,8 @@ Route::get('prueba', function(){
 
 
 //Ruta Administrador
-Route::get('/admin', function () {
-    return view('admin.dashboard');
-})->middleware('can:acceso dashboard')
-->name('admin.dashboard');
+Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard')
+    ->middleware(['web', 'auth', 'can:acceso dashboard']);
 
 
 //Ruta Resource (agregar el prefijo admin ya que hago todo dentro de web.php)
