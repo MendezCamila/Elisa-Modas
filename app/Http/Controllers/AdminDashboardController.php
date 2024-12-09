@@ -6,7 +6,7 @@ use App\Models\Ventas;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
 {
@@ -40,9 +40,45 @@ class AdminDashboardController extends Controller
 
         //dd($ventasData);
 
+        $ventasxsubcategoria = DB::table('ventas')->get();
+
+        $estadisticas=[];
+
+        foreach ($ventasxsubcategoria as $venta){
+            $content = json_decode($venta->content, true); //decodificamos el json
+
+            foreach ($content as $item) {
+                $productId = $item['id']; // Obtén el ID del producto desde el JSON
+                $cantidad = $item['qty']; // Obtén la cantidad vendida
+
+                // Obtén la subcategoría del producto
+                $subcategoria = DB::table('products')
+                    ->join('subcategories', 'subcategories.id', '=', 'products.subcategory_id')
+                    ->where('products.id', $productId)
+                    ->value('subcategories.name');
+
+                // Suma las cantidades vendidas por subcategoría
+                if (isset($estadisticas[$subcategoria])) {
+                    $estadisticas[$subcategoria] += $cantidad;
+                } else {
+                    $estadisticas[$subcategoria] = $cantidad;
+                }
+            }
+        }
+
+        arsort($estadisticas); // Ordena el array de mayor a menor
+
+        //formatea para la vista
+        $data = collect($estadisticas)->map(function ($cantidad, $subcategoria) {
+            return ['subcategory' => $subcategoria, 'total' => $cantidad];
+        })->values();
+
+        dd($data);
+
         return view('admin.dashboard', [
             'ventas' => $ventasData,
             'promedioVentas' => $promedioVentas,
+            'unidadesVendidas' =>$data,
         ]);
     }
 }

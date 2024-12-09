@@ -43,9 +43,10 @@
             <div id="chart" style="height: 400px;"></div>
         </div>
 
-        <!-- Productos más vendidos -->
+        <!-- Subcategorias mas vendidas -->
         <div class="bg-white rounded-lg shadow-lg p-6">
-            <h3 class="text-lg font-semibold">Productos más vendidos</h3>
+            <h3 class="text-lg font-semibold">Subcategorias mas vendidas</h3>
+            <div id="chartSubcategoria" style="height: 400px;"></div>
             <ul>
 
             </ul>
