@@ -73,7 +73,7 @@ class AdminDashboardController extends Controller
             return ['subcategory' => $subcategoria, 'total' => $cantidad];
         })->values();
 
-        dd($data);
+        //dd($data);
 
         return view('admin.dashboard', [
             'ventas' => $ventasData,

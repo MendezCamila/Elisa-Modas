@@ -45,8 +45,8 @@
 
         <!-- Subcategorias mas vendidas -->
         <div class="bg-white rounded-lg shadow-lg p-6">
-            <h3 class="text-lg font-semibold">Subcategorias mas vendidas</h3>
-            <div id="chartSubcategoria" style="height: 400px;"></div>
+            <h3 class="text-lg font-semibold">Subcategorias mas vendidas</h3>  
+            <div id="unidadesChart" style="height: 400px;"></div>
             <ul>
 
             </ul>
@@ -119,6 +119,41 @@
         // Crear e iniciar el gráfico
         var chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();  // Renderiza el gráfico
+
+        // Subcategorias mas vendidas
+        var unidadesVendidas = @json($unidadesVendidas);
+
+    var unidadesOptions = {
+        chart: {
+            type: 'bar',
+        },
+        series: [{
+            name: 'Unidades Vendidas',
+            data: unidadesVendidas.map(item => ({
+                x: item.subcategory,
+                y: item.total
+            }))
+        }],
+        xaxis: {
+            type: 'category',
+            title: {
+                text: 'Subcategorías'
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Unidades Vendidas'
+            }
+        },
+        colors: ['#1E90FF'],
+        title: {
+            text: 'Unidades Vendidas por Subcategoría',
+            align: 'center'
+        }
+    };
+
+    var unidadesChart = new ApexCharts(document.querySelector("#unidadesChart"), unidadesOptions);
+    unidadesChart.render();
     }
 </script>
 
