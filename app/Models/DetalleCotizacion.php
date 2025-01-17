@@ -18,7 +18,8 @@ class DetalleCotizacion extends Model implements Auditable
         'cantidad',
         'tiempo_entrega',
         'cotizacion_id',
-        'variant_id'
+        'variant_id',
+        'cantidad_solicitada',
     ];
 
     //relacion uno a muchos inversa con cotizacion
