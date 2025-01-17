@@ -177,6 +177,8 @@ Route::middleware(['web', 'auth', /*'can:administrar auditoria'*/])->prefix('adm
 //Ruta para administrar Cotizaciones
 Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('admin')->name('admin.')->group(function () {
     Route::get('cotizaciones', [CotizacionController::class, 'index'])->name('cotizaciones.index');
+    //ruta para crear una nueva cotizacion
+    Route::get('cotizaciones/create', [CotizacionController::class, 'create'])->name('cotizaciones.create');
 });
 
 //Ruta para administrar las ventas
