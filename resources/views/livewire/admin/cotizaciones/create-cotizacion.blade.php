@@ -34,17 +34,26 @@
                 </div>
 
 
-                {{-- Seleccionar las variantes --}}
+                {{-- Seleccionar las variantes
                 <div class="mb-4">
                     <x-label for="variant_id" value="Variantes" />
                     <select name="variant_id" id="variants" class="w-full" wire:model="variant_id">
                         @foreach ($variants as $variant)
                             <option value="{{ $variant->id }}">
-                                {{ $variant->sku }}
+                                {{ $variant->product->name }} ({{ $variant->features->pluck('name')->join(', ') }})
                             </option>
                         @endforeach
                     </select>
-                </div>
+                </div> --}}
+
+                {{-- Seleccionar las variantes --}}
+
+                <select wire:model="variant_id" class="w-full">
+                    <option value="">Selecciona una variante</option>
+                    @foreach($variants as $variant)
+                        <option value="{{ $variant['id'] }}">{{ $variant['name'] }}</option>
+                    @endforeach
+                </select>
 
 
                 <div class="flex justify-end mt-4">
@@ -80,7 +89,7 @@
             Livewire.on('initializeSelect2', function() {
                 setTimeout(function() {
                     $('#subcategories').select2(
-                    'destroy'); // Destruye select2 antes de volver a aplicarlo
+                        'destroy'); // Destruye select2 antes de volver a aplicarlo
                     initializeSelect2(); // Vuelve a inicializar select2 después de renderizar
                 }, 100); // Retardo de 100ms para dar tiempo al DOM a estabilizarse
             });

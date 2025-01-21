@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Variant;
 use App\Models\Supplier;
 use App\Models\Subcategory;
+use App\Models\Product;
 
 class CreateCotizacion extends Component
 {
@@ -15,7 +16,9 @@ class CreateCotizacion extends Component
 
     // Agrega esta propiedad para almacenar las variantes
     public $variants = [];
-    public $variant_id ;// Agrega esta propiedad para almacenar la variante seleccionada
+    public $variant_id; // Agrega esta propiedad para almacenar la variante seleccionada
+
+    public $subcategory_id;
 
     public function mount()
     {
@@ -35,10 +38,7 @@ class CreateCotizacion extends Component
     }
 
     //creacion reglas de validacion
-    protected function rules()
-    {
-
-    }
+    protected function rules() {}
 
     public function updatedSubcategoryIds($value)
     {
@@ -59,17 +59,57 @@ class CreateCotizacion extends Component
     }
 
     public function updateVariants()
-    {
-        if (count($this->subcategory_ids) > 0) {
-            $this->variants = Variant::whereIn('product_id', function($query) {
-                $query->select('id')
-                    ->from('products')
-                    ->whereIn('subcategory_id', $this->subcategory_ids);
-            })->get();
-        } else {
-            $this->variants = [];
+{
+
+    $variantData = []; // Array para almacenar los datos formateados
+
+    // Asegúrate de que subcategory_ids esté definido y no esté vacío
+    if (count($this->subcategory_ids) > 0) {
+        // Obtener las variantes de los productos asociados a las subcategorías seleccionadas
+        $this->variants = Variant::whereHas('product', function ($query) {
+            $query->whereIn('subcategory_id', $this->subcategory_ids);
+        })
+        ->with('features', 'product') // Cargar características asociadas a las variantes y los productos
+        ->get();
+
+        // Iterar sobre las variantes obtenidas
+        foreach ($this->variants as $variant) {
+            // Obtener el nombre del producto
+            $productName = $variant->product->name;
+
+            // Inicializar un array para las características de la variante
+            $variantFeatures = [];
+
+            // Iterar sobre las características de la variante
+            foreach ($variant->features as $feature) {
+                // Verificar si la descripción existe y agregarla entre paréntesis
+                if ($feature->description) {
+                    $variantFeatures[] = $feature->description; // Solo agregar la descripción
+                }
+            }
+
+            // Unir las características con coma y espacio
+            $featuresString = implode(', ', $variantFeatures);
+
+            // Formatear el nombre del producto con las características de la variante
+            if ($featuresString) {
+                $variantData[] = $productName . ' (' . $featuresString . ')'; // Mostrar solo descripciones
+            }
         }
+
+        // Depurar los datos obtenidos (solo para revisar el resultado)
+        dd($variantData);
+
+    } else {
+        $this->variants = []; // Si no hay subcategorías seleccionadas, no se obtienen variantes
     }
+
+
+}
+
+
+
+
 
     public function render()
     {
