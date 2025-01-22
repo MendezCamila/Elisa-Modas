@@ -66,7 +66,7 @@ class CreateCotizacion extends Component
 
     public function updateVariants()
 {
-    /*
+    
     $variantData = []; // Array para almacenar los datos formateados
 
     if (count($this->subcategory_ids) > 0) {
@@ -102,8 +102,9 @@ class CreateCotizacion extends Component
     } else {
         $this->variants = [];
     }
-        */
+        
 
+        /*
         $variantData = []; // Array para almacenar los datos formateados
 
         if (count($this->subcategory_ids) > 0) {
@@ -138,7 +139,7 @@ class CreateCotizacion extends Component
             \Log::info('Variants after assignment:', $this->variants);
         } else {
             $this->variants = [];
-        }
+        }*/
 }
 
 
