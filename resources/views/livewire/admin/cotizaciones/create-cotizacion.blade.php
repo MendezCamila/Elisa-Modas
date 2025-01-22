@@ -20,7 +20,7 @@
 
 
                 {{-- Seleccionar las subcategorias --}}
-                <div class="mb-4" wire:ignore>
+                <div class="mb-4"   wire:ignore >
                     <x-label for="subcategory_id" value="Subcategorías" />
 
                     <select name="" id="subcategories" class="w-full" wire:model="subcategory_ids">
@@ -33,25 +33,22 @@
                     </select>
                 </div>
 
-            
 
-                {{-- Seleccionar las variantes --}}
-                <div class="mb-4" >
+
+                {{-- Seleccionar las variantes--}}
+                <div class="mb-4">
                     <x-label for="variant_ids" value="Variantes Select2" />
-                    <select  id="variants" class="w-full" multiple="multiple" wire:model="variant_ids">
+                    <select  id="variants" class="w-full" multiple="multiple" wire:model="variant_ids"  >
                         @foreach ($variants as $variant)
-                        {{ var_dump($variant) }}
                             <option value="{{ $variant['id'] }}">{{ $variant['name'] }}</option>
-                            
                         @endforeach
                     </select>
-                    {{--  @dump($variants)--}}
                 </div>
 
 
 
                 {{-- Selección de variantes
-                @dump($variants) --}}
+                @dump($variants)
                 <div>
                     <x-label for="variant_id" value="Variante" />
                     <select id="variant_id" class="w-full" wire:model="variant_id">
@@ -61,9 +58,19 @@
                             <option value="{{ $variant['id'] }}">{{ $variant['name'] }}</option>
                         @endforeach
                     </select>
-                    {{--  @dump($variants)--}}
-                </div>
+                    @dump($variants)
+                </div>--}}
 
+                <div class="mb-4">
+                    <x-label for="supplier_ids" value="Proveedores" />
+                    <select name="supplier_ids" id="suppliers" class="w-full" multiple="multiple" wire:model="supplier_ids">
+                        @foreach ($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}">
+                                {{ $supplier->name }} {{ $supplier->last_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
 
             </form>
@@ -79,52 +86,8 @@
 @endassets
 
 
-{{--  
 @script
-    <script>
-        $(document).ready(function() {
-            function initializeSelect2() {
-                $('#subcategories').select2();
-                $('#subcategories').on('change', function(event) {
-                    @this.set('subcategory_ids', $(this).val());
-                });
-            }
 
-            initializeSelect2(); // Inicializar en la primera carga
-
-            Livewire.on('initializeSelect2', function() {
-                setTimeout(function() {
-                    $('#subcategories').select2(
-                        'destroy'); // Destruye select2 antes de volver a aplicarlo
-                    initializeSelect2(); // Vuelve a inicializar select2 después de renderizar
-                }, 100); // Retardo de 100ms para dar tiempo al DOM a estabilizarse
-            });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            function initializeSelect2() {
-                $('#variants').select2();
-                $('#variants').on('change', function(event) {
-                    @this.set('variant_ids', $(this).val());
-                });
-            }
-
-            initializeSelect2(); // Inicializar en la primera carga
-
-            Livewire.on('initializeSelect2', function() {
-                setTimeout(function() {
-                    $('#variants').select2(
-                        'destroy'); // Destruye select2 antes de volver a aplicarlo
-                    initializeSelect2(); // Vuelve a inicializar select2 después de renderizar
-                }, 100); // Retardo de 100ms para dar tiempo al DOM a estabilizarse
-            });
-        });
-    </script>
-@endscript --}}
-
-@script
 <script>
     $(document).ready(function() {
         function initializeSelect2() {
@@ -137,19 +100,30 @@
             $('#variants').on('change', function(event) {
                 @this.set('variant_ids', $(this).val());
             });
+
+            $('#suppliers').select2();
+            $('#suppliers').on('change', function(event) {
+                @this.set('supplier_ids', $(this).val());
+            });
+
         }
 
         initializeSelect2(); // Inicializar en la primera carga
+
+
         Livewire.on('initializeSelect2', function() {
                 setTimeout(function() {
                     $('#subcategories').select2(
                         'destroy'); // Destruye select2 antes de volver a aplicarlo
-                    $('#variants').select2('destroy'); // Destruye select2 antes de volver a aplicarlo  
-                    initializeSelect2(); // Vuelve a inicializar select2 después de renderizar
-                }, 100); // Retardo de 100ms para dar tiempo al DOM a estabilizarse
+                    $('#variants').select2('destroy'); // Destruye select2 antes de volver a aplicarlo
+                   initializeSelect2(); // Vuelve a inicializar select2 después de renderizar
+                }/*, 100*/); // Retardo de 100ms para dar tiempo al DOM a estabilizarse
             });
         });
     </script>
+
+
+
 @endscript
 
 

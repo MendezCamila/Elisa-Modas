@@ -27,6 +27,14 @@ class CreateCotizacion extends Component
 
     public $variant_id;
 
+    //lista los proveedores asociados a la subcategoria
+    public $suppliers = [];
+
+    //Proveedores seleccionados
+    public $selectedSuppliers = [];
+
+    public $supplier_ids = [];
+
     public function mount()
     {
         //recupero todas las categorias
@@ -39,11 +47,13 @@ class CreateCotizacion extends Component
 
 
         $this->dispatch('initializeSelect2');
+
     }
 
     public function hydrate()
     {
         $this->dispatch('initializeSelect2');
+
     }
 
     //creacion reglas de validacion
@@ -51,9 +61,10 @@ class CreateCotizacion extends Component
 
     public function updatedSubcategoryIds($value)
     {
-        
+
         $this->subcategory_ids = is_array($value) ? $value : explode(',', $value);
         $this->updateVariants();
+        $this->updateProveedores();
     }
 
     protected function messages()
@@ -66,7 +77,7 @@ class CreateCotizacion extends Component
 
     public function updateVariants()
 {
-    
+
     $variantData = []; // Array para almacenar los datos formateados
 
     if (count($this->subcategory_ids) > 0) {
@@ -102,45 +113,20 @@ class CreateCotizacion extends Component
     } else {
         $this->variants = [];
     }
-        
-
-        /*
-        $variantData = []; // Array para almacenar los datos formateados
-
-        if (count($this->subcategory_ids) > 0) {
-            $variants = Variant::whereHas('product', function ($query) {
-                $query->whereIn('subcategory_id', $this->subcategory_ids);
-            })
-            ->with('features', 'product') // Cargar características asociadas a las variantes y los productos
-            ->get();
-    
-            foreach ($variants as $variant) {
-                $productName = $variant->product->name;
-                $variantFeatures = [];
-    
-                foreach ($variant->features as $feature) {
-                    if ($feature->description) {
-                        $variantFeatures[] = $feature->description;
-                    }
-                }
-    
-                $featuresString = implode(', ', $variantFeatures);
-    
-                if ($featuresString) {
-                    $variantData[] = [
-                        'id' => $variant->id,
-                        'name' => $productName . ' (' . $featuresString . ')'
-                    ];
-                }
-            }
-    
-            $this->variants = $variantData; // Asignar las variantes formateadas a la propiedad
-            //dd( $this->variants);
-            \Log::info('Variants after assignment:', $this->variants);
-        } else {
-            $this->variants = [];
-        }*/
 }
+
+    //filtre proveedores en base a la subcategoria selecccioanda
+    public function updateProveedores (){
+        if (count($this->subcategory_ids) > 0) {
+            $this->suppliers = Supplier::whereHas('subcategories', function ($query) {
+                $query->whereIn('subcategory_id', $this->subcategory_ids);
+            })->get();
+        } else {
+            $this->suppliers = [];
+        }
+
+        //dd($this->suppliers)->toArray();
+    }
 
 
 
