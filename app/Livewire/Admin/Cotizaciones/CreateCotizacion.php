@@ -12,7 +12,7 @@ use App\Models\Product;
 class CreateCotizacion extends Component
 {
     // Agrega esta propiedad para almacenar los IDs de subcategorías seleccionadas
-    public $subcategory_ids = [];
+    public $subcategory_ids;
 
 
     public $subcategories = [];
@@ -23,17 +23,13 @@ class CreateCotizacion extends Component
 
     public $variant_ids = [];  // Agrega esta propiedad para almacenar la variante seleccionada
 
-    public $subcategory_id;
-
     public $variant_id;
 
     //lista los proveedores asociados a la subcategoria
     public $suppliers = [];
-
-    //Proveedores seleccionados
-    public $selectedSuppliers = [];
-
     public $supplier_ids = [];
+
+    public $quantities = [];
 
     public function mount()
     {
@@ -45,10 +41,10 @@ class CreateCotizacion extends Component
 
         $this->subcategories = Subcategory::with('category.family')->get();
 
-
         $this->dispatch('initializeSelect2');
 
     }
+
 
     public function hydrate()
     {
@@ -65,6 +61,13 @@ class CreateCotizacion extends Component
         $this->subcategory_ids = is_array($value) ? $value : explode(',', $value);
         $this->updateVariants();
         $this->updateProveedores();
+        $this->dispatch('initializeSelect2');
+    }
+
+    public function updatedVariantIds($value)
+    {
+        $this->variant_ids = is_array($value) ? $value : explode(',', $value);
+        $this->quantities = array_fill_keys($this->variant_ids, 1); // Inicializa las cantidades con 1
     }
 
     protected function messages()
