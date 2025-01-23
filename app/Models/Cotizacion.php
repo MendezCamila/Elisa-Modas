@@ -16,8 +16,6 @@ class Cotizacion extends Model implements Auditable
 
     protected $fillable = [
         'supplier_id',
-        'total',
-        'tiempo_entrega',
         'orden_compra_id'
     ];
 

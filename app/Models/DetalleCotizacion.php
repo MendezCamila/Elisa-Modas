@@ -20,6 +20,8 @@ class DetalleCotizacion extends Model implements Auditable
         'cotizacion_id',
         'variant_id',
         'cantidad_solicitada',
+        'plazo_resp',
+
     ];
 
     //relacion uno a muchos inversa con cotizacion
