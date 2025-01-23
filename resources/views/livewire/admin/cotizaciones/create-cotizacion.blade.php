@@ -94,7 +94,7 @@
                 {{-- Seleccionar la fecha límite --}}
                 <div class="mb-4">
                     <x-label for="response_deadline" value="Fecha límite de respuesta" />
-                    <x-input type="date" id="response_deadline" class="w-full" wire:model="response_deadline" />
+                    <x-input type="date" id="plazo_resp" class="w-full" wire:model="plazo_resp" />
                 </div>
 
                 {{-- Boton para enviar cotizacion --}}

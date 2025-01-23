@@ -8,6 +8,8 @@ use App\Models\Variant;
 use App\Models\Supplier;
 use App\Models\Subcategory;
 use App\Models\Product;
+use App\Models\Cotizacion;
+use App\Models\DetalleCotizacion;
 
 class CreateCotizacion extends Component
 {
@@ -31,7 +33,7 @@ class CreateCotizacion extends Component
 
     public $quantities = [];
 
-    public $response_deadline;
+    public $plazo_resp;
 
     public function mount()
     {
@@ -135,24 +137,38 @@ class CreateCotizacion extends Component
 
     public function enviarCotizacion()
     {
-        /*
+
         $this->validate([
             'supplier_ids' => 'required|array|min:1',
             'supplier_ids.*' => 'required|integer|exists:suppliers,id',
             'quantities' => 'required|array|min:1',
-            'quantities.*' => 'required|integer|min:1',
-            'response_deadline' => 'required|date|after:today',
+            'quantities.*' => 'required|integer|min:1',// Cantidad solicitada por variante
+            'plazo_resp' => 'required|date|after:today', // Fecha de plazo de respuesta
+            'variant_ids' => 'required|array|min:1', // Variantes seleccionadas
+            'supplier_ids' => 'required|array|min:1', // Proveedores seleccionados
         ]);
 
         foreach ($this->supplier_ids as $supplierId) {
-            $cotizacion= Cotizacion::create([
-                'total' => 0,
-                'tiempo_entrega' => 0,
-
+            // Crear la cotización
+            $cotizacion = Cotizacion::create([
+                'supplier_id' => $supplierId,
+                'orden_compra_id' => null, // Inicialmente nulo
             ]);
 
+            foreach ($this->variant_ids as $variantId) {
+                DetalleCotizacion::create([
+                    'cotizacion_id' => $cotizacion->id,
+                    'variant_id' => $variantId,
+                    'cantidad_solicitada' => $this->quantities[$variantId], // Cantidad ingresada
+                    'plazo_resp' => $this->plazo_resp, // Fecha límite para respuesta
+                    'precio' => null, // Inicialmente nulo (rellena desp el prov)
+                    'cantidad' => null, // Inicialmente nulo (rellena desp el prov)
+                    'tiempo_entrega' => null, // Inicialmente nulo (rellena desp el prov)
+                ]);
+            }
 
-        }*/
+        //dd($cotizacion);
+        }
 
 
         // Lógica para enviar la cotización
