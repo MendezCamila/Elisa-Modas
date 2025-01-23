@@ -170,6 +170,13 @@ class CreateCotizacion extends Component
         //dd($cotizacion);
         }
 
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien hecho!',
+            'text' => 'La cotización ha sido enviada correctamente',
+        ]);
+
+        return redirect()->route('admin.cotizaciones.index');
 
         // Lógica para enviar la cotización
     }
