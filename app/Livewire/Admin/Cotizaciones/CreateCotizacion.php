@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Livewire\Admin\Cotizaciones;
+//use illuminate\Support\Facades\Mail;
+
+
 
 use Livewire\Component;
 use App\Models\Category;
@@ -10,6 +13,8 @@ use App\Models\Subcategory;
 use App\Models\Product;
 use App\Models\Cotizacion;
 use App\Models\DetalleCotizacion;
+use App\Mail\EnviarCotizacionMail;
+use Illuminate\Support\Facades\Mail;
 
 class CreateCotizacion extends Component
 {
@@ -166,6 +171,10 @@ class CreateCotizacion extends Component
                     'tiempo_entrega' => null, // Inicialmente nulo (rellena desp el prov)
                 ]);
             }
+
+            // Enviar correo electrónico al proveedor con un enlace unico al formulario de cotización
+            $supplier = Supplier::find($supplierId); // Aquí se corrige
+            Mail::to($supplier->email)->send(new EnviarCotizacionMail($cotizacion));
 
         //dd($cotizacion);
         }
