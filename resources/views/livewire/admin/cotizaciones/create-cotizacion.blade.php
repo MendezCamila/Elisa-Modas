@@ -10,7 +10,7 @@
         </header>
 
         <div class="px-6 py-4">
-            <form wire:submit.prevent="createCotizacion">
+            <form wire:submit.prevent="enviarCotizacion">
 
                 <div class="mb-4">
                     <x-label for="name" value="Nombre" />
@@ -44,7 +44,7 @@
                             </option>
                         @endforeach
                     </select>
-                    @dump($subcategory_ids)
+                    {{--  @dump($subcategory_ids) --}}
                 </div>
 
 
@@ -57,23 +57,23 @@
                             <option value="{{ $variant['id'] }}">{{ $variant['name'] }}</option>
                         @endforeach
                     </select>
-                    @dump($variant_ids)
+                    {{--  @dump($variant_ids) --}}
                 </div>
 
                 {{-- Mostrar las variantes seleccionadas con sus cantidades --}}
                 <div class="mb-4">
-                    <x-label value="Variantes seleccionadas" />
+                    <x-label value="Cantidad solicitada" />
                     @foreach ($variant_ids as $variant_id)
                         @php
                             $variant = collect($variants)->firstWhere('id', $variant_id);
                         @endphp
                         <div class="flex items-center mb-2">
                             <span class="mr-2">{{ $variant['name'] }}</span>
-                            <x-input type="number" class="w-20" wire:model.live="quantities.{{ $variant_id }}"
-                                min="1" />
+                            <x-input type="number" class="w-20" wire:model.live="quantities.{{ $variant_id }} "
+                                placeholder="Cantidad" min="1" />
                         </div>
                     @endforeach
-                    @dump($quantities)
+                    {{--  @dump($quantities) --}}
                 </div>
 
 
@@ -88,9 +88,21 @@
                             </option>
                         @endforeach
                     </select>
-                    @dump($supplier_ids)
+                    {{--  @dump($supplier_ids) --}}
                 </div>
 
+                {{-- Seleccionar la fecha límite --}}
+                <div class="mb-4">
+                    <x-label for="response_deadline" value="Fecha límite de respuesta" />
+                    <x-input type="date" id="response_deadline" class="w-full" wire:model="response_deadline" />
+                </div>
+
+                {{-- Boton para enviar cotizacion --}}
+                <div class="flex justify-end mt-4">
+                    <x-button>
+                        Enviar cotización
+                    </x-button>
+                </div>
 
             </form>
         </div>
@@ -135,7 +147,7 @@
                     $('#subcategories').select2(
                         'destroy'); // Destruye select2 antes de volver a aplicarlo
                     $('#variants').select2(
-                    'destroy'); // Destruye select2 antes de volver a aplicarlo
+                        'destroy'); // Destruye select2 antes de volver a aplicarlo
                     initializeSelect2(); // Vuelve a inicializar select2 después de renderizar
                 } /*, 100*/ ); // Retardo de 100ms para dar tiempo al DOM a estabilizarse
             });

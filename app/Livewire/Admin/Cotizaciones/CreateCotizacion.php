@@ -31,6 +31,8 @@ class CreateCotizacion extends Component
 
     public $quantities = [];
 
+    public $response_deadline;
+
     public function mount()
     {
         //recupero todas las categorias
@@ -129,6 +131,31 @@ class CreateCotizacion extends Component
         }
 
         //dd($this->suppliers)->toArray();
+    }
+
+    public function enviarCotizacion()
+    {
+        /*
+        $this->validate([
+            'supplier_ids' => 'required|array|min:1',
+            'supplier_ids.*' => 'required|integer|exists:suppliers,id',
+            'quantities' => 'required|array|min:1',
+            'quantities.*' => 'required|integer|min:1',
+            'response_deadline' => 'required|date|after:today',
+        ]);
+
+        foreach ($this->supplier_ids as $supplierId) {
+            $cotizacion= Cotizacion::create([
+                'total' => 0,
+                'tiempo_entrega' => 0,
+
+            ]);
+
+
+        }*/
+
+
+        // Lógica para enviar la cotización
     }
 
 
