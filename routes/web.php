@@ -181,6 +181,18 @@ Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('
     Route::get('cotizaciones/create', [CotizacionController::class, 'create'])->name('cotizaciones.create');
 });
 
+//previsualizar como queda el correo que vera el proveedor http://elisamodas.test/previsualizar-cotizacion
+Route::get('/previsualizar-cotizacion', function () {
+    $cotizacion = (object) [
+        'id' => 123, // ID ficticio para la cotización
+    ];
+
+    return view('admin.emails.cotizacion', compact('cotizacion'));
+});
+
+Route::get('/cotizacion/{id}', [CotizacionController::class, 'show'])->name('cotizacion.show');
+
+
 //Ruta para administrar las ventas
 Route::middleware(['web', 'auth', /*'can:administrar ventas'*/])->prefix('admin')->name('admin.')->group(function () {
     Route::get('ventas', [VentasController::class, 'index'])->name('ventas.index');
