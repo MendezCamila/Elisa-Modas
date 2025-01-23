@@ -44,7 +44,11 @@ class EnviarCotizacionMail extends Mailable
     {
         return new Content(
             view: 'admin.emails.cotizacion',
+            with: [
+                'cotizacion' => $this->cotizacion,
+            ],
         );
+
     }
 
     /**
