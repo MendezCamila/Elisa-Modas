@@ -120,7 +120,7 @@ class CreateCotizacion extends Component
         }
 
         $this->variants = $variantData;
-        dd($this->variants);
+        //dd($this->variants);
 
     } else {
         $this->variants = [];
