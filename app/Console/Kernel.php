@@ -14,9 +14,12 @@ class Kernel extends ConsoleKernel
     {
         // Aquí puedes programar tu comando
         $schedule->command('cotizaciones:generar')->mondays()->at('07:00');
+
+        // Comando para revisar las cotizaciones no respondidas todos los días a la medianoche
+        $schedule->command('cotizaciones:revisar-no-respondidas')->dailyAt('00:00');
     }
 
-    
+
 
     /**
      * Registra los comandos disponibles.
