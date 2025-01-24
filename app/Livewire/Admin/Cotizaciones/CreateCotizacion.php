@@ -158,6 +158,7 @@ class CreateCotizacion extends Component
             $cotizacion = Cotizacion::create([
                 'supplier_id' => $supplierId,
                 'orden_compra_id' => null, // Inicialmente nulo
+                'estado' => 'enviada', // Estado inicial al crear la cotización
             ]);
 
             foreach ($this->variant_ids as $variantId) {

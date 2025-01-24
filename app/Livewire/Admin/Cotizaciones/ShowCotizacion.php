@@ -39,7 +39,8 @@ class ShowCotizacion extends Component
         }
     }
 
-    public function guardarCotizacion(){
+    public function guardarCotizacion()
+    {
 
         //validad la entrada de datos
         $this->validate([
@@ -58,6 +59,12 @@ class ShowCotizacion extends Component
 
             ]);
         }
+
+        // Cambiar el estado de la cotización a "respondida"
+        $this->cotizacion->update([
+            'estado' => 'respondida',
+        ]);
+
         //mostrar en un dd lo que se guardo
         //dd($this->detalleCotizaciones);
         session()->flash('swal', [

@@ -16,7 +16,8 @@ class Cotizacion extends Model implements Auditable
 
     protected $fillable = [
         'supplier_id',
-        'orden_compra_id'
+        'orden_compra_id',
+        'estado',
     ];
 
     //Relacion uno a muchos inversa con proveedores
