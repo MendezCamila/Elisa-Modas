@@ -13,4 +13,9 @@
     @livewire('admin.cotizaciones.manage-cotizaciones')
 
 
+    {{-- llamo a mi componente IndexTable
+    @livewire('admin.cotizaciones.index-table')--}}
+
+
+
 </x-admin-layout>

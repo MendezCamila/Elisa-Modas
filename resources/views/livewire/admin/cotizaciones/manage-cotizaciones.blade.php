@@ -14,12 +14,11 @@
             </a>
         </x-slot>
 
-        {{-- Buscador de usuarios --}}
-        <div class="px-6 py-4">
-            <x-input wire:model.live="search" type="text" class="w-full rounded-md border-gray-300 shadow-sm" placeholder="Buscar" />
-        </div>
+        
 
         {{-- Tabla Cotizacion --}}
+        {{-- llamo a mi componente IndexTable --}}
+        @livewire('admin.cotizaciones.index-table')
 
 
 
