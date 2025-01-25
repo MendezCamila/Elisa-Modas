@@ -23,7 +23,7 @@ class Cotizacion extends Model implements Auditable
     //Relacion uno a muchos inversa con proveedores
     public function proveedor()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
     //relacion uno a muchos con detalle cotizacion
     public function detalleCotizaciones()

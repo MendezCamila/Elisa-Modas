@@ -14,7 +14,7 @@
             </a>
         </x-slot>
 
-        
+
 
         {{-- Tabla Cotizacion --}}
         {{-- llamo a mi componente IndexTable --}}

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Cotizaciones;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Cotizacion;
+use App\Models\Supplier;
 
 class IndexTable extends DataTableComponent
 {
@@ -24,13 +25,26 @@ class IndexTable extends DataTableComponent
             Column::make("Id", "id")
                 ->sortable(),
 
-            /*
-            Column::make("Supplier id", "supplier_id")
-                ->sortable(),
+            Column::make("Fecha creación", "created_at")
+                ->sortable()
+                ->format(fn($value) => $value->format('d/m/Y')),
 
             /*
-            Column::make("Orden compra id", "orden_compra_id")
-                ->sortable(),*/
+            Column::make("Proveedor", "supplier_id")
+                ->sortable()
+                ->searchable()
+                ->format(function ($value) {
+                    $supplier = Supplier::find($value);
+                    return $supplier->name ?? 'N/A';
+                }),*/
+
+            Column::make("Proveedor", "supplier_id")
+                ->sortable()
+                ->searchable()
+                ->format(function ($value) {
+                    $supplier = Supplier::find($value);
+                    return $supplier ? $supplier->name . ' ' . $supplier->last_name : 'N/A';
+                }),
 
             Column::make("Plazo Respuesta")
                 ->label(function ($row) {
@@ -38,9 +52,6 @@ class IndexTable extends DataTableComponent
                     $detalle = $row->detalleCotizaciones->first();
                     return $detalle->plazo_resp ?? 'N/A';
                 }),
-
-
-
             Column::make("Estado", "estado")
                 ->sortable()
                 ->searchable()
@@ -53,26 +64,9 @@ class IndexTable extends DataTableComponent
                     default => '<span class="badge bg-secondary">Desconocido</span>',
                 }),
 
-            /*
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),*/
 
             Column::make("Acciones", "id")
             /*->format(fn($value, $row) => view('admin.cotizaciones.partials.actions', ['cotizacion' => $row])),*/
         ];
     }
-
-    /*
-    protected function formatearEstado($estado): string
-    {
-        return match ($estado) {
-            'pendiente' => '<span class="badge bg-warning">Pendiente</span>',
-            'enviada' => '<span class="badge bg-primary">Enviada</span>',
-            'respondida' => '<span class="badge bg-success">Respondida</span>',
-            'no respondida' => '<span class="badge bg-danger">No Respondida</span>',
-            default => '<span class="badge bg-secondary">' . e($estado) . '</span>', // En caso de estado desconocido, mostramos el valor original.
-        };
-    }*/
 }
