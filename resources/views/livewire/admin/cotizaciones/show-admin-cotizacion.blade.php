@@ -8,21 +8,20 @@
         </header>
 
         <div class="px-6 py-4">
-            <div class="mb-4">
-                <x-label value="Nombre" />
-                <p>{{ $cotizacion->nombre }}</p>
-            </div>
 
-
-            {{-- Mostrar subcategorías
+            {{-- Mostrar variantes
             <div class="mb-4">
-                <x-label value="Subcategorías" />
+                <x-label value="Variantes" />
                 <ul>
-                    @foreach ($cotizacion->subcategories as $subcategory)
-                        <li>{{ $subcategory->name }} ({{ $subcategory->category->name }} - {{ $subcategory->category->family->name }})</li>
+                    @foreach ($cotizacion->detalleCotizaciones as $detalle)
+                        <li>
+                            {{ $detalle->variant->name ?? 'N/A' }}
+                            - Producto: {{ $detalle->variant->product->name ?? 'N/A' }} <!-- Aquí agregamos el nombre del producto -->
+                            - Cantidad: {{ $detalle->cantidad_solicitada }}
+                        </li>
                     @endforeach
                 </ul>
-            </div> --}}
+            </div>--}}
 
             {{-- Mostrar variantes --}}
             <div class="mb-4">
@@ -30,30 +29,28 @@
                 <ul>
                     @foreach ($cotizacion->detalleCotizaciones as $detalle)
                         <li>
-                            {{ $detalle->variant->name ?? 'N/A' }}
+                            - Producto: {{ $detalle->variant->product->name ?? 'N/A' }}
                             - Cantidad: {{ $detalle->cantidad_solicitada }}
+                            @if ($detalle->variant->features->isNotEmpty())
+                                - Características: {{ implode(', ', $detalle->variant->features->pluck('description')->toArray()) }}
+                            @endif
                         </li>
                     @endforeach
                 </ul>
             </div>
 
-            {{-- Mostrar proveedores
+            {{-- Mostrar el proveedor --}}
             <div class="mb-4">
-                <x-label value="Proveedores" />
-                <ul>
-                    @foreach ($cotizacion->suppliers as $supplier)
-                        <li>{{ $supplier->name }} {{ $supplier->last_name }}</li>
-                    @endforeach
-                </ul>
-            </div> --}}
+                <x-label value="Proveedor" />
+                <p>{{ $cotizacion->proveedor->name ?? 'Proveedor no disponible' }} {{ $cotizacion->proveedor->last_name ?? 'N/A' }}</p> <!-- Mostrar nombre completo del proveedor -->
+            </div>
 
-            {{ $cotizacion->proveedor->name ?? 'Proveedor no disponible' }}
-
-            {{-- Mostrar fecha límite --}}
+            {{-- Mostrar fecha límite de respuesta --}}
             <div class="mb-4">
                 <x-label value="Fecha límite de respuesta" />
-                <p>{{ $cotizacion->plazo_resp ? $cotizacion->plazo_resp->format('d/m/Y') : 'N/A' }}</p>
+                <p>{{ $cotizacion->detalleCotizaciones->first()->plazo_resp ? \Carbon\Carbon::parse($cotizacion->detalleCotizaciones->first()->plazo_resp)->format('d/m/Y') : 'N/A' }}</p> <!-- Acceder al plazo_resp desde detalleCotizacion -->
             </div>
         </div>
     </section>
 </div>
+

@@ -15,10 +15,8 @@ class ShowAdminCotizacion extends Component
 
     public function mount($cotizacionId)
     {
-        //$this->cotizacion = Cotizacion::with('detalleCotizaciones.variant', 'proveedor')->findOrFail($id);
-
         // Carga la cotización con todas las relaciones necesarias
-        $this->cotizacion = Cotizacion::with(['detalleCotizaciones.variant'])->findOrFail($cotizacionId);
+        $this->cotizacion = Cotizacion::with(['detalleCotizaciones.variant.features','detalleCotizaciones.variant.product'])->findOrFail($cotizacionId);
 
         // Cargar manualmente el proveedor si la relación no está cargada
         if (is_null($this->cotizacion->proveedor)) {
@@ -26,6 +24,10 @@ class ShowAdminCotizacion extends Component
         } else {
             $this->proveedor = $this->cotizacion->proveedor;
         }
+
+
+
+        //dd($this->cotizacion);
 
     }
 
