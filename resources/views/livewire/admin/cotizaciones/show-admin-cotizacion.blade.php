@@ -9,21 +9,9 @@
 
         <div class="px-6 py-4">
 
-            {{-- Mostrar variantes
-            <div class="mb-4">
-                <x-label value="Variantes" />
-                <ul>
-                    @foreach ($cotizacion->detalleCotizaciones as $detalle)
-                        <li>
-                            {{ $detalle->variant->name ?? 'N/A' }}
-                            - Producto: {{ $detalle->variant->product->name ?? 'N/A' }} <!-- Aquí agregamos el nombre del producto -->
-                            - Cantidad: {{ $detalle->cantidad_solicitada }}
-                        </li>
-                    @endforeach
-                </ul>
-            </div>--}}
 
-            {{-- Mostrar variantes --}}
+
+            {{-- Mostrar variantes
             <div class="mb-4">
                 <x-label value="Variantes" />
                 <ul>
@@ -37,6 +25,34 @@
                         </li>
                     @endforeach
                 </ul>
+            </div>--}}
+
+            <div class="mb-4">
+                <x-label value="Variantes" />
+                <table class="table-auto w-full border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="px-4 py-2 border">Producto</th>
+                            <th class="px-4 py-2 border">Cantidad Solicitada</th>
+                            <th class="px-4 py-2 border">Características</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($cotizacion->detalleCotizaciones as $detalle)
+                            <tr>
+                                <td class="px-4 py-2 border">{{ $detalle->variant->product->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border">{{ $detalle->cantidad_solicitada }}</td>
+                                <td class="px-4 py-2 border">
+                                    @if ($detalle->variant->features->isNotEmpty())
+                                        {{ implode(', ', $detalle->variant->features->pluck('description')->toArray()) }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
 
             {{-- Mostrar el proveedor --}}
