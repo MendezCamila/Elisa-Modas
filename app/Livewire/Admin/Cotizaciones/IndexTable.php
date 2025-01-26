@@ -11,6 +11,7 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\NumberRangeFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
 use Carbon\Carbon;
 use Rappasoft\LaravelLivewireTables\Views\SearchFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class IndexTable extends DataTableComponent
 {
@@ -84,9 +85,25 @@ class IndexTable extends DataTableComponent
                 }),
 
 
-            Column::make("Acciones", "id")
-            /*->format(fn($value, $row) => view('admin.cotizaciones.partials.actions', ['cotizacion' => $row])),*/
+            Column::make("Acciones","id")
+                ->label(function ($row) {
+                    return view('admin.cotizaciones.actions', ['cotizacion' => $row]);
+                }),
         ];
+    }
+
+    public function query()
+    {
+        // Realiza la consulta básica, con la búsqueda si se activa
+        return Cotizacion::query()
+            ->with('supplier') // Asegúrate de cargar la relación de los proveedores
+            ->when($this->search, function ($query) {
+                // Filtra por nombre o apellido del proveedor
+                $query->whereHas('supplier', function ($query) {
+                    $query->where('name', 'like', "%{$this->search}%")
+                        ->orWhere('last_name', 'like', "%{$this->search}%");
+                });
+            });
     }
 
     public function filters(): array
