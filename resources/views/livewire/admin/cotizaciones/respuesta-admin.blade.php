@@ -1,3 +1,58 @@
+{{-- filepath: /C:/xampp/htdocs/laravel/elisamodas/resources/views/livewire/admin/cotizaciones/show-response-cotizacion.blade.php --}}
 <div>
-    respuesta de la cotizacion
+    <x-validation-errors class="mb-4" />
+    <section class="card">
+        <header class="border-b px-6 py-2 border-gray-200">
+            <h1>
+                <span class="text-lg font-semibold text-gray-700 dark:text-gray-300">Ver Respuesta de Cotización</span>
+            </h1>
+        </header>
+
+        <div class="px-6 py-4">
+            <h1 class="text-xl font-bold mb-4">Cotización #{{ $cotizacion->id }}</h1>
+            <div class="mb-4">
+                @if($proveedor)
+                    <h2>Proveedor: {{ $proveedor->name }} {{ $proveedor->last_name }}</h2>
+                @else
+                    <h2>No proveedor asignado</h2>
+                @endif
+            </div>
+
+            <p class="mb-4"><strong>Fecha de creación:</strong> {{ $cotizacion->created_at->format('d/m/Y') }}</p>
+            <p class="mb-4"><strong>Plazo de respuesta:</strong>
+                {{ $cotizacion->detalleCotizaciones->first()->plazo_resp ? \Carbon\Carbon::parse($cotizacion->detalleCotizaciones->first()->plazo_resp)->format('d/m/Y') : 'N/A' }}
+            </p>
+
+            <table class="table-auto w-full border border-gray-200">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="px-4 py-2 border">Variante</th>
+                        <th class="px-4 py-2 border">Cantidad Solicitada</th>
+                        <th class="px-4 py-2 border">Precio</th>
+                        <th class="px-4 py-2 border">Cantidad Ofrecida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($cotizacion->detalleCotizaciones as $detalle)
+                        <tr>
+                            <td class="px-4 py-2 border">
+                                {{ $detalle->variant->product->name ?? 'N/A' }}
+                                @if ($detalle->variant->features->isNotEmpty())
+                                    ({{ implode(', ', $detalle->variant->features->pluck('description')->toArray()) }})
+                                @endif
+                            </td>
+                            <td class="px-4 py-2 border">{{ $detalle->cantidad_solicitada }}</td>
+                            <td class="px-4 py-2 border">{{ $detalle->precio ?? 'N/A' }}</td>
+                            <td class="px-4 py-2 border">{{ $detalle->cantidad ?? 'N/A' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <div class="mt-4">
+                <label for="tiempo_entrega" class="block font-medium text-sm text-gray-700">Tiempo de entrega (días):</label>
+                <p>{{ $cotizacion->detalleCotizaciones->first()->tiempo_entrega ?? 'N/A' }}</p>
+            </div>
+        </div>
+    </section>
 </div>

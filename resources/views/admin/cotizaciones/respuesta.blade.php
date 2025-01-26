@@ -10,7 +10,7 @@
 ]">
 
     {{-- Llamo a mi componente livewire para mostrar la respuesta de la cotizacion--}}
-    @livewire('admin.cotizaciones.respuesta-admin')
+    @livewire('admin.cotizaciones.respuesta-admin', ['cotizacionId' => $cotizacion->id])
 
 
 
