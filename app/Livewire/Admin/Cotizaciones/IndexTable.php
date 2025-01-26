@@ -6,6 +6,11 @@ use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Cotizacion;
 use App\Models\Supplier;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\NumberRangeFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
+use Carbon\Carbon;
+use Rappasoft\LaravelLivewireTables\Views\SearchFilter;
 
 class IndexTable extends DataTableComponent
 {
@@ -17,26 +22,38 @@ class IndexTable extends DataTableComponent
         $this->setTableAttributes([
             'class' => 'table table-striped table-bordered',
         ]);
+
+        // Ordenar por fecha de creación en orden descendente
+        $this->setDefaultSort('created_at', 'desc');
+
+        $this->setPaginationEnabled(); // Habilitar paginación
+        $this->setSortingPillsEnabled(); // Habilitar ordenamiento
+
+
+        $this->setSearchVisibilityStatus(true);
+        $this->setSearchVisibilityEnabled();
+
+        //$this->setSearchEnabled();
+        $this->setSearchEnabled();  // Habilita la búsqueda
+        //$this->setSearchVisibilityEnabled();  // Muestra el cuadro de búsqueda
+        $this->setSearchPlaceholder('Buscar');  // Cambia el placeholder
+        //$this->setSearchLive();  // Realiza la búsqueda de inmediato
+
+        //$this->setSearchDisabled();
+
+
+        $this->setEmptyMessage('No se encontraron resultados'); // Mensaje de tabla vacía
     }
 
     public function columns(): array
     {
         return [
             Column::make("Id", "id")
-                ->sortable(),
+                ->searchable(),
 
             Column::make("Fecha creación", "created_at")
                 ->sortable()
-                ->format(fn($value) => $value->format('d/m/Y')),
-
-            /*
-            Column::make("Proveedor", "supplier_id")
-                ->sortable()
-                ->searchable()
-                ->format(function ($value) {
-                    $supplier = Supplier::find($value);
-                    return $supplier->name ?? 'N/A';
-                }),*/
+                ->format(fn($value) => $value ? $value->format('d/m/Y') : 'N/A'),
 
             Column::make("Proveedor", "supplier_id")
                 ->sortable()
@@ -48,9 +65,11 @@ class IndexTable extends DataTableComponent
 
             Column::make("Plazo Respuesta")
                 ->label(function ($row) {
-                    // Accedemos a la relación detalleCotizaciones para obtener el primer plazo_resp
                     $detalle = $row->detalleCotizaciones->first();
-                    return $detalle->plazo_resp ?? 'N/A';
+                    // Formatea la fecha del plazo de respuesta si existe
+                    return $detalle && $detalle->plazo_resp
+                        ? Carbon::parse($detalle->plazo_resp)->format('d/m/Y')
+                        : 'N/A';
                 }),
             Column::make("Estado", "estado")
                 ->sortable()
@@ -67,6 +86,65 @@ class IndexTable extends DataTableComponent
 
             Column::make("Acciones", "id")
             /*->format(fn($value, $row) => view('admin.cotizaciones.partials.actions', ['cotizacion' => $row])),*/
+        ];
+    }
+
+    public function filters(): array
+    {
+        return [
+            // Filtro por proveedor: Mostrar nombre y apellido del proveedor
+            SelectFilter::make('Proveedor', 'supplier_id')
+                ->options(
+                    Supplier::query()
+                        ->distinct()
+                        ->get()
+                        ->pluck('name', 'id')
+                        ->mapWithKeys(function ($name, $id) {
+                            $supplier = Supplier::find($id);
+                            return [$id => $supplier->name . ' ' . $supplier->last_name];
+                        }) // Concatenamos nombre y apellido
+                        ->toArray()
+                )
+                ->filter(function ($query, $value) {
+                    return $query->where('supplier_id', $value); // Filtra las cotizaciones por el proveedor seleccionado
+                }),
+
+            // Filtro por rango de fechas de creación
+            DateRangeFilter::make('Rango de Fechas')
+                ->config([
+                    'allowInput' => true,
+                    'altFormat' => 'd F, Y',
+                    'ariaDateFormat' => 'd F, Y',
+                    'dateFormat' => 'Y-m-d',
+                    'earliestDate' => '2020-01-01',
+                    'latestDate' => '2030-12-31',
+                    'placeholder' => 'Selecciona un rango de fechas',
+                    'locale' => 'es',
+                ])
+                ->filter(function ($query, array $dateRange) {
+                    $minDate = $dateRange['minDate'] ?? null;
+                    $maxDate = $dateRange['maxDate'] ?? null;
+
+                    if ($minDate) {
+                        $query->whereDate('created_at', '>=', $minDate);
+                    }
+
+                    if ($maxDate) {
+                        $query->whereDate('created_at', '<=', $maxDate);
+                    }
+                }),
+
+            // Filtro por estado de la cotización
+            SelectFilter::make('Estado', 'estado')
+                ->options([
+                    'pendiente' => 'Pendiente',
+                    'enviada' => 'Enviada',
+                    'respondida' => 'Respondida',
+                    'no respondida' => 'No Respondida',
+                ])
+                ->filter(function ($query, $value) {
+                    return $query->where('estado', $value); // Filtra por el estado seleccionado
+                }),
         ];
     }
 }

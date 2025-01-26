@@ -11,6 +11,7 @@ use App\Models\Ventas;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\NumberRangeFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
+use Rappasoft\LaravelLivewireTables\Views\SearchFilter;
 
 //pdf
 use Barryvdh\DomPDF\Facade\Pdf;
