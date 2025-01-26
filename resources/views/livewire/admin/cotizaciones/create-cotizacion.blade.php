@@ -16,22 +16,6 @@
                     <x-label for="name" value="Nombre" />
                 </div>
 
-                {{-- Selección de variantes
-                @dump($variants)
-                <div>
-                    <x-label for="variant_id" value="Variante" />
-                    <select id="variant_id" class="w-full" wire:model="variant_id">
-
-                        @foreach ($variants as $variant)
-                            {{ var_dump($variant) }}
-                            <option value="{{ $variant['id'] }}">{{ $variant['name'] }}</option>
-                        @endforeach
-                    </select>
-                    @dump($variants)
-                </div> --}}
-
-
-
                 {{-- Seleccionar la subcategoria --}}
                 <div class="mb-4" wire:ignore>
                     <x-label for="subcategory_id" value="Subcategorías" />
