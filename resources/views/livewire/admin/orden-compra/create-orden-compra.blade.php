@@ -36,7 +36,9 @@
                                 {{ $detalle['precio'] ? '$' . number_format($detalle['precio'], 2) : 'N/A' }}
                             </td>
                             <td class="px-4 py-2 border text-center">
-                                <input type="number" wire:model="detalles.{{ $index }}.cantidad_solicitada" class="form-input w-full" />
+                                <input type="number"
+                                    wire:model.defer="detalles.{{ $index }}.cantidad_solicitada"
+                                    class="form-input w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50" />
                             </td>
                         </tr>
                     @endforeach
