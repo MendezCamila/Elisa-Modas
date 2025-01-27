@@ -14,6 +14,7 @@ class CreateOrdenCompra extends Component
 {
     public $cotizacion;
     public $detalles = [];
+    public $proveedor;
 
     public function mount($cotizacionId)
     {
@@ -26,6 +27,16 @@ class CreateOrdenCompra extends Component
             $this->proveedor = Supplier::find($this->cotizacion->supplier_id);
         } else {
             $this->proveedor = $this->cotizacion->proveedor;
+        }
+
+        // Cargar los detalles de la cotización
+        foreach ($this->cotizacion->detalleCotizaciones as $detalle) {
+            $this->detalles[] = [
+                'variant_id' => $detalle->variant_id,
+                'cantidad_ofrecida' => $detalle->cantidad,
+                'precio' => $detalle->precio,
+                'cantidad_solicitada' => $detalle->cantidad_solicitada,
+            ];
         }
 
     }
