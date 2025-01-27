@@ -9,7 +9,7 @@
 
 ]">
 
-    form cotizacion desde resp proveedor
+    @livewire('admin.orden-compra.create-orden-compra',  ['cotizacionId' => $cotizacion->id])
 
 
 

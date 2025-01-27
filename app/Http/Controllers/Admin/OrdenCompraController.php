@@ -15,11 +15,12 @@ class OrdenCompraController extends Controller
         return view('admin.orden-compras.index');
     }
 
-    public function create($cotizacion_id){
-        $cotizacion = Cotizacion::with('detalleCotizaciones.variant.product')->findOrFail($cotizacion_id);
-        $suppliers = Supplier::all();
-        $variants = Variant::all();
-        return view('admin.orden-compras.create', compact('cotizacion', 'suppliers', 'variants'));
+    public function create($id){
+
+        //$cotizacion = Cotizacion::with('detalleCotizaciones.variant', 'proveedor')->findOrFail($id);
+
+        $cotizacion = Cotizacion::with(['detalleCotizaciones.variant.features','detalleCotizaciones.variant.product'])->findOrFail($id);
+        return view('admin.orden-compras.create', compact('cotizacion'));
     }
 
     /*retornar la vista create
