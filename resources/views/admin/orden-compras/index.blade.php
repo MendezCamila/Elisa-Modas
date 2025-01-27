@@ -9,7 +9,7 @@
 
 ]">
 
-    holis
+    @livewire('admin.orden-compra.manage-orden-compras')
 
 
 

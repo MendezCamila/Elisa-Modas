@@ -111,6 +111,17 @@
             'active'=> request()->routeIs('admin.cotizaciones.*')
         ],
 
+        [
+            //Ordenes de compras
+            'name'=>'Ordenes de compras',
+            'icon'=>'fa-solid fa-shopping-bag',
+            //'icon' => 'fa-solid fa-shopping-cart',
+            'route'=>route('admin.orden-compras.index'),
+            'active'=> request()->routeIs('admin.orden-compras.*')
+
+
+        ],
+
 
         //Parte de informes y estadisticas
         [
