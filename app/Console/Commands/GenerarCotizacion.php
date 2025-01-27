@@ -19,62 +19,71 @@ class GenerarCotizacion extends Command
 
     // Método handle() que ejecuta la lógica cuando se llama al comando
     public function handle()
-    {
-        $this->info("Iniciando el proceso de generación de cotizaciones...");
+{
+    $this->info("Iniciando el proceso de generación de cotizaciones...");
 
-        // Obtén todas las subcategorías
-        $subcategories = Subcategory::all();
+    // Obtén todas las subcategorías
+    $subcategories = Subcategory::all();
 
-        // Recorremos cada subcategoría
-        foreach ($subcategories as $subcategory) {
-            //$this->info("Procesando subcategoría: " . $subcategory->name);
+    // Recorremos cada subcategoría
+    foreach ($subcategories as $subcategory) {
+        // Creamos un array para agrupar las variantes por proveedor
+        $variantesAgrupadas = [];
 
-            // Para cada subcategoría, obtenemos los productos
-            foreach ($subcategory->products as $product) {
-                //$this->info("  Procesando producto: " . $product->name);
+        // Recorremos los productos de la subcategoría
+        foreach ($subcategory->products as $product) {
+            // Recorremos las variantes del producto
+            foreach ($product->variants as $variant) {
+                // Verificar si el stock actual está por debajo del stock mínimo
+                if ($variant->stock < $variant->stock_min) {
+                    // Calculamos la cantidad a solicitar
+                    $cantidadSolicitada = ceil(($variant->stock_min - $variant->stock) * 0.5);
 
-                // Para cada producto, obtenemos sus variantes
-                foreach ($product->variants as $variant) {
-                    // Comprobamos si el stock actual es menor que el stock mínimo
-                    if ($variant->stock < $variant->stock_min) {
-                        //$this->info("    Variante con stock bajo detectada: " . $variant->sku);
+                    // Obtenemos los proveedores asociados a esta subcategoría
+                    $suppliers = Supplier::whereHas('subcategories', function ($query) use ($subcategory) {
+                        $query->where('subcategory_id', $subcategory->id);
+                    })->get();
 
-                        // Calculamos el 50% del stock mínimo para reponer
-                        $cantidadSolicitada = ceil(($variant->stock_min - $variant->stock) * 0.5);
-
-                        // Encontramos los proveedores asociados a la subcategoría de este producto
-                        $suppliers = Supplier::whereHas('subcategories', function ($query) use ($subcategory) {
-                            $query->where('subcategory_id', $subcategory->id);
-                        })->get();
-
-                        // Crear la cotización para cada proveedor
-                        foreach ($suppliers as $supplier) {
-                            $cotizacion = Cotizacion::create([
-                                'supplier_id' => $supplier->id,
-                                'orden_compra_id' => null,
-                                'estado' => 'enviada',
-                            ]);
-
-                            DetalleCotizacion::create([
-                                'cotizacion_id' => $cotizacion->id,
-                                'variant_id' => $variant->id,
-                                'cantidad_solicitada' => $cantidadSolicitada,
-                                'plazo_resp' => now()->addDays(7), // Ejemplo de plazo de respuesta
-                                'precio' => null,
-                                'cantidad' => null,
-                                'tiempo_entrega' => null,
-                            ]);
-
-                            // Enviar correo electrónico al proveedor con un enlace único al formulario de cotización
-                            Mail::to($supplier->email)->send(new EnviarCotizacionMail($cotizacion));
-
-                            
-                        }
+                    // Agrupar variantes por proveedor
+                    foreach ($suppliers as $supplier) {
+                        // Agrupamos las variantes bajo el mismo proveedor
+                        $variantesAgrupadas[$supplier->id][] = [
+                            'variant_id' => $variant->id,
+                            'cantidad_solicitada' => $cantidadSolicitada,
+                        ];
                     }
                 }
             }
         }
 
-        $this->info("Proceso de generación de cotizaciones finalizado.");
+        // Generamos una cotización por proveedor con las variantes agrupadas
+        foreach ($variantesAgrupadas as $supplierId => $variantes) {
+            // Creamos la cotización para el proveedor
+            $cotizacion = Cotizacion::create([
+                'supplier_id' => $supplierId,
+                'orden_compra_id' => null,
+                'estado' => 'enviada',
+            ]);
+
+            // Agregamos los detalles de la cotización
+            foreach ($variantes as $variante) {
+                DetalleCotizacion::create([
+                    'cotizacion_id' => $cotizacion->id,
+                    'variant_id' => $variante['variant_id'],
+                    'cantidad_solicitada' => $variante['cantidad_solicitada'],
+                    'plazo_resp' => now()->addDays(7),
+                    'precio' => null,
+                    'cantidad' => null,
+                    'tiempo_entrega' => null,
+                ]);
+            }
+
+            // Enviar correo al proveedor
+            $supplier = Supplier::find($supplierId);
+            Mail::to($supplier->email)->send(new EnviarCotizacionMail($cotizacion));
+        }
     }
+
+    $this->info("Proceso de generación de cotizaciones finalizado.");
+}
 }
