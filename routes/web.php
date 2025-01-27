@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CotizacionController;
+use App\Http\Controllers\Admin\OrdenCompraController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PaymentController;
@@ -185,6 +186,15 @@ Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('
     Route::get('cotizaciones/{id}/respuesta', [CotizacionController::class, 'respuesta'])->name('cotizaciones.respuesta');
     //ruta para generar cotizacion automatica
     Route::get('cotizaciones/generar', [CotizacionController::class, 'generar'])->name('cotizaciones.generar');
+});
+
+
+//Ruta para administrar las ordenes de compra
+Route::middleware(['web', 'auth', /*'can:administrar ordenes de compra'*/])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('ordenes-compra', [OrdenCompraController::class, 'index'])->name('ordenes-compra.index');
+    /*Route::get('ordenes-compra/{id}', [OrdenCompraController::class, 'show'])->name('ordenes-compra.show');
+    Route::get('ordenes-compra/{id}/descargar-comprobante', [OrdenCompraController::class, 'descargarComprobante'])
+        ->name('ordenes-compra.descargarComprobante');*/
 });
 
 //previsualizar como queda el correo que vera el proveedor http://elisamodas.test/previsualizar-cotizacion

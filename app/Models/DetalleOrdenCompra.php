@@ -17,6 +17,7 @@ class DetalleOrdenCompra extends Model implements Auditable
     protected $fillable = [
         'cantidad',
         'precio_unitario',
+        'total',
         'orden_compra_id',
         'variant_id',
     ];
