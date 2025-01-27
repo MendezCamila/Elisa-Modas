@@ -18,6 +18,7 @@
                         <th class="px-4 py-2 border text-center">Cantidad Ofrecida</th>
                         <th class="px-4 py-2 border text-right">Precio</th>
                         <th class="px-4 py-2 border text-center">Cantidad Solicitada</th>
+                        <th class="px-4 py-2 border text-center">Acción</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,9 +37,14 @@
                                 {{ $detalle['precio'] ? '$' . number_format($detalle['precio'], 2) : 'N/A' }}
                             </td>
                             <td class="px-4 py-2 border text-center">
-                                <input type="number"
-                                    wire:model.defer="detalles.{{ $index }}.cantidad_solicitada"
-                                    class="form-input w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50" />
+                                <input type="number" wire:model="detalles.{{ $index }}.cantidad_solicitada" class="form-input w-full" />
+                            </td>
+                            <td class="px-4 py-2 border text-center">
+                                <button type="button"
+                                    wire:click="removeProducto({{ $index }})"
+                                    class="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none">
+                                    X
+                                </button>
                             </td>
                         </tr>
                     @endforeach

@@ -20,7 +20,7 @@ class CreateOrdenCompra extends Component
     {
 
         // Carga la cotización con todas las relaciones necesarias
-        $this->cotizacion = Cotizacion::with(['detalleCotizaciones.variant.features','detalleCotizaciones.variant.product'])->findOrFail($cotizacionId);
+        $this->cotizacion = Cotizacion::with(['detalleCotizaciones.variant.features', 'detalleCotizaciones.variant.product'])->findOrFail($cotizacionId);
 
         // Cargar manualmente el proveedor si la relación no está cargada
         if (is_null($this->cotizacion->proveedor)) {
@@ -38,7 +38,15 @@ class CreateOrdenCompra extends Component
                 'cantidad_solicitada' => $detalle->cantidad_solicitada,
             ];
         }
+    }
 
+    public function removeProducto($index)
+    {
+        // Eliminar el producto de la lista
+        unset($this->detalles[$index]);
+
+        // Reindexar el array para mantener las claves ordenadas
+        $this->detalles = array_values($this->detalles);
     }
 
     public function render()
