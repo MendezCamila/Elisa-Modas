@@ -74,11 +74,17 @@
                 <p class="text-gray-800">{{ $cotizacion->detalleCotizaciones->first()->tiempo_entrega ?? 'N/A' }}</p>
             </div>
 
-            {{-- Botón para volver atrás --}}
-            <div class="mt-6">
+            {{-- Botones --}}
+            <div class="mt-6 flex justify-between">
+                {{-- Botón para volver atrás --}}
                 <button onclick="window.history.back()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                     Volver Atrás
                 </button>
+                {{-- Botón para crear orden de compra --}}
+                <a href="{{ route('admin.orden-compras.create', ['cotizacion_id' => $cotizacion->id]) }}"
+                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                    Crear Orden de Compra
+                </a>
             </div>
         </div>
     </section>

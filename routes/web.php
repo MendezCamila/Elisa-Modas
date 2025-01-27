@@ -192,6 +192,7 @@ Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('
 //Ruta para administrar las ordenes de compra
 Route::middleware(['web', 'auth', /*'can:administrar ordenes de compra'*/])->prefix('admin')->name('admin.')->group(function () {
     Route::get('ordenes-compra', [OrdenCompraController::class, 'index'])->name('orden-compras.index');
+    Route::get('ordenes-compras/create/{cotizacion_id}', [OrdenCompraController::class, 'create'])->name('orden-compras.create');
     /*Route::get('ordenes-compra/{id}', [OrdenCompraController::class, 'show'])->name('ordenes-compra.show');
     Route::get('ordenes-compra/{id}/descargar-comprobante', [OrdenCompraController::class, 'descargarComprobante'])
         ->name('ordenes-compra.descargarComprobante');*/
