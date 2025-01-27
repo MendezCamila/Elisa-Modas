@@ -12,12 +12,22 @@
             <a class="btn btn-blue" href="{{ route('admin.cotizaciones.create') }}">
                 Nueva Cotización
             </a>
+
+            <a class="btn bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg"
+                href="{{ route('admin.cotizaciones.generar') }}">
+                Generar Cotización
+            </a>
         </x-slot>
 
+        {{-- Mostrar mensajes de éxito --}}
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
 
-        {{-- Tabla Cotizacion --}}
-        {{-- llamo a mi componente IndexTable --}}
+        {{-- llamo a mi componente IndexTable Tabla Cotizacion --}}
         @livewire('admin.cotizaciones.index-table')
 
 

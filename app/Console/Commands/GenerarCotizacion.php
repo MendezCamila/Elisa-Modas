@@ -6,6 +6,10 @@ use Illuminate\Console\Command;
 use App\Models\Subcategory;
 use App\Models\Supplier;
 use App\Models\Variant;
+use App\Models\Cotizacion;
+use App\Models\DetalleCotizacion;
+use App\Mail\EnviarCotizacionMail;
+use Illuminate\Support\Facades\Mail;
 
 class GenerarCotizacion extends Command
 {
@@ -43,15 +47,28 @@ class GenerarCotizacion extends Command
                             $query->where('subcategory_id', $subcategory->id);
                         })->get();
 
-                        // Mostrar la información solicitada: producto, variante, stock mínimo, cantidad solicitada y proveedor
+                        // Crear la cotización para cada proveedor
                         foreach ($suppliers as $supplier) {
-                            // Mostramos la información en consola solo para variantes con stock bajo
-                            $this->info("      Producto: " . $product->name);
-                            $this->info("      Codigo Variante con stock bajo: " . $variant->sku);
-                            $this->info("      Stock mínimo: " . $variant->stock_min);
-                            $this->info("      Cantidad a solicitar: " . $cantidadSolicitada);
-                            $this->info("      Proveedor: " . $supplier->name);
-                            $this->info("      ---------------------------------");
+                            $cotizacion = Cotizacion::create([
+                                'supplier_id' => $supplier->id,
+                                'orden_compra_id' => null,
+                                'estado' => 'enviada',
+                            ]);
+
+                            DetalleCotizacion::create([
+                                'cotizacion_id' => $cotizacion->id,
+                                'variant_id' => $variant->id,
+                                'cantidad_solicitada' => $cantidadSolicitada,
+                                'plazo_resp' => now()->addDays(7), // Ejemplo de plazo de respuesta
+                                'precio' => null,
+                                'cantidad' => null,
+                                'tiempo_entrega' => null,
+                            ]);
+
+                            // Enviar correo electrónico al proveedor con un enlace único al formulario de cotización
+                            Mail::to($supplier->email)->send(new EnviarCotizacionMail($cotizacion));
+
+                            
                         }
                     }
                 }

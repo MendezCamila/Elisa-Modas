@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cotizacion;
+use Illuminate\Support\Facades\Artisan;
 
 class CotizacionController extends Controller
 {
@@ -38,5 +39,10 @@ class CotizacionController extends Controller
         return view('admin.cotizaciones.respuesta', compact('cotizacion'));
     }
 
+    // Generar cotización automática
+    public function generar(){
+        Artisan::call('cotizaciones:generar');
+        return redirect()->route('admin.cotizaciones.index')->with('success', 'Cotizaciones generadas automáticamente.');
+    }
 
 }

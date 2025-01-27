@@ -183,6 +183,8 @@ Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('
     Route::get('cotizaciones/{id}/admin', [CotizacionController::class, 'showAdmin'])->name('cotizaciones.showAdmin');
     //ruta para mostrar respuesta del proveedor
     Route::get('cotizaciones/{id}/respuesta', [CotizacionController::class, 'respuesta'])->name('cotizaciones.respuesta');
+    //ruta para generar cotizacion automatica
+    Route::get('cotizaciones/generar', [CotizacionController::class, 'generar'])->name('cotizaciones.generar');
 });
 
 //previsualizar como queda el correo que vera el proveedor http://elisamodas.test/previsualizar-cotizacion
