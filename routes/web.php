@@ -194,6 +194,7 @@ Route::middleware(['web', 'auth', /*'can:administrar ordenes de compra'*/])->pre
     Route::get('ordenes-compra', [OrdenCompraController::class, 'index'])->name('orden-compras.index');
     Route::get('ordenes-compras/create/{cotizacion_id}', [OrdenCompraController::class, 'create'])->name('orden-compras.create');
     Route::get('/orden-compras/{id}', [OrdenCompraController::class, 'show'])->name('orden-compras.show');
+    Route::get('orden-compras/{id}', [OrdenCompraController::class, 'showAdmin'])->name('orden-compras.showAdmin');
 });
 
 

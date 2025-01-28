@@ -34,6 +34,11 @@ class OrdenCompraController extends Controller
         return view('admin.orden-compras.create');
     }*/
 
+    public function showAdmin ($id){
+        $ordenCompra = OrdenCompra::with(['detalleOrdenCompras.variant.product', 'proveedor'])->findOrFail($id);
+        return view('admin.orden-compras.showAdmin', compact('ordenCompra'));
+    }
+
 
 
 
