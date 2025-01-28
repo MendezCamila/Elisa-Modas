@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Cotizacion;
 use App\Models\Supplier;
 use App\Models\Variant;
+use App\Models\OrdenCompra;
 
 class OrdenCompraController extends Controller
 {
@@ -21,6 +22,11 @@ class OrdenCompraController extends Controller
 
         $cotizacion = Cotizacion::with(['detalleCotizaciones.variant.features','detalleCotizaciones.variant.product'])->findOrFail($id);
         return view('admin.orden-compras.create', compact('cotizacion'));
+    }
+
+    public function show($id){
+        $ordenCompra = OrdenCompra::with(['detalleOrdenCompras.variant.product', 'proveedor'])->findOrFail($id);
+        return view('admin.orden-compras.show', compact('ordenCompra'));
     }
 
     /*retornar la vista create
