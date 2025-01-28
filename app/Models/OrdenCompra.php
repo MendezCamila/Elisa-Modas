@@ -21,7 +21,7 @@ class OrdenCompra extends Model implements Auditable
     //relacion uno a muchos inversa con proveedores
     public function proveedor()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Supplier::class, 'supplier_id');
     }
 
     //relacion uno a muchos con detalle orden compra

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Mail;
 
 use App\Models\OrdenCompra;
@@ -20,7 +19,6 @@ class EnviarOrdenCompraMail extends Mailable
     {
         $this->ordenCompra = $ordenCompra;
     }
-    
 
     /**
      * Get the message envelope.
@@ -28,7 +26,7 @@ class EnviarOrdenCompraMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Enviar Orden Compra Mail',
+            subject: 'Nueva Orden de Compra',
         );
     }
 
@@ -38,7 +36,10 @@ class EnviarOrdenCompraMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'admin.emails.orden-compra',
+            with: [
+                'ordenCompra' => $this->ordenCompra,
+            ],
         );
     }
 

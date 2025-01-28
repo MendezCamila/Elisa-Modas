@@ -22,7 +22,7 @@ class CreateOrdenCompra extends Component
     {
 
         // Carga la cotización con todas las relaciones necesarias
-        $this->cotizacion = Cotizacion::with(['detalleCotizaciones.variant.features', 'detalleCotizaciones.variant.product'])->findOrFail($cotizacionId);
+        $this->cotizacion = Cotizacion::with(['detalleCotizaciones.variant' ,'detalleCotizaciones.variant.product'])->findOrFail($cotizacionId);
 
         // Cargar manualmente el proveedor si la relación no está cargada
         if (is_null($this->cotizacion->proveedor)) {
@@ -76,9 +76,17 @@ class CreateOrdenCompra extends Component
             ]);
         }
 
-        /* Enviar correo electrónico al proveedor con la orden de compra
-        $supplier = Supplier::find($this->cotizacion->supplier_id);
-        Mail::to($supplier->email)->send(new EnviarOrdenCompraMail($ordenCompra));*/
+         // Cargar las relaciones necesarias para el correo
+        $ordenCompra->load(['detalleOrdenCompras.variant.product', 'proveedor']);
+
+        //dd($ordenCompra->toArray());
+
+
+        // Enviar el correo
+        Mail::to($this->proveedor->email)->send(new EnviarOrdenCompraMail($ordenCompra));
+
+
+
 
         session()->flash('swal', [
             'icon' => 'success',
