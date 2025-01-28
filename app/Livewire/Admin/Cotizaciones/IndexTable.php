@@ -58,7 +58,13 @@ class IndexTable extends DataTableComponent
 
             Column::make("Proveedor", "supplier_id")
                 ->sortable()
-                ->searchable()
+                ->searchable(function ($builder, $term) {
+                    // Búsqueda por nombre o apellido del proveedor
+                    $builder->orWhereHas('proveedor', function ($query) use ($term) {
+                        $query->where('name', 'like', "%{$term}%")
+                            ->orWhere('last_name', 'like', "%{$term}%");
+                    });
+                })
                 ->format(function ($value) {
                     $supplier = Supplier::find($value);
                     return $supplier ? $supplier->name . ' ' . $supplier->last_name : 'N/A';
