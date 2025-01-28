@@ -11,6 +11,8 @@
 
     @livewire('admin.orden-compra.manage-orden-compras')
 
+    @livewire('admin.orden-compra.index-table')
+
 
 
 </x-admin-layout>
