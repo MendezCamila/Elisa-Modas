@@ -53,11 +53,9 @@ class IndexTable extends DataTableComponent
                 ->searchable(),
 
             Column::make("Fecha creación", "created_at")
-                ->sortable()
                 ->format(fn($value) => $value ? $value->format('d/m/Y') : 'N/A'),
 
             Column::make("Proveedor", "supplier_id")
-                ->sortable()
                 ->searchable(function ($builder, $term) {
                     // Búsqueda por nombre o apellido del proveedor
                     $builder->orWhereHas('proveedor', function ($query) use ($term) {
@@ -79,7 +77,6 @@ class IndexTable extends DataTableComponent
                         : 'N/A';
                 }),
             Column::make("Estado", "estado")
-                ->sortable()
                 ->searchable()
                 ->html()
                 ->format(fn($value) => match ($value) {

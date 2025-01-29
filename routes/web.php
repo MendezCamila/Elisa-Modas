@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CotizacionController;
 use App\Http\Controllers\Admin\OrdenCompraController;
+use App\Http\Controllers\Admin\PdfExportController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PaymentController;
@@ -195,6 +196,7 @@ Route::middleware(['web', 'auth', /*'can:administrar ordenes de compra'*/])->pre
     Route::get('ordenes-compras/create/{cotizacion_id}', [OrdenCompraController::class, 'create'])->name('orden-compras.create');
     Route::get('/orden-compras/{id}', [OrdenCompraController::class, 'show'])->name('orden-compras.show');
     Route::get('orden-compras/{id}', [OrdenCompraController::class, 'showAdmin'])->name('orden-compras.showAdmin');
+    Route::get('export/orden-compras/pdf', [PdfExportController::class, 'exportOrdenesCompra'])->name('orden-compras.pdf');
 });
 
 
