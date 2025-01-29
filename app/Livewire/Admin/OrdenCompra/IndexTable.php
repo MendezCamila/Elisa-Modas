@@ -18,6 +18,15 @@ class IndexTable extends DataTableComponent
 {
     protected $model = OrdenCompra::class;
 
+    public $filters = [
+        'supplier_id' => null,
+        'rango_de_fechas' => [
+            'minDate' => null,
+            'maxDate' => null,
+        ],
+    ];
+  
+
     public function configure(): void
     {
         $this->setPrimaryKey('id');
@@ -43,7 +52,7 @@ class IndexTable extends DataTableComponent
         $this->setEmptyMessage('No se encontraron resultados'); // Mensaje de tabla vacía
     }
 
-    
+
 
 
     public function query(): Builder
