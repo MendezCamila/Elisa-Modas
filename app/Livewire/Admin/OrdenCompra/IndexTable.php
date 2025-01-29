@@ -43,6 +43,9 @@ class IndexTable extends DataTableComponent
         $this->setEmptyMessage('No se encontraron resultados'); // Mensaje de tabla vacía
     }
 
+    
+
+
     public function query(): Builder
     {
         // Incluye relaciones necesarias para los filtros y columnas
