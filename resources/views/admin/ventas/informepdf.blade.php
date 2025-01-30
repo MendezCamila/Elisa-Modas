@@ -91,12 +91,16 @@
         <div class="filters">
             <h3>Filtros Aplicados:</h3>
             <ul>
-                @if(isset($filters['cliente_id']))
-                    <li>Cliente: {{ \App\Models\User::find($filters['cliente_id'])->name ?? 'No especificado' }} {{ \App\Models\User::find($filters['cliente_id'])->last_name ?? '' }}</li>
+                @if(isset($filters['user_id']))
+                    <li>Cliente: {{ \App\Models\User::find($filters['user_id'])->name ?? 'No especificado' }} {{ \App\Models\User::find($filters['user_id'])->last_name ?? '' }}</li>
                 @endif
 
                 @if(isset($filters['rango_de_fechas']['minDate']) && isset($filters['rango_de_fechas']['maxDate']))
                     <li>Rango de Fechas: {{ $filters['rango_de_fechas']['minDate'] }} hasta {{ $filters['rango_de_fechas']['maxDate'] }}</li>
+                @endif
+
+                @if(isset($filters['rango_de_precio']['min']) && isset($filters['rango_de_precio']['max']))
+                    <li>Rango de Precio: {{ number_format($filters['rango_de_precio']['min'], 2) }} hasta {{ number_format($filters['rango_de_precio']['max'], 2) }}</li>
                 @endif
 
                 @if(empty($filters))
