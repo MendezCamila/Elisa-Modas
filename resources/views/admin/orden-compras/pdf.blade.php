@@ -19,7 +19,13 @@
             left: 0;
             width: 100%;
             text-align: center;
-            padding-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        .title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 40px; /* Agregado más espacio entre "Elisa Modas" y el título */
         }
         .footer {
             position: fixed;
@@ -32,7 +38,7 @@
             padding-top: 5px;
         }
         .content {
-            margin-top: 20px;
+            margin-top: 60px; /* Aumentado para mayor separación con la cabecera */
         }
         .filters {
             margin-top: 20px;
@@ -49,7 +55,7 @@
             margin-top: 20px;
         }
         thead {
-            display: table-header-group; /* Para que el encabezado se repita en cada página */
+            display: table-header-group;
         }
         table, th, td {
             border: 1px solid #ddd;
@@ -76,6 +82,9 @@
     <div class="header">
         <h1>Elisa Modas</h1>
     </div>
+
+    <!-- Título Informativo -->
+    <div class="title">Informe de Órdenes de Compra</div>
 
     <div class="content">
         <!-- Filtros Aplicados y Fecha de Generación -->
@@ -145,3 +154,4 @@
 
 </body>
 </html>
+
