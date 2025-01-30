@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\OrdenCompra;
+use App\Models\Ventas;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
@@ -31,6 +32,26 @@ class PdfExportController extends Controller
 
         $pdf = Pdf::loadView('admin.orden-compras.pdf', compact('ordenesCompra', 'filters'));
         return $pdf->download('orden-compra.pdf');
+    }
+
+    public function exportVentas(Request $request)
+    {
+        $filters = $request->input('table-filters');
+        //dd($filters); // Debugging line
+
+        $ventas = Ventas::with(['user'])
+            ->when(isset($filters['cliente_id']), function ($query) use ($filters) {
+                return $query->where('user_id', $filters['cliente_id']);
+            })
+            ->when(isset($filters['rango_de_fechas']['minDate']) && isset($filters['rango_de_fechas']['maxDate']), function ($query) use ($filters) {
+                $minDate = $filters['rango_de_fechas']['minDate'];
+                $maxDate = $filters['rango_de_fechas']['maxDate'];
+                return $query->whereBetween('created_at', [$minDate, $maxDate]);
+            })
+            ->get();
+
+        $pdf = Pdf::loadView('admin.ventas.informepdf', compact('ventas', 'filters'));
+        return $pdf->download('ventas.pdf');
     }
 
 }

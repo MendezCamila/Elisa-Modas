@@ -217,6 +217,7 @@ Route::get('/cotizacion/{id}', [CotizacionController::class, 'show'])->name('cot
 //Ruta para administrar las ventas
 Route::middleware(['web', 'auth', /*'can:administrar ventas'*/])->prefix('admin')->name('admin.')->group(function () {
     Route::get('ventas', [VentasController::class, 'index'])->name('ventas.index');
+    Route::get('ventas/informepdf', [PdfExportController::class, 'exportVentas'])->name('ventas.informepdf');
 });
 
 
