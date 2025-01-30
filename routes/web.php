@@ -32,7 +32,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Models\Ventas;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-Route::get('/',[WelcomeController::class, 'index'] )->name('welcome.index');
+Route::get('/', [WelcomeController::class, 'index'])->name('welcome.index');
 
 //filtrar productos por familia
 Route::get('families/{family}', [FamiliaController::class, 'show'])->name('families.show');
@@ -51,25 +51,29 @@ Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 
 
 
-Route::get('prueba', function(){
+Route::get('prueba', function () {
     $venta = Ventas::first();
 
-    $pdf = Pdf:: loadView('ventas.ticket', compact('venta')) -> setPaper('a5');
+    $pdf = Pdf::loadView('ventas.ticket', compact('venta'))->setPaper('a5');
 
     //visualiza el pdf
     return $pdf->stream();
 
     //almacena el pdf
-    $pdf->save(storage_path('app/public/tickets/ticket-'. $venta->id . '.pdf'));
+    $pdf->save(storage_path('app/public/tickets/ticket-' . $venta->id . '.pdf'));
 
-    $venta->pdf_path = 'tickets/ticket-'. $venta->id . '.pdf';
+    $venta->pdf_path = 'tickets/ticket-' . $venta->id . '.pdf';
     $venta->save();
 });
 
 
-//Ruta Administrador
+/*Ruta Administrador
 Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard')
-    ->middleware(['web', 'auth', 'can:acceso dashboard']);
+    ->middleware(['web', 'auth', 'can:acceso dashboard']);*/
+
+Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+});
 
 
 //Ruta Resource (agregar el prefijo admin ya que hago todo dentro de web.php)
@@ -167,7 +171,6 @@ Route::middleware(['web', 'auth', /*'can:administrar proveedores'*/])->prefix('a
 
     // Ruta para eliminar un proveedor
     Route::delete('suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
-
 });
 
 //Ruta para administrar la auditoria
@@ -253,7 +256,3 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
-
-
-
-

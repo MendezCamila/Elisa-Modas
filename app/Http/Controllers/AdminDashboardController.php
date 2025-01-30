@@ -10,23 +10,27 @@ use Illuminate\Support\Facades\DB;
 
 class AdminDashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Filtros de fecha
+        $startDate = $request->input('start_date', Carbon::now()->startOfYear()->format('Y-m-d'));
+        $endDate = $request->input('end_date', Carbon::now()->endOfYear()->format('Y-m-d'));
 
+        // Filtro de subcategoría
+        $subcategoryFilter = $request->input('subcategory');
 
-
-        //Obtenemos las ventas mensuales y calculamos el promedio de ventas por mes
+        // Obtenemos las ventas mensuales y calculamos el promedio de ventas por mes
         $ventas = Ventas::selectRaw('MONTH(created_at) as month, sum(total) as total')
-            ->whereYear('created_at', Carbon::now()->year)
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->groupByRaw('MONTH(created_at)')
             ->orderByRaw('MONTH(created_at)')
             ->get();
 
-        //calculamos el total de ventas y el numero de meses
+        // Calculamos el total de ventas y el número de meses
         $totalVentas = $ventas->sum('total');
         $numMeses = $ventas->count();
 
-        //calculamos el promedio de ventas por mes
+        // Calculamos el promedio de ventas por mes
         $promedioVentas = $numMeses > 0 ? $totalVentas / $numMeses : 0;
 
         // Pasamos los datos al gráfico, calculando el promedio por mes
@@ -38,14 +42,15 @@ class AdminDashboardController extends Controller
             ];
         })->toArray();
 
-        //dd($ventasData);
+        // Obtenemos las ventas por subcategoría
+        $ventasxsubcategoria = DB::table('ventas')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
 
-        $ventasxsubcategoria = DB::table('ventas')->get();
+        $estadisticas = [];
 
-        $estadisticas=[];
-
-        foreach ($ventasxsubcategoria as $venta){
-            $content = json_decode($venta->content, true); //decodificamos el json
+        foreach ($ventasxsubcategoria as $venta) {
+            $content = json_decode($venta->content, true); // Decodificamos el JSON
 
             foreach ($content as $item) {
                 $productId = $item['id']; // Obtén el ID del producto desde el JSON
@@ -56,6 +61,11 @@ class AdminDashboardController extends Controller
                     ->join('subcategories', 'subcategories.id', '=', 'products.subcategory_id')
                     ->where('products.id', $productId)
                     ->value('subcategories.name');
+
+                // Filtrar por subcategoría si se ha seleccionado una
+                if ($subcategoryFilter && $subcategoria !== $subcategoryFilter) {
+                    continue;
+                }
 
                 // Suma las cantidades vendidas por subcategoría
                 if (isset($estadisticas[$subcategoria])) {
@@ -68,17 +78,22 @@ class AdminDashboardController extends Controller
 
         arsort($estadisticas); // Ordena el array de mayor a menor
 
-        //formatea para la vista
+        // Formatea para la vista
         $data = collect($estadisticas)->map(function ($cantidad, $subcategoria) {
             return ['subcategory' => $subcategoria, 'total' => $cantidad];
         })->values();
 
-        //dd($data);
+        // Obtener todas las subcategorías para el filtro
+        $subcategories = DB::table('subcategories')->pluck('name');
 
         return view('admin.dashboard', [
             'ventas' => $ventasData,
             'promedioVentas' => $promedioVentas,
-            'unidadesVendidas' =>$data,
+            'unidadesVendidas' => $data,
+            'subcategories' => $subcategories,
+            'selectedSubcategory' => $subcategoryFilter,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ]);
     }
 }

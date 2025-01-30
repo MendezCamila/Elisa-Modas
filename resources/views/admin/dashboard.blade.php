@@ -34,94 +34,114 @@
         </div>
     </div>
 
-    {{-- Estadisticas --}}
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        <!-- Ventas -->
-        <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
-            <h3 class="text-lg font-semibold">Ventas</h3>
-            <div id="chart" style="height: 400px;"></div>
+   {{-- Filtros --}}
+   <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+    <form method="GET" action="{{ url('admin/dashboard') }}">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div>
+                <label for="start_date">Fecha de Inicio:</label>
+                <input type="date" id="start_date" name="start_date" value="{{ $startDate }}">
+            </div>
+            <div>
+                <label for="end_date">Fecha de Fin:</label>
+                <input type="date" id="end_date" name="end_date" value="{{ $endDate }}">
+            </div>
+            <div>
+                <label for="subcategory">Subcategoría:</label>
+                <select id="subcategory" name="subcategory">
+                    <option value="">Todas</option>
+                    @foreach ($subcategories as $subcategory)
+                        <option value="{{ $subcategory }}" {{ $selectedSubcategory == $subcategory ? 'selected' : '' }}>
+                            {{ $subcategory }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </div>
-
-        <!-- Subcategorias mas vendidas -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h3 class="text-lg font-semibold">Subcategorias mas vendidas</h3>  
-            <div id="unidadesChart" style="height: 400px;"></div>
-            <ul>
-
-            </ul>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
         </div>
+    </form>
+</div>
 
-        <!-- Productos con stock bajo
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h3 class="text-lg font-semibold">Stock bajo</h3>
-            <ul>
-
-            </ul>
-        </div>-->
+{{-- Estadisticas --}}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+    <!-- Ventas -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+        <h3 class="text-lg font-semibold">Ventas</h3>
+        <div id="chart" style="height: 400px;"></div>
     </div>
 
+    <!-- Subcategorias mas vendidas -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h3 class="text-lg font-semibold">Subcategorias mas vendidas</h3>
+        <div id="unidadesChart" style="height: 400px;"></div>
+        <ul>
+
+        </ul>
+    </div>
+</div>
 
 </x-admin-layout>
 
 <script>
-    // Verifica que los datos de ventas no estén vacíos
-    var ventasData = @json($ventas);  // Los datos pasan desde PHP a JavaScript
-    var promedioVentas = @json($promedioVentas);  // El promedio global de ventas
+// Verifica que los datos de ventas no estén vacíos
+var ventasData = @json($ventas);  // Los datos pasan desde PHP a JavaScript
+var promedioVentas = @json($promedioVentas);  // El promedio global de ventas
 
-    if (!ventasData || ventasData.length === 0) {
-        console.error('No hay datos de ventas disponibles.');
-    } else {
-        // Configuración del gráfico
-        var options = {
-            chart: {
-                type: 'bar',  // Tipo de gráfico: columna
-            },
-            series: [{
-                name: 'Ventas',
-                data: ventasData.map(function (item) {
-                    return {
-                        x: 'Mes ' + item.month,  // Usamos el mes como categoría
-                        y: item.total  // Total de ventas
-                    };
-                })
-            }],
-            xaxis: {
-                type: 'category',  // El eje X es de tipo categoría
-                title: {
-                    text: 'Meses'
-                }
-            },
-            yaxis: {
-                title: {
-                    text: 'Ventas Totales'
-                },
-                // Para agregar una línea horizontal en el gráfico para el promedio
-                min: 0,  // Establecemos un mínimo en 0
-            },
-            annotations: {
-                yaxis: [{
-                    y: promedioVentas,
-                    borderColor: '#FF0000',
-                    label: {
-                        text: 'Promedio Anual: ' + promedioVentas,
-                        style: {
-                            color: '#FF0000',
-                            background: '#FFFFFF',
-                            fontSize: '14px',
-                            fontWeight: 600
-                        }
-                    }
-                }]
+if (!ventasData || ventasData.length === 0) {
+    console.error('No hay datos de ventas disponibles.');
+} else {
+    // Configuración del gráfico
+    var options = {
+        chart: {
+            type: 'bar',  // Tipo de gráfico: columna
+        },
+        series: [{
+            name: 'Ventas',
+            data: ventasData.map(function (item) {
+                return {
+                    x: 'Mes ' + item.month,  // Usamos el mes como categoría
+                    y: item.total  // Total de ventas
+                };
+            })
+        }],
+        xaxis: {
+            type: 'category',  // El eje X es de tipo categoría
+            title: {
+                text: 'Meses'
             }
-        };
+        },
+        yaxis: {
+            title: {
+                text: 'Ventas Totales'
+            },
+            // Para agregar una línea horizontal en el gráfico para el promedio
+            min: 0,  // Establecemos un mínimo en 0
+        },
+        annotations: {
+            yaxis: [{
+                y: promedioVentas,
+                borderColor: '#FF0000',
+                label: {
+                    text: 'Promedio Anual: ' + promedioVentas,
+                    style: {
+                        color: '#FF0000',
+                        background: '#FFFFFF',
+                        fontSize: '14px',
+                        fontWeight: 600
+                    }
+                }
+            }]
+        }
+    };
 
-        // Crear e iniciar el gráfico
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();  // Renderiza el gráfico
+    // Crear e iniciar el gráfico
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();  // Renderiza el gráfico
 
-        // Subcategorias mas vendidas
-        var unidadesVendidas = @json($unidadesVendidas);
+    // Subcategorias mas vendidas
+    var unidadesVendidas = @json($unidadesVendidas);
 
     var unidadesOptions = {
         chart: {
@@ -154,7 +174,5 @@
 
     var unidadesChart = new ApexCharts(document.querySelector("#unidadesChart"), unidadesOptions);
     unidadesChart.render();
-    }
+}
 </script>
-
-
