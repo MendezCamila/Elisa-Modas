@@ -110,10 +110,10 @@
         <table>
             <thead>
                 <tr>
-                    <th># Venta</th>
+                    <th>ID Venta</th>
                     <th>Cliente</th>
-                    <th>Estado</th>
-                    <th>Fecha de Creación</th>
+                    <th>Payment ID</th>
+                    <th>Fecha de Venta</th>
                     <th>Contenido</th>
                     <th>Total</th>
                 </tr>
@@ -123,9 +123,13 @@
                     <tr>
                         <td>{{ $venta->id }}</td>
                         <td>{{ $venta->user->name ?? 'No disponible' }} {{ $venta->user->last_name ?? '' }}</td>
-                        <td>{{ $venta->estado }}</td>
+                        <td>{{ $venta->payment_id }}</td>
                         <td>{{ $venta->created_at->format('d/m/Y') }}</td>
-                        <td>{{ json_encode($venta->content) }}</td>
+                        <td>
+                            @foreach ($venta->content as $item)
+                                <p>{{ $item['name'] }} (SKU: {{ $item['options']['sku'] }}) - Cantidad: {{ $item['qty'] }} - Precio: {{ number_format($item['price'], 2) }}</p>
+                            @endforeach
+                        </td>
                         <td>{{ number_format($venta->total, 2) }}</td>
                     </tr>
                 @endforeach
