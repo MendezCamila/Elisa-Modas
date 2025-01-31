@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ventas;
+use App\Models\Subcategory;
 use Carbon\Carbon;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -59,19 +59,28 @@ class AdminDashboardController extends Controller
                 // Obtén la subcategoría del producto
                 $subcategoria = DB::table('products')
                     ->join('subcategories', 'subcategories.id', '=', 'products.subcategory_id')
+                    ->join('categories', 'categories.id', '=', 'subcategories.category_id')
+                    ->join('families', 'families.id', '=', 'categories.family_id')
                     ->where('products.id', $productId)
-                    ->value('subcategories.name');
+                    ->select('subcategories.name as subcategory', 'categories.name as category', 'families.name as family')
+                    ->first();
+
+                // Verificar si la subcategoría es null
+                if (!$subcategoria) {
+                    continue;
+                }
 
                 // Filtrar por subcategoría si se ha seleccionado una
-                if ($subcategoryFilter && $subcategoria !== $subcategoryFilter) {
+                if ($subcategoryFilter && $subcategoria->subcategory !== $subcategoryFilter) {
                     continue;
                 }
 
                 // Suma las cantidades vendidas por subcategoría
-                if (isset($estadisticas[$subcategoria])) {
-                    $estadisticas[$subcategoria] += $cantidad;
+                $key = "{$subcategoria->subcategory} ({$subcategoria->category} - {$subcategoria->family})";
+                if (isset($estadisticas[$key])) {
+                    $estadisticas[$key] += $cantidad;
                 } else {
-                    $estadisticas[$subcategoria] = $cantidad;
+                    $estadisticas[$key] = $cantidad;
                 }
             }
         }
@@ -83,8 +92,8 @@ class AdminDashboardController extends Controller
             return ['subcategory' => $subcategoria, 'total' => $cantidad];
         })->values();
 
-        // Obtener todas las subcategorías para el filtro
-        $subcategories = DB::table('subcategories')->pluck('name');
+        // Obtener todas las subcategorías con sus familias y categorías para el filtro
+        $subcategories = Subcategory::with('category.family')->get();
 
         return view('admin.dashboard', [
             'ventas' => $ventasData,

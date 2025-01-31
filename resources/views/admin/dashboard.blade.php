@@ -6,7 +6,7 @@
     ],
 ]">
 
-    {{-- Presentacion Usuario, nombre tienda --}}
+    {{-- Presentación Usuario, nombre tienda --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="bg-white rounded-lg shadow-lg p-6">
             <div class="flex items-center">
@@ -20,7 +20,7 @@
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button class="text-sm hover:text-blue-500">
-                            Cerrar sesion
+                            Cerrar sesión
                         </button>
                     </form>
                 </div>
@@ -34,57 +34,72 @@
         </div>
     </div>
 
-   {{-- Filtros --}}
-   <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
-    <form method="GET" action="{{ url('admin/dashboard') }}">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div>
-                <label for="start_date">Fecha de Inicio:</label>
-                <input type="date" id="start_date" name="start_date" value="{{ $startDate }}">
-            </div>
-            <div>
-                <label for="end_date">Fecha de Fin:</label>
-                <input type="date" id="end_date" name="end_date" value="{{ $endDate }}">
-            </div>
-            <div>
-                <label for="subcategory">Subcategoría:</label>
-                <select id="subcategory" name="subcategory">
-                    <option value="">Todas</option>
-                    @foreach ($subcategories as $subcategory)
-                        <option value="{{ $subcategory }}" {{ $selectedSubcategory == $subcategory ? 'selected' : '' }}>
-                            {{ $subcategory }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-        </div>
-    </form>
-</div>
-
-{{-- Estadisticas --}}
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-    <!-- Ventas -->
+    {{-- Filtros --}}
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
-        <h3 class="text-lg font-semibold">Ventas</h3>
-        <div id="chart" style="height: 400px;"></div>
+        <form method="GET" action="{{ url('admin/dashboard') }}" onsubmit="return validateDates()">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="flex flex-col lg:flex-row gap-4">
+                    <div class="flex-1">
+                        <label for="start_date">Fecha de Inicio:</label>
+                        <input type="date" id="start_date" name="start_date" value="{{ $startDate }}"
+                            class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    </div>
+                    <div class="flex-1">
+                        <label for="end_date">Fecha de Fin:</label>
+                        <input type="date" id="end_date" name="end_date" value="{{ $endDate }}"
+                            class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                    </div>
+                </div>
+                <div>
+                    <label for="subcategory">Subcategoría:</label>
+                    <select id="subcategory" name="subcategory"
+                        class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                        <option value="">Todas</option>
+                        @foreach ($subcategories as $subcategory)
+                            <option value="{{ $subcategory->name }}" {{ $selectedSubcategory == $subcategory->name ? 'selected' : '' }}>
+                                {{ $subcategory->name }} ({{ $subcategory->category->name }} - {{ $subcategory->category->family->name }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="mt-4 flex justify-end">
+                <x-button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Filtrar
+                </x-button>
+            </div>
+        </form>
     </div>
 
-    <!-- Subcategorias mas vendidas -->
-    <div class="bg-white rounded-lg shadow-lg p-6">
-        <h3 class="text-lg font-semibold">Subcategorias mas vendidas</h3>
-        <div id="unidadesChart" style="height: 400px;"></div>
-        <ul>
+    {{-- Estadísticas --}}
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <!-- Ventas -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+            <h3 class="text-lg font-semibold">Ventas</h3>
+            <div id="chart" style="height: 400px;"></div>
+        </div>
 
-        </ul>
+        <!-- Subcategorías más vendidas -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold">Subcategorías más vendidas</h3>
+            <div id="unidadesChart" style="height: 400px;"></div>
+        </div>
     </div>
-</div>
 
 </x-admin-layout>
 
 <script>
+function validateDates() {
+    var startDate = document.getElementById('start_date').value;
+    var endDate = document.getElementById('end_date').value;
+
+    if (new Date(endDate) < new Date(startDate)) {
+        alert('La fecha de fin no puede ser menor que la fecha de inicio.');
+        return false;
+    }
+    return true;
+}
+
 // Verifica que los datos de ventas no estén vacíos
 var ventasData = @json($ventas);  // Los datos pasan desde PHP a JavaScript
 var promedioVentas = @json($promedioVentas);  // El promedio global de ventas
