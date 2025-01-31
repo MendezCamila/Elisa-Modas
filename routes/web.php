@@ -67,12 +67,9 @@ Route::get('prueba', function () {
 });
 
 
-/*Ruta Administrador
-Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard')
-    ->middleware(['web', 'auth', 'can:acceso dashboard']);*/
-
-Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['web', 'auth', 'can:acceso dashboard'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index']);
 });
 
 

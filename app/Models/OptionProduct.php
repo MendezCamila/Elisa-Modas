@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 use OwenIt\Auditing\Contracts\Auditable;
 
-class OptionProduct extends Pivot implements Auditable
+class OptionProduct extends Pivot
 {
 
-    use \OwenIt\Auditing\Auditable;
+    
     use HasFactory;
 
     protected $casts = [
