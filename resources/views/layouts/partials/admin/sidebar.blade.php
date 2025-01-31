@@ -119,19 +119,6 @@
             'active'=> request()->routeIs('admin.orden-compras.*')
         ],
 
-
-        //Parte de informes y estadisticas
-        [
-            'header' => 'Informes y Estadisticas',
-        ],
-        //tengo que modificarlo para cuando tenga las rutas
-        [
-            'name'=>'Informes',
-            'icon'=>'fa-solid fa-chart-simple',
-            'route'=>route('admin.covers.index'),
-            'active'=> request()->routeIs('admin.covers.*')
-        ],
-
         //Parte de auditorias
         [
             'header' => 'Auditorias',
