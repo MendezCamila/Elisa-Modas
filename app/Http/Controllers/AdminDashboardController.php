@@ -76,7 +76,7 @@ class AdminDashboardController extends Controller
                 }
 
                 // Suma las cantidades vendidas por subcategoría
-                $key = "{$subcategoria->subcategory} ({$subcategoria->category} - {$subcategoria->family})";
+                $key = $subcategoria->subcategory;
                 if (isset($estadisticas[$key])) {
                     $estadisticas[$key] += $cantidad;
                 } else {
