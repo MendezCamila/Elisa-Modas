@@ -132,7 +132,7 @@ Route::middleware(['web', 'auth', 'can:administrar usuarios'])->prefix('admin')-
 });
 
 // Rutas para administrar roles
-Route::middleware(['web', 'auth'/*, 'can:administrar roles'*/])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar roles'])->prefix('admin')->name('admin.')->group(function () {
     // Ruta para listar roles
     Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
 
@@ -153,7 +153,7 @@ Route::middleware(['web', 'auth'/*, 'can:administrar roles'*/])->prefix('admin')
 });
 
 // Rutas para administrar proveedores
-Route::middleware(['web', 'auth', /*'can:administrar proveedores'*/])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar proveedores'])->prefix('admin')->name('admin.')->group(function () {
     // Ruta para listar proveedores
     Route::get('suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
 
@@ -171,13 +171,13 @@ Route::middleware(['web', 'auth', /*'can:administrar proveedores'*/])->prefix('a
 });
 
 //Ruta para administrar la auditoria
-Route::middleware(['web', 'auth', /*'can:administrar auditoria'*/])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar auditoria'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('auditorias', [AuditController::class, 'index'])->name('auditorias.index');
 });
 
 
 //Ruta para administrar Cotizaciones
-Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar cotizaciones'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('cotizaciones', [CotizacionController::class, 'index'])->name('cotizaciones.index');
     //ruta para crear una nueva cotizacion
     Route::get('cotizaciones/create', [CotizacionController::class, 'create'])->name('cotizaciones.create');
@@ -191,7 +191,7 @@ Route::middleware(['web', 'auth', /*'can:administrar cotizaciones'*/])->prefix('
 
 
 //Ruta para administrar las ordenes de compra
-Route::middleware(['web', 'auth', /*'can:administrar ordenes de compra'*/])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar ordenes de compra'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('ordenes-compra', [OrdenCompraController::class, 'index'])->name('orden-compras.index');
     Route::get('ordenes-compras/create/{cotizacion_id}', [OrdenCompraController::class, 'create'])->name('orden-compras.create');
     Route::get('/orden-compras/{id}', [OrdenCompraController::class, 'show'])->name('orden-compras.show');
@@ -215,7 +215,7 @@ Route::get('/cotizacion/{id}', [CotizacionController::class, 'show'])->name('cot
 
 
 //Ruta para administrar las ventas
-Route::middleware(['web', 'auth', /*'can:administrar ventas'*/])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['web', 'auth', 'can:administrar ventas'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('ventas', [VentasController::class, 'index'])->name('ventas.index');
     Route::get('ventas/informepdf', [PdfExportController::class, 'exportVentas'])->name('ventas.informepdf');
 });

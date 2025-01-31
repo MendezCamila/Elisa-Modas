@@ -23,11 +23,19 @@ class PermissionSeeder extends Seeder
             'administrar productos',
             'administrar portadas',
             'administrar usuarios',
+            //nuevos permisos
+            'administrar roles',
+            'administrar proveedores',
+            'administrar ventas',
+            'administrar cotizaciones',
+            'administrar ordenes de compra',
+            'administrar auditoria',
+
         ];
 
         //recorremos el array y creamos los permisos
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
     }
 }
