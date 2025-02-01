@@ -190,11 +190,17 @@ Route::middleware(['web', 'auth', 'can:administrar cotizaciones'])->prefix('admi
 });
 
 
-//Ruta para administrar las ordenes de compra
-Route::middleware(['web', 'auth', 'can:administrar ordenes de compra'])->prefix('admin')->name('admin.')->group(function () {
+// Ruta accesible sin el permiso 'administrar ordenes de compra'
+Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/orden-compras/{id}', [OrdenCompraController::class, 'show'])->name('orden-compras.show');
+});
+
+
+
+// Rutas para administrar las ordenes de compra
+Route::middleware(['web', 'auth'/*, 'can:administrar ordenes de compra'*/])->prefix('admin')->name('admin.')->group(function () {
     Route::get('ordenes-compra', [OrdenCompraController::class, 'index'])->name('orden-compras.index');
     Route::get('ordenes-compras/create/{cotizacion_id}', [OrdenCompraController::class, 'create'])->name('orden-compras.create');
-    Route::get('/orden-compras/{id}', [OrdenCompraController::class, 'show'])->name('orden-compras.show');
     Route::get('orden-compras/{id}', [OrdenCompraController::class, 'showAdmin'])->name('orden-compras.showAdmin');
     Route::get('export/orden-compras/pdf', [PdfExportController::class, 'exportOrdenesCompra'])->name('orden-compras.pdf');
 });

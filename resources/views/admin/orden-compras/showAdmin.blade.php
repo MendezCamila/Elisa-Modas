@@ -1,16 +1,20 @@
-<x-admin-layout :breadcrumbs="[
-    [
-        'name' => 'Dashboard',
-        'route' => route('admin.dashboard'),
-    ],
-    [
-        'name' => 'Orden de compras',
-        'route' => route('admin.orden-compras.index'),
-    ],
-    [
-        'name' => 'Detalles de la Orden de Compra',
-    ],
-]">
+@php
+    $breadcrumbs = [
+        [
+            'name' => 'Dashboard',
+            'route' => route('admin.dashboard'),
+        ],
+        [
+            'name' => 'Orden de compras',
+            'route' => route('admin.orden-compras.index'),
+        ],
+        [
+            'name' => 'Detalles de la Orden de Compra',
+        ],
+    ];
+@endphp
+
+<x-admin-layout :breadcrumbs="Auth::user()->can('acceso dashboard') ? $breadcrumbs : []">
     <div class="card bg-white shadow-sm rounded-lg p-6">
         <div class="card-header mb-4 border-b pb-4">
             <h3 class="text-lg font-semibold text-gray-700">Detalles de la Orden de Compra #{{ $ordenCompra->id }}</h3>
@@ -49,12 +53,14 @@
                 </table>
             </div>
 
-            {{-- Botón para volver atrás --}}
-            <div class="mt-6">
-                <button onclick="window.history.back()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                    Volver Atrás
-                </button>
-            </div>
+            @can('acceso dashboard')
+                {{-- Botón para volver atrás --}}
+                <div class="mt-6">
+                    <button onclick="window.history.back()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                        Volver Atrás
+                    </button>
+                </div>
+            @endcan
         </div>
     </div>
 </x-admin-layout>
