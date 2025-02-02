@@ -138,8 +138,10 @@ class CreateCotizacion extends Component
     {
         if (count($this->subcategory_ids) > 0) {
             $this->suppliers = Supplier::whereHas('subcategories', function ($query) {
-                $query->whereIn('subcategory_id', $this->subcategory_ids);
-            })->get();
+                    $query->whereIn('subcategory_id', $this->subcategory_ids);
+                })
+                ->where('estado', 'activo') // Filtrar solo proveedores activos
+                ->get();
         } else {
             $this->suppliers = [];
         }
