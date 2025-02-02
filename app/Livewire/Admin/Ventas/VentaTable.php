@@ -83,20 +83,20 @@ class VentaTable extends DataTableComponent
                 }),
 
             // Estado de la venta
-        Column::make("Estado", "estado")
-        ->searchable(),
+            Column::make("Estado", "estado")
+                ->searchable(),
 
-    // Acciones para cambiar el estado
-    Column::make("Acciones")
-        ->label(function ($row) {
-            return view('admin.ventas.estado', ['venta' => $row]);
-        }),
+            // Acciones para cambiar el estado
+            Column::make("Acciones")
+                ->label(function ($row) {
+                    return view('admin.ventas.estado', ['venta' => $row]);
+                }),
 
-    // Comprobante
-    Column::make("Comprobante")
-        ->label(function ($row) {
-            return view('admin.ventas.comprobante', ['venta' => $row]);
-        })
+            // Comprobante
+            Column::make("Comprobante")
+                ->label(function ($row) {
+                    return view('admin.ventas.comprobante', ['venta' => $row]);
+                })
         ];
     }
 
@@ -144,6 +144,17 @@ class VentaTable extends DataTableComponent
                     }
                 }),
 
+            // Filtro por estado
+            SelectFilter::make('Estado', 'estado')
+                ->options([
+                    'pendiente' => 'Pendiente',
+                    'entregado' => 'Entregado',
+                ])
+                ->filter(function ($query, $value) {
+                    return $query->where('estado', $value);
+                }),
+
+
             // Filtro por rango de precio
             NumberRangeFilter::make('Rango de Precio')
                 ->options([
@@ -161,6 +172,7 @@ class VentaTable extends DataTableComponent
 
                     $query->whereBetween('total', [$min, $max]);
                 }),
+
 
         ];
     }
