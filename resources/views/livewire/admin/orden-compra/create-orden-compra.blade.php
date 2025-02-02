@@ -23,30 +23,32 @@
                 </thead>
                 <tbody>
                     @foreach ($detalles as $index => $detalle)
-                        <tr class="hover:bg-gray-100">
-                            <td class="px-4 py-2 border text-left">
-                                {{ $cotizacion->detalleCotizaciones[$index]->variant->product->name ?? 'N/A' }}
-                                @if ($cotizacion->detalleCotizaciones[$index]->variant->features->isNotEmpty())
-                                    ({{ implode(', ', $cotizacion->detalleCotizaciones[$index]->variant->features->pluck('description')->toArray()) }})
-                                @endif
-                            </td>
-                            <td class="px-4 py-2 border text-center">
-                                {{ $detalle['cantidad_ofrecida'] ?? 'N/A' }} unidades
-                            </td>
-                            <td class="px-4 py-2 border text-right">
-                                {{ $detalle['precio'] ? '$' . number_format($detalle['precio'], 2) : 'N/A' }}
-                            </td>
-                            <td class="px-4 py-2 border text-center">
-                                <input type="number" wire:model="detalles.{{ $index }}.cantidad_solicitada" class="form-input w-full" />
-                            </td>
-                            <td class="px-4 py-2 border text-center">
-                                <button type="button"
-                                    wire:click="removeProducto({{ $index }})"
-                                    class="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none">
-                                    X
-                                </button>
-                            </td>
-                        </tr>
+                        @if ($cotizacion->detalleCotizaciones[$index]->disponible == 1)
+                            <tr class="hover:bg-gray-100">
+                                <td class="px-4 py-2 border text-left">
+                                    {{ $cotizacion->detalleCotizaciones[$index]->variant->product->name ?? 'N/A' }}
+                                    @if ($cotizacion->detalleCotizaciones[$index]->variant->features->isNotEmpty())
+                                        ({{ implode(', ', $cotizacion->detalleCotizaciones[$index]->variant->features->pluck('description')->toArray()) }})
+                                    @endif
+                                </td>
+                                <td class="px-4 py-2 border text-center">
+                                    {{ $detalle['cantidad_ofrecida'] ?? 'N/A' }} unidades
+                                </td>
+                                <td class="px-4 py-2 border text-right">
+                                    {{ $detalle['precio'] ? '$' . number_format($detalle['precio'], 2) : 'N/A' }}
+                                </td>
+                                <td class="px-4 py-2 border text-center">
+                                    <input type="number" wire:model="detalles.{{ $index }}.cantidad_solicitada"
+                                        class="form-input w-full" />
+                                </td>
+                                <td class="px-4 py-2 border text-center">
+                                    <button type="button" wire:click="removeProducto({{ $index }})"
+                                        class="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none">
+                                        X
+                                    </button>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>
@@ -54,7 +56,8 @@
 
         <div class="flex justify-between">
             {{-- Botón para volver atrás --}}
-            <button onclick="window.history.back()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            <button onclick="window.history.back()"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                 Volver Atrás
             </button>
 
