@@ -21,6 +21,7 @@ class DetalleCotizacion extends Model implements Auditable
         'variant_id',
         'cantidad_solicitada',
         'plazo_resp',
+        'disponible',
 
     ];
 

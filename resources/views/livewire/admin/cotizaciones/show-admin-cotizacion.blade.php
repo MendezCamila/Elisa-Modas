@@ -27,7 +27,7 @@
                     <tbody>
                         @foreach ($cotizacion->detalleCotizaciones as $detalle)
                             <tr class="hover:bg-gray-100">
-                                <td class="px-4 py-2 border text-left">{{ $detalle->variant->product->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border text-left">{{ $detalle->variant->product->name ?? 'No disponible' }}</td>
                                 <td class="px-4 py-2 border text-center">
                                     {{ $detalle->cantidad_solicitada }} unidades
                                 </td>
@@ -35,7 +35,7 @@
                                     @if ($detalle->variant->features->isNotEmpty())
                                         {{ implode(', ', $detalle->variant->features->pluck('description')->toArray()) }}
                                     @else
-                                        N/A
+                                        No disponible
                                     @endif
                                 </td>
                             </tr>

@@ -56,12 +56,20 @@
                                 <td class="px-4 py-2 border text-center">
                                     {{ $detalle->cantidad_solicitada }} unidades
                                 </td>
-                                <td class="px-4 py-2 border text-right">
-                                    {{ $detalle->precio ? '$' . number_format($detalle->precio, 2) : 'N/A' }}
-                                </td>
-                                <td class="px-4 py-2 border text-center">
-                                    {{ $detalle->cantidad ?? 'N/A' }} unidades
-                                </td>
+
+                                {{-- Verificación para mostrar si el producto no está disponible --}}
+                                @if (is_null($detalle->cantidad) && is_null($detalle->precio))
+                                    <td colspan="2" class="px-4 py-2 border text-center text-red-500 font-semibold">
+                                        Producto no disponible
+                                    </td>
+                                @else
+                                    <td class="px-4 py-2 border text-right">
+                                        {{ $detalle->precio ? '$' . number_format($detalle->precio, 2) : 'N/A' }}
+                                    </td>
+                                    <td class="px-4 py-2 border text-center">
+                                        {{ $detalle->cantidad ?? 'N/A' }} unidades
+                                    </td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

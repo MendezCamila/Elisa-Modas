@@ -35,44 +35,65 @@ class ShowCotizacion extends Component
             $this->detalleCotizaciones[$detalle->id] = [
                 'precio' => null,
                 'cantidad' => null,
+                'disponible' => $detalle->disponible,
             ];
         }
     }
 
     public function guardarCotizacion()
-    {
+{
+    $this->validate([
+        'tiempo_entrega' => 'required|numeric|min:1',
+    ]);
 
-        //validad la entrada de datos
-        $this->validate([
-            'tiempo_entrega' => 'required|numeric|min:1',
-            'detalleCotizaciones.*.precio' => 'required|numeric|min:1',
-            'detalleCotizaciones.*.cantidad' => 'required|numeric|min:1',
-        ]);
+    foreach ($this->detalleCotizaciones as $detalleId => $valores) {
+        // Si el producto está disponible (no está marcado como no disponible)
+        if (empty($valores['no_disponible'])) { 
+            // Validar precio
+            if (is_null($valores['precio']) || !is_numeric($valores['precio']) || $valores['precio'] < 1) {
+                $this->addError("detalleCotizaciones.$detalleId.precio", 'El campo precio debe ser numérico y mayor a 0 cuando el producto está disponible.');
+            }
 
-        //guardar los datos completados por el proveedor
-        foreach ($this->detalleCotizaciones as $detalleId => $valores) {
-            $detalle = DetalleCotizacion::findOrFail($detalleId);
-            $detalle->update([
-                'precio' => $valores['precio'],
-                'cantidad' => $valores['cantidad'],
-                'tiempo_entrega' => $this->tiempo_entrega,
-
-            ]);
+            // Validar cantidad
+            if (is_null($valores['cantidad']) || !is_numeric($valores['cantidad']) || $valores['cantidad'] < 1) {
+                $this->addError("detalleCotizaciones.$detalleId.cantidad", 'El campo cantidad debe ser numérico y mayor a 0 cuando el producto está disponible.');
+            }
         }
+    }
 
-        // Cambiar el estado de la cotización a "respondida"
-        $this->cotizacion->update([
-            'estado' => 'respondida',
-        ]);
+    if ($this->getErrorBag()->isNotEmpty()) {
+        return; // Detener la ejecución si hay errores de validación
+    }
 
-        //mostrar en un dd lo que se guardo
-        //dd($this->detalleCotizaciones);
-        session()->flash('swal', [
-            'icon' => 'success',
-            'title' => 'Bien hecho!',
-            'text' => 'La cotización ha sido enviada correctamente',
+    // Guardar los detalles de la cotización
+    foreach ($this->detalleCotizaciones as $detalleId => $valores) {
+        $detalle = DetalleCotizacion::findOrFail($detalleId);
+
+        $detalle->update([
+            'precio' => empty($valores['no_disponible']) ? $valores['precio'] : null,
+            'cantidad' => empty($valores['no_disponible']) ? $valores['cantidad'] : null,
+            'tiempo_entrega' => $this->tiempo_entrega,
+            'disponible' => empty($valores['no_disponible']) ? 1 : 0,  // 1 si está disponible, 0 si no lo está
         ]);
     }
+
+    $this->cotizacion->update(['estado' => 'respondida']);
+
+    session()->flash('swal', [
+        'icon' => 'success',
+        'title' => '¡Bien hecho!',
+        'text' => 'La cotización ha sido enviada correctamente',
+    ]);
+}
+
+    public function actualizarDisponibilidad($detalleId)
+    {
+        if (!$this->detalleCotizaciones[$detalleId]['disponible']) {
+            $this->detalleCotizaciones[$detalleId]['precio'] = null;
+            $this->detalleCotizaciones[$detalleId]['cantidad'] = null;
+        }
+    }
+
 
     public function render()
     {

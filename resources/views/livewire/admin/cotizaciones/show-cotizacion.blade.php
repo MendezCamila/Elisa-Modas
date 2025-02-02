@@ -11,13 +11,13 @@
             <form wire:submit.prevent="guardarCotizacion">
                 <h1 class="text-xl font-bold mb-4">Cotización #{{ $cotizacion->id }}</h1>
                 <p class="mb-4">
-                    <div class="mb-4">
-                        @if($proveedor)
-                            <h2>Proveedor: {{ $proveedor->name }} {{ $proveedor->last_name }}</h2>
-                        @else
-                            <h2>No proveedor asignado</h2>
-                        @endif
-                    </div>
+                <div class="mb-4">
+                    @if ($proveedor)
+                        <h2>Proveedor: {{ $proveedor->name }} {{ $proveedor->last_name }}</h2>
+                    @else
+                        <h2>No proveedor asignado</h2>
+                    @endif
+                </div>
 
                 <p class="mb-4"><strong>Fecha de creación:</strong> {{ $cotizacion->created_at->format('d/m/Y') }}</p>
                 <p class="mb-4"><strong>Plazo de respuesta:</strong>
@@ -31,6 +31,7 @@
                             <th class="px-4 py-2 border">Cantidad Solicitada</th>
                             <th class="px-4 py-2 border">Precio</th>
                             <th class="px-4 py-2 border">Cantidad Ofrecida</th>
+                            <th class="px-4 py-2 border">No Disponible</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,13 +48,20 @@
                                     <input type="text"
                                         class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
                                         wire:model.defer="detalleCotizaciones.{{ $detalle->id }}.precio"
-                                        placeholder="Precio por unidad" />
+                                        placeholder="Precio por unidad"
+                                        @if (!empty($detalleCotizaciones[$detalle->id]['no_disponible'])) disabled @endif />
                                 </td>
+
                                 <td class="px-4 py-2 border">
                                     <input type="number"
                                         class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
                                         wire:model.defer="detalleCotizaciones.{{ $detalle->id }}.cantidad"
-                                        placeholder="Cantidad ofrecida" />
+                                        placeholder="Cantidad ofrecida"
+                                        @if (!empty($detalleCotizaciones[$detalle->id]['no_disponible'])) disabled @endif />
+                                </td>
+                                <td class="px-4 py-2 border text-center">
+                                    <input type="checkbox"
+                                        wire:model.defer="detalleCotizaciones.{{ $detalle->id }}.no_disponible" />
                                 </td>
                             </tr>
                         @endforeach
@@ -76,5 +84,4 @@
                 </div>
             </form>
         </div>
-    </section>
-</div>
+    </section
