@@ -53,11 +53,15 @@
                         @endphp
                         <div class="flex items-center mb-2">
                             <span class="mr-2">{{ $variant['name'] }}</span>
-                            <x-input type="number" class="w-20" wire:model.live="quantities.{{ $variant_id }} "
-                                placeholder="Cantidad" min="1" />
+                            <x-input
+                                type="number"
+                                class="w-20"
+                                wire:model="quantities.{{ $variant_id }}"
+                                placeholder="Cantidad"
+                                min="1"
+                            />
                         </div>
                     @endforeach
-                    {{--  @dump($quantities) --}}
                 </div>
 
 
@@ -84,7 +88,7 @@
                 {{-- Boton para enviar cotizacion --}}
                 <div class="flex justify-end mt-4">
                     <x-button>
-                        Enviar cotización 
+                        Enviar cotización
                     </x-button>
                 </div>
 

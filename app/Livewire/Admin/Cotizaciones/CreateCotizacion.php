@@ -51,14 +51,12 @@ class CreateCotizacion extends Component
         $this->subcategories = Subcategory::with('category.family')->get();
 
         $this->dispatch('initializeSelect2');
-
     }
 
 
     public function hydrate()
     {
         $this->dispatch('initializeSelect2');
-
     }
 
     //creacion reglas de validacion
@@ -68,6 +66,12 @@ class CreateCotizacion extends Component
     {
 
         $this->subcategory_ids = is_array($value) ? $value : explode(',', $value);
+
+        // Limpiar las selecciones de variantes, cantidades y proveedores
+        $this->variant_ids = [];
+        $this->quantities = [];
+        $this->supplier_ids = [];
+
         $this->updateVariants();
         $this->updateProveedores();
         $this->dispatch('initializeSelect2');
@@ -76,6 +80,8 @@ class CreateCotizacion extends Component
     public function updatedVariantIds($value)
     {
         $this->variant_ids = is_array($value) ? $value : explode(',', $value);
+
+
         $this->quantities = array_fill_keys($this->variant_ids, 1); // Inicializa las cantidades con 1
     }
 
@@ -88,47 +94,48 @@ class CreateCotizacion extends Component
     }
 
     public function updateVariants()
-{
+    {
 
-    $variantData = []; // Array para almacenar los datos formateados
+        $variantData = []; // Array para almacenar los datos formateados
 
-    if (count($this->subcategory_ids) > 0) {
-        $this->variants = Variant::whereHas('product', function ($query) {
-            $query->whereIn('subcategory_id', $this->subcategory_ids);
-        })
-        ->with('features', 'product') // Cargar características asociadas a las variantes y los productos
-        ->get();
+        if (count($this->subcategory_ids) > 0) {
+            $this->variants = Variant::whereHas('product', function ($query) {
+                $query->whereIn('subcategory_id', $this->subcategory_ids);
+            })
+                ->with('features', 'product') // Cargar características asociadas a las variantes y los productos
+                ->get();
 
-        foreach ($this->variants as $variant) {
-            $productName = $variant->product->name;
-            $variantFeatures = [];
+            foreach ($this->variants as $variant) {
+                $productName = $variant->product->name;
+                $variantFeatures = [];
 
-            foreach ($variant->features as $feature) {
-                if ($feature->description) {
-                    $variantFeatures[] = $feature->description;
+                foreach ($variant->features as $feature) {
+                    if ($feature->description) {
+                        $variantFeatures[] = $feature->description;
+                    }
+                }
+
+                $featuresString = implode(', ', $variantFeatures);
+
+                if ($featuresString) {
+                    $variantData[] = [
+                        'id' => $variant->id,
+                        'name' => $productName . ' (' . $featuresString . ')'
+                    ];
                 }
             }
 
-            $featuresString = implode(', ', $variantFeatures);
+            $this->variants = $variantData;
+            //dd($this->variants);
 
-            if ($featuresString) {
-                $variantData[] = [
-                    'id' => $variant->id,
-                    'name' => $productName . ' (' . $featuresString . ')'
-                ];
-            }
+        } else {
+            $this->variants = [];
         }
-
-        $this->variants = $variantData;
-        //dd($this->variants);
-
-    } else {
-        $this->variants = [];
     }
-}
 
     //filtre proveedores en base a la subcategoria selecccioanda
-    public function updateProveedores (){
+    public function updateProveedores()
+    {
         if (count($this->subcategory_ids) > 0) {
             $this->suppliers = Supplier::whereHas('subcategories', function ($query) {
                 $query->whereIn('subcategory_id', $this->subcategory_ids);
@@ -147,7 +154,7 @@ class CreateCotizacion extends Component
             'supplier_ids' => 'required|array|min:1',
             'supplier_ids.*' => 'required|integer|exists:suppliers,id',
             'quantities' => 'required|array|min:1',
-            'quantities.*' => 'required|integer|min:1',// Cantidad solicitada por variante
+            'quantities.*' => 'required|integer|min:1', // Cantidad solicitada por variante
             'plazo_resp' => 'required|date|after:today', // Fecha de plazo de respuesta
             'variant_ids' => 'required|array|min:1', // Variantes seleccionadas
             'supplier_ids' => 'required|array|min:1', // Proveedores seleccionados
@@ -177,7 +184,7 @@ class CreateCotizacion extends Component
             $supplier = Supplier::find($supplierId); // Aquí se corrige
             Mail::to($supplier->email)->send(new EnviarCotizacionMail($cotizacion));
 
-        //dd($cotizacion);
+            //dd($cotizacion);
         }
 
         session()->flash('swal', [
@@ -187,8 +194,6 @@ class CreateCotizacion extends Component
         ]);
 
         return redirect()->route('admin.cotizaciones.index');
-
-        // Lógica para enviar la cotización
     }
 
 
