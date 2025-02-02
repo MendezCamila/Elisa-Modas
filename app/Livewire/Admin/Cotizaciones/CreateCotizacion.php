@@ -82,7 +82,11 @@ class CreateCotizacion extends Component
         $this->variant_ids = is_array($value) ? $value : explode(',', $value);
 
 
-        $this->quantities = array_fill_keys($this->variant_ids, 1); // Inicializa las cantidades con 1
+        foreach ($this->variant_ids as $variant_id) {
+            if (!isset($this->quantities[$variant_id])) {
+                $this->quantities[$variant_id] = 1; // Inicializa las cantidades con 1 si no está definida
+            }
+        }
     }
 
     protected function messages()

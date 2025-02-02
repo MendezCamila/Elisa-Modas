@@ -53,13 +53,8 @@
                         @endphp
                         <div class="flex items-center mb-2">
                             <span class="mr-2">{{ $variant['name'] }}</span>
-                            <x-input
-                                type="number"
-                                class="w-20"
-                                wire:model="quantities.{{ $variant_id }}"
-                                placeholder="Cantidad"
-                                min="1"
-                            />
+                            <x-input type="number" class="w-20" wire:model="quantities.{{ $variant_id }}"
+                                placeholder="Cantidad" min="1" />
                         </div>
                     @endforeach
                 </div>
