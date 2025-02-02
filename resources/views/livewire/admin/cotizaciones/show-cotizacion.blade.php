@@ -62,7 +62,7 @@
 
                 <div class="mt-4">
                     <label for="tiempo_entrega" class="block font-medium text-sm text-gray-700">Tiempo de entrega
-                        (días):</label>
+                        (días hábiles):</label>
                     <input type="number" id="tiempo_entrega" wire:model.defer="tiempo_entrega"
                         class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-opacity-50"
                         placeholder="Ingrese el tiempo de entrega en días" />

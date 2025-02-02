@@ -84,7 +84,7 @@
                 {{-- Boton para enviar cotizacion --}}
                 <div class="flex justify-end mt-4">
                     <x-button>
-                        Enviar cotización
+                        Enviar cotización 
                     </x-button>
                 </div>
 

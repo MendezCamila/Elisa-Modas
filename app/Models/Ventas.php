@@ -20,6 +20,7 @@ class Ventas extends Model implements Auditable
         'content',     // Contenido del carrito (probablemente un JSON o string serializado)
         'payment_id',  // ID de pago de MercadoPago
         'total',       // Total de la venta
+        'estado',      // Estado de la venta
     ];
 
     use HasFactory;

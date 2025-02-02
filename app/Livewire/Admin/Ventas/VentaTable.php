@@ -82,10 +82,21 @@ class VentaTable extends DataTableComponent
                     return "$" . number_format($value, 2);
                 }),
 
-            Column::make("Comprobante")
-                ->label(function ($row) {
-                    return view('admin.ventas.comprobante', ['venta' => $row]);
-                })
+            // Estado de la venta
+        Column::make("Estado", "estado")
+        ->searchable(),
+
+    // Acciones para cambiar el estado
+    Column::make("Acciones")
+        ->label(function ($row) {
+            return view('admin.ventas.estado', ['venta' => $row]);
+        }),
+
+    // Comprobante
+    Column::make("Comprobante")
+        ->label(function ($row) {
+            return view('admin.ventas.comprobante', ['venta' => $row]);
+        })
         ];
     }
 
@@ -154,6 +165,17 @@ class VentaTable extends DataTableComponent
         ];
     }
 
+    public function cambiarEstado($ventaId)
+    {
+        $venta = Ventas::find($ventaId);
+        if ($venta) {
+            // Cambiar estado a "entregado"
+            $venta->estado = 'entregado';
+            $venta->save();
+
+            session()->flash('message', 'El estado de la venta ha sido actualizado a "entregado".');
+        }
+    }
 
 
     public function descargarComprobante(Ventas $venta)
