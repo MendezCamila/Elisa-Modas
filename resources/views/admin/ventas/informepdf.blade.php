@@ -103,6 +103,10 @@
                     <li>Rango de Precio: {{ number_format($filters['rango_de_precio']['min'], 2) }} hasta {{ number_format($filters['rango_de_precio']['max'], 2) }}</li>
                 @endif
 
+                @if(isset($filters['estado']))
+                    <li>Estado: {{ ucfirst($filters['estado']) }}</li>
+                @endif
+
                 @if(empty($filters))
                     <li>No se aplicaron filtros</li>
                 @endif
@@ -118,6 +122,7 @@
                     <th>Cliente</th>
                     <th>Payment ID</th>
                     <th>Fecha de Venta</th>
+                    <th>Estado</th> <!-- Nueva columna añadida -->
                     <th>Contenido</th>
                     <th>Total</th>
                 </tr>
@@ -129,6 +134,7 @@
                         <td>{{ $venta->user->name ?? 'No disponible' }} {{ $venta->user->last_name ?? '' }}</td>
                         <td>{{ $venta->payment_id }}</td>
                         <td>{{ $venta->created_at->format('d/m/Y') }}</td>
+                        <td>{{ $venta->estado ?? 'No disponible' }}</td> <!-- Mostrar estado de la venta -->
                         <td>
                             @foreach ($venta->content as $item)
                                 <p>{{ $item['name'] }} (SKU: {{ $item['options']['sku'] }}) - Cantidad: {{ $item['qty'] }} - Precio: {{ number_format($item['price'], 2) }}</p>
@@ -154,3 +160,4 @@
 
 </body>
 </html>
+
