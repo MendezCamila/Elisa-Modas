@@ -37,7 +37,7 @@ class GenerarCotizacion extends Command
                 // Verificar si el stock actual está por debajo del stock mínimo
                 if ($variant->stock < $variant->stock_min) {
                     // Calculamos la cantidad a solicitar
-                    $cantidadSolicitada = ceil(($variant->stock_min - $variant->stock) * 0.5);
+                    $cantidadSolicitada = ($variant->stock_min - $variant->stock) + 15;
 
                     // Obtenemos los proveedores asociados a esta subcategoría
                     $suppliers = Supplier::whereHas('subcategories', function ($query) use ($subcategory) {
