@@ -153,6 +153,22 @@ class CreateCotizacion extends Component
         //dd($this->suppliers)->toArray();
     }
 
+
+    public function boot()
+    {
+        $this->withValidator(function ($validator) {
+            // Verificar si hay errores de validación
+            if ($validator->fails()) {
+                // Disparar una alerta con los detalles del error
+                $this->dispatch('swal', [
+                    'icon' => 'error',
+                    'title' => 'Error!',
+                    'text' => 'El formulario contiene errores.',
+                ]);
+            }
+        });
+    }
+
     public function enviarCotizacion()
     {
 
@@ -164,7 +180,20 @@ class CreateCotizacion extends Component
             'plazo_resp' => 'required|date|after:today', // Fecha de plazo de respuesta
             'variant_ids' => 'required|array|min:1', // Variantes seleccionadas
             'supplier_ids' => 'required|array|min:1', // Proveedores seleccionados
-        ]);
+        ],[
+            'supplier_ids.required' => 'Debe seleccionar al menos un proveedor.',
+            'supplier_ids.min' => 'Debe seleccionar al menos un proveedor.',
+            'quantities.required' => 'Debe ingresar al menos una cantidad.',
+            'quantities.min' => 'Debe ingresar al menos una cantidad.',
+            'plazo_resp.required' => 'Debe ingresar una fecha límite para la respuesta.',
+            'plazo_resp.date' => 'La fecha límite para la respuesta debe ser una fecha válida.',
+            'plazo_resp.after' => 'La fecha límite para la respuesta debe ser posterior a la fecha actual.',
+            'variant_ids.required' => 'Debe seleccionar al menos un producto.',
+            'variant_ids.min' => 'Debe seleccionar al menos un producto.',
+            'supplier_ids.required' => 'Debe seleccionar al menos un proveedor.',
+            'supplier_ids.min' => 'Debe seleccionar al menos un proveedor.',
+        ]
+    );
 
         foreach ($this->supplier_ids as $supplierId) {
             // Crear la cotización

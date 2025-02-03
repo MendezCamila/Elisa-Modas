@@ -42,7 +42,14 @@
                     <tbody>
                         @foreach ($ordenCompra->detalleOrdenCompras as $detalle)
                             <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 border-b">{{ $detalle->variant->product->name ?? 'Producto no disponible' }}</td>
+                                <td class="px-4 py-2 border-b">
+                                    {{ $detalle->variant->product->name ?? 'Producto no disponible' }}
+                                    @if ($detalle->variant->features->isNotEmpty())
+                                        ({{ implode(', ', $detalle->variant->features->pluck('description')->toArray()) }})
+                                    @else
+                                        (Características no disponibles)
+                                    @endif
+                                </td>
                                 <td class="px-4 py-2 border-b">{{ $detalle->variant->sku ?? 'Variante no disponible' }}</td>
                                 <td class="px-4 py-2 border-b">{{ $detalle->cantidad }} unidades</td>
                                 <td class="px-4 py-2 border-b">{{ number_format($detalle->precio_unitario, 2) }}</td>
