@@ -1,5 +1,13 @@
 <div class="card">
+    <x-validation-errors class="mb-4" />
+    @if (session()->has('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">¡Error!</strong>
+            <span class="block sm:inline">{{ session('error') }}</span>
+        </div>
+    @endif
     <form wire:submit.prevent="submit">
+
         {{-- Información del proveedor --}}
         <div class="mb-6">
             <x-label value="Proveedor" class="font-medium text-gray-700 mb-2" />
@@ -11,6 +19,14 @@
         {{-- Variantes --}}
         <div class="mb-6">
             <x-label value="Variantes" class="font-medium text-gray-700 mb-2" />
+
+            @if (empty($detalles))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">¡No hay productos seleccionados!</strong>
+                    <span class="block sm:inline">Debes agregar al menos un producto para enviar la orden de compra.</span>
+                </div>
+            @endif
+
             <table class="table-auto w-full border border-gray-300 text-sm">
                 <thead>
                     <tr class="bg-gray-200 text-gray-600">
@@ -43,7 +59,8 @@
                                 </td>
                                 <td class="px-4 py-2 border text-center">
                                     <button type="button" wire:click="removeProducto({{ $index }})"
-                                        class="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none">
+                                        class="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none"
+                                        @if (count($detalles) <= 1) disabled @endif>
                                         X
                                     </button>
                                 </td>
