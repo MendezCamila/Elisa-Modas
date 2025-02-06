@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
@@ -164,17 +165,26 @@ class AdminDashboardController extends Controller
 
                 $key = $subcategoria->subcategory;
                 if (isset($estadisticas[$key])) {
-                    $estadisticas[$key] += $cantidad;
+                    $estadisticas[$key]['total'] += $cantidad;
                 } else {
-                    $estadisticas[$key] = $cantidad;
+                    $estadisticas[$key] = [
+                        'total' => $cantidad,
+                        'category' => $subcategoria->category,
+                        'family' => $subcategoria->family,
+                    ];
                 }
             }
         }
 
         arsort($estadisticas);
 
-        $data = collect($estadisticas)->map(function ($cantidad, $subcategoria) {
-            return ['subcategory' => $subcategoria, 'total' => $cantidad];
+        $data = collect($estadisticas)->map(function ($estadistica, $subcategoria) {
+            return [
+                'subcategory' => $subcategoria,
+                'total' => $estadistica['total'],
+                'category' => $estadistica['category'],
+                'family' => $estadistica['family'],
+            ];
         })->values();
 
         $pdf = Pdf::loadView('admin.dashboard_pdf', [
@@ -183,6 +193,9 @@ class AdminDashboardController extends Controller
             'unidadesVendidas' => $data,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'user' => Auth::user()->name,
+            'lastName' => Auth::user()->last_name,
+            'exportDate' => Carbon::now()->format('d/m/Y'),
         ]);
 
         return $pdf->download('estadisticas.pdf');
