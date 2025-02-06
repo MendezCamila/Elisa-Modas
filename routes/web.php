@@ -70,6 +70,7 @@ Route::get('prueba', function () {
 Route::middleware(['web', 'auth', 'can:acceso dashboard'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [AdminDashboardController::class, 'index']);
+    Route::get('/dashboard/export-pdf', [AdminDashboardController::class, 'exportPdf'])->name('dashboard.export-pdf');
 });
 
 

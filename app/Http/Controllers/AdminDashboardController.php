@@ -7,6 +7,7 @@ use App\Models\Subcategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminDashboardController extends Controller
 {
@@ -104,5 +105,86 @@ class AdminDashboardController extends Controller
             'startDate' => $startDate,
             'endDate' => $endDate,
         ]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        // Reutiliza la lógica del método index para obtener los datos
+        $startDate = $request->input('start_date', Carbon::now()->startOfYear()->format('Y-m-d'));
+        $endDate = $request->input('end_date', Carbon::now()->endOfYear()->format('Y-m-d'));
+        $subcategoryFilter = $request->input('subcategory');
+
+        // Obtenemos las ventas mensuales y calculamos el promedio de ventas por mes
+        $ventas = Ventas::selectRaw('MONTH(created_at) as month, sum(total) as total')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupByRaw('MONTH(created_at)')
+            ->orderByRaw('MONTH(created_at)')
+            ->get();
+
+        $totalVentas = $ventas->sum('total');
+        $numMeses = $ventas->count();
+        $promedioVentas = $numMeses > 0 ? $totalVentas / $numMeses : 0;
+
+        $ventasData = $ventas->map(function ($venta) use ($promedioVentas) {
+            return [
+                'month' => $venta->month,
+                'total' => $venta->total,
+                'average' => $promedioVentas,
+            ];
+        })->toArray();
+
+        $ventasxsubcategoria = DB::table('ventas')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+
+        $estadisticas = [];
+
+        foreach ($ventasxsubcategoria as $venta) {
+            $content = json_decode($venta->content, true);
+
+            foreach ($content as $item) {
+                $productId = $item['id'];
+                $cantidad = $item['qty'];
+
+                $subcategoria = DB::table('products')
+                    ->join('subcategories', 'subcategories.id', '=', 'products.subcategory_id')
+                    ->join('categories', 'categories.id', '=', 'subcategories.category_id')
+                    ->join('families', 'families.id', '=', 'categories.family_id')
+                    ->where('products.id', $productId)
+                    ->select('subcategories.name as subcategory', 'categories.name as category', 'families.name as family')
+                    ->first();
+
+                if (!$subcategoria) {
+                    continue;
+                }
+
+                if ($subcategoryFilter && $subcategoria->subcategory !== $subcategoryFilter) {
+                    continue;
+                }
+
+                $key = $subcategoria->subcategory;
+                if (isset($estadisticas[$key])) {
+                    $estadisticas[$key] += $cantidad;
+                } else {
+                    $estadisticas[$key] = $cantidad;
+                }
+            }
+        }
+
+        arsort($estadisticas);
+
+        $data = collect($estadisticas)->map(function ($cantidad, $subcategoria) {
+            return ['subcategory' => $subcategoria, 'total' => $cantidad];
+        })->values();
+
+        $pdf = Pdf::loadView('admin.dashboard_pdf', [
+            'ventas' => $ventasData,
+            'promedioVentas' => $promedioVentas,
+            'unidadesVendidas' => $data,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+
+        return $pdf->download('estadisticas.pdf');
     }
 }

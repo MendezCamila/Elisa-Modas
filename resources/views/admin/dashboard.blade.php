@@ -75,7 +75,13 @@
                 <x-button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Filtrar
                 </x-button>
+
+                <a href="{{ route('admin.dashboard.export-pdf', ['start_date' => $startDate, 'end_date' => $endDate, 'subcategory' => $selectedSubcategory]) }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2">
+                    Exportar a PDF
+                </a>
+
             </div>
+
         </form>
     </div>
 
