@@ -11,4 +11,8 @@ class PreVentaController extends Controller
         return view('admin.pre-ventas.index');
     }
 
+    public function create(){
+        return view('admin.pre-ventas.create');
+    }
+
 }

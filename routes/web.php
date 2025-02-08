@@ -213,6 +213,8 @@ Route::middleware(['web', 'auth'/*, 'can:administrar preventas'*/])
     ->name('admin.')
     ->group(function () {
         Route::get('pre-ventas', [PreVentaController::class, 'index'])->name('pre-ventas.index');
+        //ruta para crear una nueva preventa
+        Route::get('pre-ventas/create', [PreVentaController::class, 'create'])->name('pre-ventas.create');
     });
 
 
