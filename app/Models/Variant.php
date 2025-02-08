@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use App\Models\DetalleCotizacion;
 use App\Models\DetalleOrdenCompra;
 use OwenIt\Auditing\Contracts\Auditable;
+use App\Models\preVenta;
 
 
 #[ObservedBy([VariantObserver::class])]
@@ -24,6 +25,7 @@ class Variant extends Model implements Auditable
         'stock_min',
         'product_id',
         'image_path',
+        'estado',
     ];
 
     protected function image():Attribute
@@ -59,5 +61,11 @@ class Variant extends Model implements Auditable
     public function detalleOrdenCompras()
     {
         return $this->hasMany(DetalleOrdenCompra::class);
+    }
+
+    //relacion con pre_ventas (una variante puede tener muchas campañas a lo largo del tiempo)
+    public function preVentas()
+    {
+        return $this->hasMany(preVenta::class);
     }
 }
