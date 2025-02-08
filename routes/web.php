@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\CotizacionController;
 use App\Http\Controllers\Admin\OrdenCompraController;
 use App\Http\Controllers\Admin\PdfExportController;
+use App\Http\Controllers\Admin\PreVentaController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PaymentController;
@@ -205,6 +206,15 @@ Route::middleware(['web', 'auth'/*, 'can:administrar ordenes de compra'*/])->pre
     Route::get('orden-compras/{id}', [OrdenCompraController::class, 'showAdmin'])->name('orden-compras.showAdmin');
     Route::get('export/orden-compras/pdf', [PdfExportController::class, 'exportOrdenesCompra'])->name('orden-compras.pdf');
 });
+
+//ruta para administrar las preventas
+Route::middleware(['web', 'auth'/*, 'can:administrar preventas'*/])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('pre-ventas', [PreVentaController::class, 'index'])->name('pre-ventas.index');
+    });
+
 
 
 

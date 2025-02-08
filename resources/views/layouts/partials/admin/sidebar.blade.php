@@ -104,6 +104,14 @@
         ],
 
         [
+            //Preventas
+            'name'=>'Preventas',
+            'icon'=>'fa-solid fa-shopping-cart',
+            'route'=>route('admin.pre-ventas.index'),
+            'active'=> request()->routeIs('admin.pre-ventas.*')
+        ],
+
+        [
             //Cotizaciones
             'name'=>'Cotizaciones',
             'icon'=>'fa-solid fa-file-invoice',
