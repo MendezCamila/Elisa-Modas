@@ -63,6 +63,7 @@
 
 
 {{-- Componente livewire para reservar productos --}}
+@livewire('products.reservar-product', ['product' => $product])
 
 
 </x-app-layout>
