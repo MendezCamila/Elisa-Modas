@@ -21,12 +21,15 @@
                             {{-- precio --}}
                             <p class="mb-4 text-2xl">
                                 <span class="text-gray-500">Precio:</span>
-                                <span class="text-red-500 font-bold">{{ $product->price * (1 - $preventaDescuento / 100) }}</span>
-                                <span class="text-gray-500 line-through">{{ $product->price }}</span>
+                                <span class="text-red-500 font-bold">
+                                    ${{ number_format($this->discountedPrice, 2) }}
+                                </span>
+                                <span class="text-gray-500 line-through">
+                                    ${{ number_format($product->price, 2) }}
+                                </span>
                                 <span class="text-gray-500">pesos</span>
                             </p>
 
-                            {{-- Stock dinamico --}}
                             <p class="text-sm mb-4 text-gray-600">
                                 <span class="font-bold">Stock disponible:</span> {{ $this->currentStock }}
                             </p>

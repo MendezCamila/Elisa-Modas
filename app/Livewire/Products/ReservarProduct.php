@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire\Products;
+
 use App\Models\PreVenta;
 use App\Models\Feature;
 
@@ -15,12 +16,15 @@ class ReservarProduct extends Component
     public $stock;
     public $preventaDescuento = 0;
 
-    public function mount(){
-        $this->selectedFeatures = $this->product->variants->first()->features->pluck('id', 'option_id')->toArray();
-        $this->getVariant();
+    public function mount()
+    {
+        // Selecciona la primera variante del producto (puedes ajustar esta lógica si es necesario)
+        $this->variant = $this->product->variants->first();
+        // Solo mostramos las features de la variante seleccionada
+        $this->selectedFeatures = $this->variant->features->pluck('id', 'option_id')->toArray();
 
-        // Verificar si el producto está en pre-venta
-        $preVenta = PreVenta::where('variant_id', $this->product->id)
+        // Buscar la preventa usando el id de la variante, no del producto
+        $preVenta = PreVenta::where('variant_id', $this->variant->id)
             ->where('estado', 'activo')
             ->first();
 
@@ -53,10 +57,20 @@ class ReservarProduct extends Component
             return !array_diff($variant->features->pluck('id')->toArray(), $this->selectedFeatures);
         })->first();
 
-        if (!$this->preventaDescuento) {
+        // Si existe una preventa activa para esta variante, usamos su datos
+        if ($preVenta = PreVenta::where('variant_id', $this->variant->id)->where('estado', 'activo')->first()) {
+            $this->preventaDescuento = $preVenta->descuento;
+            $this->stock = $preVenta->cantidad;
+        } else {
             $this->stock = $this->variant->stock;
         }
         $this->qty = 1;
+    }
+
+    public function getDiscountedPriceProperty()
+    {
+        // Aplica el descuento sobre el precio original del producto
+        return $this->product->price * (1 - $this->preventaDescuento / 100);
     }
 
     public function reservar()
@@ -68,8 +82,6 @@ class ReservarProduct extends Component
             'icon' => 'success',
         ]);
     }
-
-
 
     public function render()
     {
