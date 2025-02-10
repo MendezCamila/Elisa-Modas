@@ -40,8 +40,8 @@
 
         {{-- Mostrar los productos --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            @foreach ($lastProducts as $product)
-                <article class="bg-white  shadow rounded overflow-hidden">
+            @foreach ($products as $product)
+                <article class="bg-white shadow rounded overflow-hidden">
                     <img src="{{ $product->image }}" class="w-full h-48 object-cover object-center">
 
                     <div class="p-4">
@@ -51,19 +51,27 @@
 
                         <p class="mb-4">
                             <span class="text-gray-500">Precio:</span>
-                            <span class="text-gray-700 font-bold">{{ $product->price }}</span>
+                            @if(isset($product->is_preventa) && $product->is_preventa)
+                                <span class="text-red-500 font-bold">{{ $product->price * (1 - $product->preventa_descuento / 100) }}</span>
+                                <span class="text-gray-500 line-through">{{ $product->price }}</span>
+                                <span class="text-green-500 font-bold">Pre-venta</span>
+                            @else
+                                <span class="text-gray-700 font-bold">{{ $product->price }}</span>
+                            @endif
                         </p>
 
-
-                        <a href="{{ route('products.show', $product) }}" class="btn btn-pink  block w-full text-center">
-                            Ver más
-                        </a>
-
+                        @if(isset($product->is_preventa) && $product->is_preventa)
+                            <a href="" class="btn btn-pink block w-full text-center">
+                                Reservar
+                            </a>
+                        @else
+                            <a href="{{ route('products.show', $product) }}" class="btn btn-pink block w-full text-center">
+                                Ver más
+                            </a>
+                        @endif
                     </div>
-
                 </article>
             @endforeach
-
         </div>
 
     </x-container>
