@@ -4,6 +4,9 @@ namespace App\Livewire\Products;
 
 use App\Models\PreVenta;
 use App\Models\Feature;
+use App\Models\Reserva;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservaConfirmacion;
 
 use Livewire\Component;
 
@@ -75,6 +78,41 @@ class ReservarProduct extends Component
 
     public function reservar()
     {
+        $preVenta = \App\Models\PreVenta::where('variant_id', $this->variant->id)
+            ->where('estado', 'activo')
+            ->first();
+
+        if (!$preVenta) {
+            // Si no se encontró una campaña activa, se muestra un mensaje de error.
+            $this->dispatch('swal', [
+                'title' => 'Error',
+                'text'  => 'No existe una pre-venta activa para este producto.',
+                'icon'  => 'error',
+            ]);
+            return;
+        }
+
+        // Crear la reserva en la tabla "reservas" usando la estructura definida:
+        // - pre_venta_id: ID de la campaña de pre-venta.
+        // - user_id: ID del usuario autenticado.
+        // - cantidad: cantidad reservada (usamos $this->qty).
+        // - estado: se establece como "pendiente".
+        $reserva = \App\Models\Reserva::create([
+            'pre_venta_id' => $preVenta->id,
+            'user_id'      => auth()->id(),   // Se usa el id del usuario autenticado.
+            'cantidad'     => $this->qty,       // Cantidad seleccionada.
+            'estado'       => 'pendiente',
+        ]);
+        if ($preVenta) {
+            $preVenta->cantidad -= $this->qty;
+            $preVenta->save();
+        }
+
+
+        // Enviar correo de confirmación
+        Mail::to(auth()->user()->email)->send(new ReservaConfirmacion($reserva));
+
+
         // Lógica para reservar
         $this->dispatch('swal', [
             'title' => 'Bien hecho!',

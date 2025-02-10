@@ -6,8 +6,8 @@
                 <div class="col-span-1">
                     <figure>
                         <img src="{{ $this->currentImage }}"
-                             class="w-full aspect-[1/1] object-cover object-center"
-                             alt="{{ $product->name }}">
+                            class="w-full aspect-[1/1] object-cover object-center"
+                            alt="{{ $product->name }}">
                     </figure>
                 </div>
 

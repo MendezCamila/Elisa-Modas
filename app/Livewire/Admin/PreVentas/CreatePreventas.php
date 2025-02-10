@@ -75,7 +75,7 @@ class CreatePreventas extends Component
             'descuento' => $this->descuento,
             'fecha_inicio' => Carbon::parse($this->start_date),
             'fecha_fin' => Carbon::parse($this->end_date),
-            'estado' => 'preventa',
+            'estado' => 'activo',
         ]);
 
 
