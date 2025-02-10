@@ -19,7 +19,7 @@ class CreatePreventas extends Component
     protected $rules = [
         'variant_id' => 'required|exists:variants,id',
         'pool' => 'required|integer|min:1',
-        'descuento' => 'required|integer|min:0|max:100',
+        'descuento' => 'required|integer|min:1|max:100',
         'start_date' => 'required|date|after_or_equal:today',
         'end_date' => 'required|date|after:start_date',
     ];

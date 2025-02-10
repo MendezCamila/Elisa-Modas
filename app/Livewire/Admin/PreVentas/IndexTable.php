@@ -32,10 +32,6 @@ class IndexTable extends DataTableComponent
                 ->sortable(),
             Column::make("Estado", "estado")
                 ->sortable(),
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),
         ];
     }
 }
