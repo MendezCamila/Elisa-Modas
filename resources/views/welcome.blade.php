@@ -41,10 +41,18 @@
         {{-- Mostrar los productos --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach ($products as $product)
-                <article class="bg-white shadow rounded overflow-hidden">
+                <article class="bg-white shadow-lg rounded-lg overflow-hidden relative">
+
+                    {{-- Distintivo de Pre-Venta --}}
+                    @if(isset($product->is_preventa) && $product->is_preventa)
+                        <div class="absolute top-2 left-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-3 py-1 rounded-full animate-pulse">
+                            🔥 Pre-Venta
+                        </div>
+                    @endif
+
                     <img src="{{ $product->image }}" class="w-full h-48 object-cover object-center">
 
-                    <div class="p-4">
+                    <div class="p-4 text-center">
                         <h1 class="text-lg font-bold text-gray-700 line-clamp-2 mb-2 min-h-[56px]">
                             {{ $product->name }}
                         </h1>
@@ -52,17 +60,22 @@
                         <p class="mb-4">
                             <span class="text-gray-500">Precio:</span>
                             @if(isset($product->is_preventa) && $product->is_preventa)
-                                <span class="text-red-500 font-bold">{{ $product->price * (1 - $product->preventa_descuento / 100) }}</span>
-                                <span class="text-gray-500 line-through">{{ $product->price }}</span>
-                                <span class="text-green-500 font-bold">Pre-venta</span>
+                                <span class="text-red-500 font-bold text-xl">
+                                    ${{ number_format($product->price * (1 - $product->preventa_descuento / 100), 2) }}
+                                </span>
+                                <span class="text-gray-500 line-through text-sm">
+                                    ${{ number_format($product->price, 2) }}
+                                </span>
                             @else
-                                <span class="text-gray-700 font-bold">{{ $product->price }}</span>
+                                <span class="text-gray-700 font-bold text-xl">
+                                    ${{ number_format($product->price, 2) }}
+                                </span>
                             @endif
                         </p>
 
                         @if(isset($product->is_preventa) && $product->is_preventa)
-                            <a href="" class="btn btn-pink block w-full text-center">
-                                Reservar
+                            <a href="" class="btn bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold py-2 px-4 rounded-lg block w-full text-center transform hover:scale-105 transition">
+                                🔥 Reservar Ahora
                             </a>
                         @else
                             <a href="{{ route('products.show', $product) }}" class="btn btn-pink block w-full text-center">
@@ -70,6 +83,7 @@
                             </a>
                         @endif
                     </div>
+
                 </article>
             @endforeach
         </div>
