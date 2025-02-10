@@ -12,4 +12,9 @@ class ProductoController extends Controller
     {
         return view('products.show', compact('product'));
     }
+
+    public function reservar(Product $product)
+    {
+        return view('products.reservar', compact('product'));
+    }
 }

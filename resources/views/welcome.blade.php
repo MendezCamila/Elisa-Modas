@@ -74,7 +74,7 @@
                         </p>
 
                         @if(isset($product->is_preventa) && $product->is_preventa)
-                            <a href="" class="btn bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold py-2 px-4 rounded-lg block w-full text-center transform hover:scale-105 transition">
+                            <a href="{{ route('products.reservar', $product) }}" class="btn bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold py-2 px-4 rounded-lg block w-full text-center transform hover:scale-105 transition">
                                 🔥 Reservar Ahora
                             </a>
                         @else

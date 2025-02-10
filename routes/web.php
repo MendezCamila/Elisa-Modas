@@ -50,6 +50,8 @@ Route::get('products/{product}', [ProductoController::class, 'show'])->name('pro
 //Mostrar items del carrito de compras
 Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 
+Route::get('/products/{product}/reservar', [ProductoController::class, 'reservar'])->name('products.reservar');
+
 
 
 Route::get('prueba', function () {
