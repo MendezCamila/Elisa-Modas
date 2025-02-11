@@ -30,7 +30,7 @@ class ReservaConfirmacion extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reserva Confirmacion',
+            subject: 'Detalles reserva',
         );
     }
 

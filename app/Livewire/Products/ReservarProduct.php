@@ -78,6 +78,16 @@ class ReservarProduct extends Component
 
     public function reservar()
     {
+        //validar que el usuario este autenticado
+        if (!auth()->check()) {
+            $this->dispatch('swal', [
+                'title' => 'Error',
+                'text'  => 'Debes iniciar sesión para reservar un producto.',
+                'icon'  => 'error',
+            ]);
+            return;
+        }
+
         $preVenta = \App\Models\PreVenta::where('variant_id', $this->variant->id)
             ->where('estado', 'activo')
             ->first();
