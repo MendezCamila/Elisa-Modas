@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PreVenta;
+use App\Jobs\NotificarReservantesJob;
 
 class PreVentaController extends Controller
 {
@@ -27,7 +28,7 @@ class PreVentaController extends Controller
     // Procesa el registro de la recepción
     public function registerReception(Request $request, PreVenta $preVenta)
     {
-        
+
         // Validar el campo cantidadRecibida
         $request->validate([
             'cantidadRecibida' => 'required|integer|min:1',
@@ -48,6 +49,9 @@ class PreVentaController extends Controller
 
         // Actualizamos el estado de la preventa
         $preVenta->update(['estado' => 'disponible']);
+
+        // **Llamar al Job para enviar notificaciones a los clientes reservantes**
+        NotificarReservantesJob::dispatch($preVenta->id);
 
         // Redirigimos a la lista de preventas con un mensaje de éxito
         return redirect()->route('admin.pre-ventas.index')
