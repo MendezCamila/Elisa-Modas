@@ -33,6 +33,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Models\Ventas;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome.index');
 
 //filtrar productos por familia
@@ -50,7 +51,16 @@ Route::get('products/{product}', [ProductoController::class, 'show'])->name('pro
 //Mostrar items del carrito de compras
 Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 
+//Preventas
 Route::get('/products/{product}/reservar', [ProductoController::class, 'reservar'])->name('products.reservar');
+
+// Muestra el formulario para registrar la recepción
+Route::get('admin/pre-ventas/{preVenta}/reception', [PreVentaController::class, 'showReceptionForm'])
+    ->name('admin.pre-ventas.reception');
+
+// Procesa el registro de la recepción
+Route::post('admin/pre-ventas/{preVenta}/reception', [PreVentaController::class, 'registerReception'])
+    ->name('admin.pre-ventas.registerReception');
 
 
 

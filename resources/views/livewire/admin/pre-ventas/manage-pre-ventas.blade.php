@@ -22,11 +22,9 @@
         @endif
 
 
+
         {{-- llamo a mi componente IndexTable de PREVENTAS --}}
         @livewire('admin.pre-ventas.index-table')
-
-
-
-
     </section>
+
 </div>

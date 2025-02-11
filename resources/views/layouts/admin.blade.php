@@ -26,8 +26,10 @@
     <!-- JS de Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
+    <!-- Alpine.js
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    -->
     
-
     <!-- Styles -->
     @livewireStyles
 
