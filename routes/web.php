@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CotizacionController;
 use App\Http\Controllers\Admin\OrdenCompraController;
 use App\Http\Controllers\Admin\PdfExportController;
 use App\Http\Controllers\Admin\PreVentaController;
+use App\Http\Controllers\Admin\ReservaController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PaymentController;
@@ -74,6 +75,9 @@ Route::get('/reservations/{id}/payment-failure', [ReservationPaymentController::
 
 Route::get('/reservations/{id}/payment-pending', [ReservationPaymentController::class, 'paymentPending'])
     ->name('reservation.paymentPending');
+
+Route::get('/reservas', [ReservaController::class, 'index'])->name('admin.reservas.index');
+
 
 
 Route::get('prueba', function () {

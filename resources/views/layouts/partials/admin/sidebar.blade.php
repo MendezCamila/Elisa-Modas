@@ -112,6 +112,14 @@
         ],
 
         [
+            //Reservas
+            'name'=>'Reservas',
+            'icon'=>'fa-solid fa-calendar-check',
+            'route'=>route('admin.reservas.index'),
+            'active'=> request()->routeIs('admin.reservas.*')
+        ],
+
+        [
             //Cotizaciones
             'name'=>'Cotizaciones',
             'icon'=>'fa-solid fa-file-invoice',
