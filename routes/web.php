@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\VentasController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\ReservationPaymentController;
 use App\Models\Ventas;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -61,6 +62,9 @@ Route::get('admin/pre-ventas/{preVenta}/reception', [PreVentaController::class, 
 // Procesa el registro de la recepción
 Route::post('admin/pre-ventas/{preVenta}/reception', [PreVentaController::class, 'registerReception'])
     ->name('admin.pre-ventas.registerReception');
+
+//ruta para pagar la reserva
+Route::get('/reservations/{id}/pay', [ReservationPaymentController::class, 'onlinePayment'])->name('reservation.onlinePayment');
 
 
 

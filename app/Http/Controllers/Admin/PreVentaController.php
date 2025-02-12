@@ -54,7 +54,12 @@ class PreVentaController extends Controller
         NotificarReservantesJob::dispatch($preVenta->id);
 
         // Redirigimos a la lista de preventas con un mensaje de éxito
-        return redirect()->route('admin.pre-ventas.index')
-            ->with('success', 'Recepción registrada correctamente.');
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien hecho!',
+            'text' => 'Recepción registrada correctamente.'
+        ]);
+
+        return redirect()->route('admin.pre-ventas.index');
     }
 }
