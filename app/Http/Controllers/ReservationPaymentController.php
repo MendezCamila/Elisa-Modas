@@ -4,36 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Reserva;
-use MercadoPago\SDK;
-use MercadoPago\Preference;
-use MercadoPago\Item;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
 use MercadoPago\Client\Preference\PreferenceClient;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\RequestException;
+use MercadoPago\Exceptions\MPApiException;
+
 class ReservationPaymentController extends Controller
 {
+
+
     public function onlinePayment($id)
     {
         //recuperamos la reserva
         $reserva = Reserva::findOrFail($id);
 
-        $accessToken = config('services.mercadopago.access_token');
-        $paymentId = $request->input('payment_id');
+        // Configurar Mercado Pago SDK
+        MercadoPagoConfig::setAccessToken(config('services.mercadopago.access_token'));
 
         // Construye el item para la preferencia de pago usando los datos de la reserva
         $item = [
             "id"           => $reserva->id,
-            "title"        => $reserva->producto->nombre,    // Asume que la relación "producto" existe en Reserva
+            "title"        => $reserva->preventa->variant->product->name,    // Se accede al producto mediante preVenta y variant
             "quantity"     => (int) $reserva->cantidad,
-            "unit_price"   => (float) $reserva->precio_unitario, // Campo definido en la reserva
+            "unit_price"   => round((float)$reserva->preventa->variant->product->price * (1 - $reserva->preventa->descuento / 100), 2),
             "currency_id"  => "ARS",
-            // "picture_url" => $reserva->producto->imagen_url, // Opcional: URL de la imagen del producto
+            // "picture_url" => $reserva->preVenta->variant->product->image_path, // Opcional: si tienes la imagen
         ];
 
-        // Crea el cliente de preferencias de Mercado Pago
         $client = new PreferenceClient();
 
         try {
@@ -48,11 +47,13 @@ class ReservationPaymentController extends Controller
                 "statement_descriptor" => "Elisa Modas",
                 "external_reference" => (string) $reserva->id, // Usamos el ID de la reserva como referencia externa
             ]);
+            return redirect()->to($preference->init_point); // Redirigir a la URL de Mercado Pago
 
-            // Redirige al usuario a la URL de pago de Mercado Pago
-            return redirect()->to($preference->init_point);
-        } catch (\MercadoPago\Exceptions\MPApiException $e) {
-            // En caso de error, devuelve una respuesta JSON con el mensaje de error
+
+
+
+        } catch (MPApiException $e) {
+            // En caso de error en la API de Mercado Pago, se muestra el error
             return response()->json([
                 "error" => $e->getMessage(),
                 "code"  => $e->getCode()
@@ -72,19 +73,52 @@ class ReservationPaymentController extends Controller
 
     public function paymentSuccess(Request $request, $id)
     {
-        // Aquí puedes obtener y validar los datos del pago mediante el payment_id que Mercado Pago envía
-        // y actualizar el estado de la reserva, descontar el stock, etc.
-        $reserva = Reserva::findOrFail($id);
+        $accessToken = config('services.mercadopago.access_token');
+        $paymentId = $request->input('payment_id');
 
-        // Por ejemplo, actualizamos el estado a "pagada" (esto depende de tu lógica)
-        $reserva->update(['estado' => 'pagada']);
+        try {
+            $client = new GuzzleClient();
+            $response = $client->request('GET', "https://api.mercadopago.com/v1/payments/{$paymentId}", [
+                'headers' => [
+                    'Authorization' => "Bearer {$accessToken}",
+                ],
+            ]);
 
-        /* Si la reserva está asociada a una preventa y esta tiene una variante,
-        // descontamos el stock de la misma.
-        if ($reserva->preVenta && $reserva->preVenta->variant) {
-            $reserva->preVenta->variant->decrement('stock', $reserva->cantidad);
-        }*/
+            $payment = json_decode($response->getBody()->getContents());
 
-        return view('reservations.payment-success', compact('reserva'));
+            if ($payment->status == 'approved') {
+                // Recupera la reserva utilizando el ID pasado en la URL (external_reference)
+                $reserva = Reserva::findOrFail($id);
+                // Actualiza el estado de la reserva a "pagada"
+                $reserva->update(['estado' => 'pagada']);
+
+                // Descuenta el stock de la variante asociada a la preventa
+                if ($reserva->preVenta && $reserva->preVenta->variant) {
+                    $reserva->preVenta->variant->decrement('stock', $reserva->cantidad);
+                }
+
+                return view('reservations.payment-success', compact('payment', 'reserva'));
+            }
+
+            return 'Pago rechazado';
+        } catch (RequestException $e) {
+            $response = $e->getResponse();
+            $body = $response ? $response->getBody()->getContents() : 'No response body';
+            return response()->json([
+                'error' => 'Error al obtener el pago de MercadoPago',
+                'message' => $body,
+            ], 500);
+        } catch (MPApiException $e) {
+            return response()->json([
+                'error' => 'Error de API de MercadoPago',
+                'message' => $e->getMessage(),
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error inesperado',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
+
 }

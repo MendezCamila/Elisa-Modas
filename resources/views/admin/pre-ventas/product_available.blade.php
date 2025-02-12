@@ -65,12 +65,21 @@
 
             <p>El producto que reservaste ya llegó a nuestro inventario.</p>
 
+            {{--
             <div class="details">
                 <strong>Detalles de la reserva:</strong><br>
-                Producto: <strong>{{ $reserva->producto->nombre }}</strong><br>
+                Producto: <strong>{{ $reserva->preVenta->variant->product->name }}</strong><br>
                 Cantidad: <strong>{{ $reserva->cantidad }}</strong><br>
-                Precio unitario: <strong>${{ number_format($reserva->precio_unitario, 2, ',', '.') }}</strong><br>
-                Total a pagar: <strong>${{ number_format($reserva->cantidad * $reserva->precio_unitario, 2, ',', '.') }}</strong>
+                Precio unitario: <strong>${{ number_format($reserva->preVenta->variant->product->price, 2, ',', '.') }}</strong><br>
+                Total a pagar: <strong>${{ number_format($reserva->cantidad * $reserva->preVenta->variant->product->price, 2, ',', '.') }}</strong>
+            </div>--}}
+            <div class="details">
+                <ul>
+                    <li><strong>Producto:</strong> {{ $reserva->preventa->variant->product->name }}</li>
+                    <li><strong>Cantidad:</strong> {{ $reserva->cantidad }}</li>
+                    <li><strong>Precio unitario:</strong> ${{ number_format($reserva->preventa->variant->product->price * (1 - $reserva->preventa->descuento / 100), 2) }}</li>
+                    <li class="total"><strong>Total a pagar:</strong> ${{ number_format(($reserva->preventa->variant->product->price * (1 - $reserva->preventa->descuento / 100)) * $reserva->cantidad, 2) }}</li>
+                </ul>
             </div>
 
             <p>
