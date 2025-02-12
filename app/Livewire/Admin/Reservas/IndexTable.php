@@ -5,6 +5,12 @@ namespace App\Livewire\Admin\Reservas;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Reserva;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\NumberRangeFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
+use Carbon\Carbon;
+use Rappasoft\LaravelLivewireTables\Views\SearchFilter;
+use Illuminate\Database\Eloquent\Builder;
 
 class IndexTable extends DataTableComponent
 {
@@ -13,25 +19,126 @@ class IndexTable extends DataTableComponent
     public function configure(): void
     {
         $this->setPrimaryKey('id');
+        $this->setTableAttributes([
+            'class' => 'table table-striped table-bordered',
+        ]);
+
+        // Ordenar por fecha de creación en orden descendente
+        $this->setDefaultSort('created_at', 'desc');
+
+        $this->setPaginationEnabled(); // Habilitar paginación
+        $this->setSortingPillsEnabled(); // Habilitar ordenamiento
+
+
+        $this->setSearchVisibilityStatus(true);
+        $this->setSearchVisibilityEnabled();
+
+        //$this->setSearchEnabled();
+        $this->setSearchEnabled();  // Habilita la búsqueda
+        //$this->setSearchVisibilityEnabled();  // Muestra el cuadro de búsqueda
+        $this->setSearchPlaceholder('Buscar');  // Cambia el placeholder
+        //$this->setSearchLive();  // Realiza la búsqueda de inmediato
+
+        //$this->setSearchDisabled();
+
+
+        $this->setEmptyMessage('No se encontraron resultados'); // Mensaje de tabla vacía
     }
+
+
 
     public function columns(): array
     {
         return [
+            // Columna ID de la reserva
             Column::make("Id", "id")
-                ->sortable(),
-            Column::make("Pre venta id", "pre_venta_id")
-                ->sortable(),
-            Column::make("User id", "user_id")
-                ->sortable(),
-            Column::make("Cantidad", "cantidad")
-                ->sortable(),
+                ->searchable(),
+
+
+            // Columna para mostrar el nombre y apellido del usuario
+            Column::make("Usuario", "user_id")
+                ->searchable(function ($builder, $term) {
+                    $builder->orWhereHas('user', function ($query) use ($term) {
+                        $query->where('name', 'like', "%{$term}%")
+                              ->orWhere('last_name', 'like', "%{$term}%");
+                    });
+                })
+                ->format(function ($value, $row) {
+                    return $row->user
+                        ? $row->user->name . ' ' . $row->user->last_name
+                        : 'N/A';
+                }),
+
+            // Columna para la fecha de creación (con formato)
+            Column::make("Fecha Creación", "created_at")
+                ->searchable()
+                ->format(fn($value) => $value ? $value->format('d/m/Y') : 'N/A'),
+
+            // Columna para el estado, con formato en badge
             Column::make("Estado", "estado")
-                ->sortable(),
-            Column::make("Created at", "created_at")
-                ->sortable(),
-            Column::make("Updated at", "updated_at")
-                ->sortable(),
+                ->searchable()
+                ->html()
+                ->format(fn($value) => match($value) {
+                    'pagada'   => '<span class="badge bg-success">Pagada</span>',
+                    'pendiente'=> '<span class="badge bg-warning">Pendiente</span>',
+                    default    => '<span class="badge bg-secondary">Desconocido</span>',
+                }),
+        ];
+    }
+
+    public function query()
+    {
+        $search = $this->search;
+
+        return Reserva::query()
+            ->with('user')
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('id', 'like', "%{$search}%")
+                          ->orWhereHas('user', function ($query) use ($search) {
+                              $query->where('name', 'like', "%{$search}%")
+                                    ->orWhere('last_name', 'like', "%{$search}%");
+                          });
+                });
+            });
+    }
+
+    public function filters(): array
+    {
+        return [
+            // Filtro por rango de fechas (para la columna created_at)
+            DateRangeFilter::make('Rango de Fechas')
+                ->config([
+                    'allowInput'     => true,
+                    'altFormat'      => 'd F, Y',
+                    'ariaDateFormat' => 'd F, Y',
+                    'dateFormat'     => 'Y-m-d',
+                    'earliestDate'   => '2020-01-01',
+                    'latestDate'     => '2030-12-31',
+                    'placeholder'    => 'Selecciona un rango de fechas',
+                    'locale'         => 'es',
+                ])
+                ->filter(function ($query, array $dateRange) {
+                    $minDate = $dateRange['minDate'] ?? null;
+                    $maxDate = $dateRange['maxDate'] ?? null;
+
+                    if ($minDate) {
+                        $query->whereDate('created_at', '>=', $minDate);
+                    }
+                    if ($maxDate) {
+                        $query->whereDate('created_at', '<=', $maxDate);
+                    }
+                }),
+
+            // Filtro por estado: Pagada o Pendiente
+            SelectFilter::make('Estado', 'estado')
+                ->options([
+                    'pagada'    => 'Pagada',
+                    'pendiente' => 'Pendiente',
+                ])
+                ->filter(function ($query, $value) {
+                    return $query->where('estado', $value);
+                }),
         ];
     }
 }

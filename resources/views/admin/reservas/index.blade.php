@@ -6,11 +6,10 @@
     [
         'name' => 'Reservas',
     ],
-
 ]">
 
     {{-- Llamo a mi componente livewire --}}
-   @livewire('admin.reservas.index-table')
+    @livewire('admin.reservas.index-table')
 
 
 </x-admin-layout>
