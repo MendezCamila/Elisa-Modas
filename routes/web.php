@@ -66,6 +66,14 @@ Route::post('admin/pre-ventas/{preVenta}/reception', [PreVentaController::class,
 //ruta para pagar la reserva
 Route::get('/reservations/{id}/pay', [ReservationPaymentController::class, 'onlinePayment'])->name('reservation.onlinePayment');
 
+Route::get('/reservations/{id}/payment-success', [ReservationPaymentController::class, 'paymentSuccess'])
+    ->name('reservation.paymentSuccess');
+
+Route::get('/reservations/{id}/payment-failure', [ReservationPaymentController::class, 'paymentFailure'])
+    ->name('reservation.paymentFailure');
+
+Route::get('/reservations/{id}/payment-pending', [ReservationPaymentController::class, 'paymentPending'])
+    ->name('reservation.paymentPending');
 
 
 Route::get('prueba', function () {
