@@ -34,32 +34,49 @@ class PreVentaController extends Controller
             'cantidadRecibida' => 'required|integer|min:1',
         ]);
 
-        // Accedemos a la variante relacionada a la preventa
+        $cantidadRecibida = $request->cantidadRecibida;
+
+        // Obtenemos la cantidad de unidades reservadas en esta pre-venta (reservas pendientes o pagadas)
+        $reservadas = $preVenta->reservas()->whereIn('estado', ['pendiente', 'pagado'])->sum('cantidad');
+
+        // Ejemplo: Si el pool era 100, se reservaron 50 y se reciben 70,
+        // entonces el stock disponible para venta normal será: 70 - 50 = 20.
+        $stockDisponible = $cantidadRecibida - $reservadas;
+        if ($stockDisponible < 0) {
+            $stockDisponible = 0;
+        }
+
+        // Accedemos a la variante relacionada a la pre-venta
         $variant = $preVenta->variant;
 
         if ($variant) {
-            // Incrementa el stock de la variante
-            $variant->increment('stock', $request->cantidadRecibida);
+            // Primero, incrementamos el stock de la variante con la cantidad recibida
+            // (Suponiendo que originalmente la variante se creó con stock 0)
+            $variant->increment('stock', $cantidadRecibida);
 
-            // Si la variante no está disponible, la actualizamos a 'disponible'
-            if ($variant->estado !== 'disponible') {
-                $variant->update(['estado' => 'disponible']);
-            }
+            // Luego, actualizamos el stock restando las unidades reservadas.
+            // Como la variante originalmente tenía stock 0, el stock final será igual a:
+            // stockFinal = cantidadRecibida - reservadas
+            $variant->update(['stock' => $stockDisponible]);
+
+            // Actualizamos el estado de la variante:
+            // Si hay stock disponible para venta normal, se marca como 'disponible'
+            $variant->update(['estado' => 'disponible']);
         }
 
-        // Actualizamos el estado de la preventa
+        // Actualizamos el estado de la pre-venta a 'disponible' para indicar que ya se recibió el producto
         $preVenta->update(['estado' => 'disponible']);
 
-        // **Llamar al Job para enviar notificaciones a los clientes reservantes**
-        NotificarReservantesJob::dispatch($preVenta->id);
+        /*Llamar al Job para enviar notificaciones a los clientes reservantes**
+        NotificarReservantesJob::dispatch($preVenta->id);*/
 
-        // Redirigimos a la lista de preventas con un mensaje de éxito
         session()->flash('swal', [
-            'icon' => 'success',
+            'icon'  => 'success',
             'title' => 'Bien hecho!',
-            'text' => 'Recepción registrada correctamente.'
+            'text'  => "Recepción registrada correctamente. Stock disponible para venta normal: $stockDisponible",
         ]);
 
         return redirect()->route('admin.pre-ventas.index');
+
     }
 }

@@ -120,7 +120,7 @@ class ReservarProduct extends Component
 
 
         // Enviar correo de confirmación
-        Mail::to(auth()->user()->email)->send(new ReservaConfirmacion($reserva));
+        //Mail::to(auth()->user()->email)->send(new ReservaConfirmacion($reserva));
 
 
         // Lógica para reservar

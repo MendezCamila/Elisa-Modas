@@ -80,12 +80,6 @@ class CreatePreventas extends Component
             'estado' => 'activo',
         ]);
 
-        /* Actualizar el estado de la variante a "preventa"
-        $variant = Variant::find($this->variant_id);
-        $variant->estado = 'preventa';
-        $variant->save();*/
-
-
         session()->flash('swal', [
             'icon' => 'success',
             'title' => 'Bien hecho!',
