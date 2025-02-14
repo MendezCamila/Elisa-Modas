@@ -10,6 +10,12 @@ use App\Models\Reserva;
 class PreVenta extends Model
 {
     protected $table = 'pre_ventas';
+
+    const ESTADOS =[
+        'ACTIVO' => 'activo',
+        'DISPONIBLE' => 'disponible',
+    ];
+
     protected $fillable = [
         'variant_id',
         'cantidad',
@@ -31,4 +37,13 @@ class PreVenta extends Model
     {
         return $this->hasMany(Reserva::class);
     }
+
+    //metodo para actualizar el estado de la preventa
+    public function actualizarEstado(){
+        if ($this->fecha_fin <= now() || $this->productos_recibidos) {
+            $this->estado = self::ESTADOS['DISPONIBLE'];
+            $this->save();
+        }
+    }
+
 }

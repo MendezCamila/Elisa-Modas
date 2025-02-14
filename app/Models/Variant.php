@@ -19,6 +19,11 @@ class Variant extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use HasFactory;
+
+    // Definir constantes para los estados (opcional)
+    const ESTADO_PREVENTA = 'preventa';
+    const ESTADO_DISPONIBLE = 'disponible';
+
     protected $fillable=[
         'sku',
         'stock',
@@ -67,5 +72,26 @@ class Variant extends Model implements Auditable
     public function preVentas()
     {
         return $this->hasMany(preVenta::class);
+    }
+
+    protected static function booted()
+    {
+        // Al crear la variante
+        static::creating(function ($variant) {
+            if ($variant->stock > 0) {
+                $variant->estado = self::ESTADO_DISPONIBLE;
+            } else {
+                $variant->estado = self::ESTADO_PREVENTA;
+            }
+        });
+
+        // Al actualizar la variante
+        static::saving(function ($variant) {
+            if ($variant->stock > 0) {
+                $variant->estado = self::ESTADO_DISPONIBLE;
+            } else {
+                $variant->estado = self::ESTADO_PREVENTA;
+            }
+        });
     }
 }

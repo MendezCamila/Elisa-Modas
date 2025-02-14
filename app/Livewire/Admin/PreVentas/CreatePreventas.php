@@ -24,7 +24,8 @@ class CreatePreventas extends Component
         'end_date' => 'required|date|after:start_date',
     ];
 
-    public function mount(){
+    public function mount()
+    {
 
         $this->updateVariants();
         $this->dispatch('initializeSelect2');
@@ -65,7 +66,8 @@ class CreatePreventas extends Component
         $this->variants = $variantData;
     }
 
-    public function submit(){
+    public function submit()
+    {
 
         $this->validate();
 
@@ -77,6 +79,11 @@ class CreatePreventas extends Component
             'fecha_fin' => Carbon::parse($this->end_date),
             'estado' => 'activo',
         ]);
+
+        /* Actualizar el estado de la variante a "preventa"
+        $variant = Variant::find($this->variant_id);
+        $variant->estado = 'preventa';
+        $variant->save();*/
 
 
         session()->flash('swal', [
