@@ -164,7 +164,7 @@ class IndexTable extends DataTableComponent
             // Opcional: si se desea, descontar del stock de la variante (por ejemplo, ya que el pago se ha confirmado)
             $reserva->preVenta->variant->decrement('stock', $reserva->cantidad);
 
-            session()->dispatch('swal', [
+            session()->session('swal', [
                 'icon' => 'success',
                 'title' => 'Pago confirmado',
                 'text' => 'La reserva ha sido marcada como pagada.',

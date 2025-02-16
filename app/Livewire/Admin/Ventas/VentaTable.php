@@ -51,96 +51,136 @@ class VentaTable extends DataTableComponent
     public function columns(): array
     {
         return [
-            //Nº venta
+            // Nº venta
             Column::make("Nº venta", "id")
                 ->searchable(),
 
-            //Fecha de venta
+            // Fecha de venta
             Column::make("F. venta", "created_at")
                 ->format(function ($value) {
                     return $value->format('d/m/Y');
                 }),
 
-            //Usuario que realizó la compra
+            // ID Cliente (opcional, se muestra internamente)
             Column::make("id cliente", "user_id")
                 ->searchable(),
 
-            // Columna "User ID" que muestra el nombre del usuario
-            Column::make("Cliente", "user.name")
-                ->label(function ($row) {
-                    return $row->user ? $row->user->name . ' ' . $row->user->last_name : 'No asignado';
+            // Cliente: muestra nombre y apellido del usuario
+            // Cliente: muestra nombre y apellido del usuario
+            Column::make("Cliente", "user_id")
+                ->searchable(function ($builder, $term) {
+                    // Búsqueda por nombre o apellido del cliente
+                    $builder->orWhereHas('user', function ($query) use ($term) {
+                        $query->where('name', 'like', "%{$term}%")
+                            ->orWhere('last_name', 'like', "%{$term}%");
+                    });
                 })
-                ->searchable(),
+                ->format(function ($value, $row) {
+                    return $row->user
+                        ? $row->user->name . ' ' . $row->user->last_name
+                        : 'No asignado';
+                }),
 
-            //Nº de operación (payment_id)
+            // Nº de operación (payment_id)
             Column::make("Nº de operación", "payment_id")
                 ->searchable(),
 
-            //Total de la venta
+            // Total de la venta
             Column::make("Total", "total")
                 ->format(function ($value) {
                     return "$" . number_format($value, 2);
                 }),
 
-            // Estado de la venta
-            Column::make("Estado", "estado")
-                ->searchable(),
 
-            // Acciones para cambiar el estado
-            Column::make("Acciones")
-                ->label(function ($row) {
-                    return view('admin.ventas.estado', ['venta' => $row]);
+
+            Column::make("Estado", "estado")
+                ->searchable()
+                ->html()
+                ->format(fn($value) => match ($value) {
+                    'pagada'   => '<span class="badge bg-success">Pagada</span>',
+                    'pendiente' => '<span class="badge bg-warning">Pendiente</span>',
+                    'entregado' => '<span class="badge bg-info">Entregado</span>',
+                    default    => '<span class="badge bg-secondary">Desconocido</span>',
                 }),
+
+            // Acciones: Botón para marcar como entregado (solo si está pendiente)
+            Column::make("Acciones", "id")
+                ->label(function ($row) {
+                    if ($row->estado === 'pendiente') {
+                        return '<button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow transition duration-200" wire:click="cambiarEstado(' . $row->id . ')">Marcar como entregado</button>';
+                    }
+                    return '<span class="text-sm text-gray-600">Entregado</span>';
+                })
+                ->html(),
 
             // Comprobante
             Column::make("Comprobante")
                 ->label(function ($row) {
                     return view('admin.ventas.comprobante', ['venta' => $row]);
-                })
+                }),
         ];
+    }
+
+    public function query(): Builder
+    {
+        $search = $this->search;
+
+        return Ventas::query()
+            ->with('user')
+            ->when($search, function (Builder $query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('id', 'like', "%{$search}%")
+                        ->orWhereHas('user', function ($query) use ($search) {
+                            $query->where('name', 'like', "%{$search}%")
+                                ->orWhere('last_name', 'like', "%{$search}%");
+                        });
+                });
+            });
     }
 
     public function filters(): array
     {
-        //dd(request()->query('table-search'));
+        // Calculamos las opciones de clientes una sola vez
+        $clientesOptions = Ventas::query()
+            ->with('user')
+            ->get()
+            ->unique('user_id')
+            ->mapWithKeys(function ($venta) {
+                return [
+                    $venta->user_id => $venta->user
+                        ? $venta->user->name . ' ' . $venta->user->last_name
+                        : 'Sin nombre'
+                ];
+            })->toArray();
 
         return [
-
-            // Filtro por cliente (id cliente)
-            SelectFilter::make('ID Cliente', 'user_id')
-                ->options(
-                    Ventas::query()
-                        ->distinct()
-                        ->get()
-                        ->pluck('user_id', 'user_id')
-                        ->toArray()
-                )
+            // Filtro por Cliente (Nombre y Apellido)
+            SelectFilter::make('Cliente', 'user_id')
+                ->options($clientesOptions)
                 ->filter(function ($query, $value) {
                     return $query->where('user_id', $value);
                 }),
 
-            // Filtro por fecha de venta
+            // Filtro por rango de fechas (para la columna created_at)
             DateRangeFilter::make('Rango de Fechas')
                 ->config([
-                    'allowInput' => true, // Permitir entrada manual de fechas
-                    'altFormat' => 'd F, Y', // Formato que se muestra al usuario
-                    'ariaDateFormat' => 'd F, Y', // Formato para lectores de pantalla
-                    'dateFormat' => 'Y-m-d', // Formato usado en la base de datos
-                    'earliestDate' => '2020-01-01', // Fecha más temprana permitida
-                    'latestDate' => '2030-12-31', // Fecha más reciente permitida
-                    'placeholder' => 'Selecciona un rango de fechas', // Texto de marcador de posición
-                    'locale' => 'es', // Idioma en español
+                    'allowInput'     => true,
+                    'altFormat'      => 'd F, Y',
+                    'ariaDateFormat' => 'd F, Y',
+                    'dateFormat'     => 'Y-m-d',
+                    'earliestDate'   => '2020-01-01',
+                    'latestDate'     => '2030-12-31',
+                    'placeholder'    => 'Selecciona un rango de fechas',
+                    'locale'         => 'es',
                 ])
                 ->filter(function ($query, array $dateRange) {
-                    $minDate = $dateRange['minDate'] ?? null; // Fecha mínima seleccionada
-                    $maxDate = $dateRange['maxDate'] ?? null; // Fecha máxima seleccionada
-
+                    $minDate = $dateRange['minDate'] ?? null;
+                    $maxDate = $dateRange['maxDate'] ?? null;
                     if ($minDate) {
-                        $query->whereDate('created_at', '>=', $minDate); // Filtra desde la fecha mínima
+                        $query->whereDate('created_at', '>=', $minDate);
                     }
-
                     if ($maxDate) {
-                        $query->whereDate('created_at', '<=', $maxDate); // Filtra hasta la fecha máxima
+                        $query->whereDate('created_at', '<=', $maxDate);
                     }
                 }),
 
@@ -154,34 +194,29 @@ class VentaTable extends DataTableComponent
                     return $query->where('estado', $value);
                 }),
 
-
             // Filtro por rango de precio
             NumberRangeFilter::make('Rango de Precio')
                 ->options([
-                    'min' => 0, // Valor mínimo permitido en el rango
-                    'max' => 50000, // Valor máximo permitido en el rango
+                    'min' => 0,
+                    'max' => 50000,
                 ])
                 ->config([
                     'minRange' => 0,
-                    'maxRange' => 50000, // Máximo del rango
-                    'prefix' => '$', // Prefijo para mostrar antes del número
+                    'maxRange' => 50000,
+                    'prefix' => '$',
                 ])
                 ->filter(function ($query, array $values) {
                     $min = isset($values['min']) ? (float)$values['min'] : 0;
                     $max = isset($values['max']) ? (float)$values['max'] : 50000;
-
                     $query->whereBetween('total', [$min, $max]);
                 }),
-
-
         ];
     }
 
     public function cambiarEstado($ventaId)
     {
-        $venta = Ventas::find($ventaId);
-        if ($venta) {
-            // Cambiar estado a "entregado"
+        $venta = \App\Models\Ventas::find($ventaId);
+        if ($venta && $venta->estado === 'pendiente') {
             $venta->estado = 'entregado';
             $venta->save();
 
