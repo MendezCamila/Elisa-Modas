@@ -54,13 +54,12 @@ class IndexTable extends DataTableComponent
             Column::make("Id", "id")
                 ->searchable(),
 
-
             // Columna para mostrar el nombre y apellido del usuario
             Column::make("Usuario", "user_id")
                 ->searchable(function ($builder, $term) {
                     $builder->orWhereHas('user', function ($query) use ($term) {
                         $query->where('name', 'like', "%{$term}%")
-                              ->orWhere('last_name', 'like', "%{$term}%");
+                            ->orWhere('last_name', 'like', "%{$term}%");
                     });
                 })
                 ->format(function ($value, $row) {
@@ -78,11 +77,22 @@ class IndexTable extends DataTableComponent
             Column::make("Estado", "estado")
                 ->searchable()
                 ->html()
-                ->format(fn($value) => match($value) {
-                    'pagada'   => '<span class="badge bg-success">Pagada</span>',
-                    'pendiente'=> '<span class="badge bg-warning">Pendiente</span>',
+                ->format(fn($value) => match ($value) {
+                    'pagado'   => '<span class="badge bg-success">Pagado</span>',
+                    'pendiente' => '<span class="badge bg-warning">Pendiente</span>',
                     default    => '<span class="badge bg-secondary">Desconocido</span>',
                 }),
+
+            // Nueva columna para acciones
+            Column::make("Acciones", "id")
+                ->label(function ($row) {
+                    // Si la reserva está pendiente, se muestra el botón para confirmar el pago.
+                    if ($row->estado === 'pendiente') {
+                        return '<button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow transition-colors duration-200" wire:click="confirmarPago(' . $row->id . ')">Confirmar Pago</button>';
+                    }
+                    return '';
+                })
+                ->html(),
         ];
     }
 
@@ -95,10 +105,10 @@ class IndexTable extends DataTableComponent
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('id', 'like', "%{$search}%")
-                          ->orWhereHas('user', function ($query) use ($search) {
-                              $query->where('name', 'like', "%{$search}%")
-                                    ->orWhere('last_name', 'like', "%{$search}%");
-                          });
+                        ->orWhereHas('user', function ($query) use ($search) {
+                            $query->where('name', 'like', "%{$search}%")
+                                ->orWhere('last_name', 'like', "%{$search}%");
+                        });
                 });
             });
     }
@@ -140,5 +150,25 @@ class IndexTable extends DataTableComponent
                     return $query->where('estado', $value);
                 }),
         ];
+    }
+
+    public function confirmarPago($reservaId)
+    {
+        // Buscar la reserva por su ID
+        $reserva = \App\Models\Reserva::find($reservaId);
+
+        // Verificamos que exista y que esté en estado "pendiente"
+        if ($reserva && $reserva->estado === 'pendiente') {
+            $reserva->update(['estado' => 'pagado']);
+
+            // Opcional: si se desea, descontar del stock de la variante (por ejemplo, ya que el pago se ha confirmado)
+            $reserva->preVenta->variant->decrement('stock', $reserva->cantidad);
+
+            session()->dispatch('swal', [
+                'icon' => 'success',
+                'title' => 'Pago confirmado',
+                'text' => 'La reserva ha sido marcada como pagada.',
+            ]);
+        }
     }
 }
