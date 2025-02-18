@@ -20,27 +20,46 @@ class WelcomeController extends Controller
             })
             ->get();
 
-        //recuperamos los ultimos productos creados
-        $lastProducts = Product::orderBy('created_at', 'desc')
-            ->take(12)
-            ->get();
+        // Recuperamos los productos para venta normal:
+        // Aquellos que tienen al menos una variante con stock > 0 y estado "disponible"
+        $normalProducts = Product::whereHas('variants', function($query) {
+            $query->where('stock', '>', 0)
+                  ->where('estado', 'disponible');
+        })
+        ->orderBy('created_at', 'desc')
+        ->take(12)
+        ->get();
 
-        //recuperamos los productos en pre-venta
-        $preVentaProducts = PreVenta::where('estado', 'activo')
+        // Recuperamos los productos en pre-venta activa:
+        // Se consideran las pre-ventas que estén activas o que estén dentro del rango de fechas (fecha_inicio y fecha_fin)
+        // y cuya variante tenga stock 0 y estado "preventa"
+        $preVentaProducts = PreVenta::where(function($query) {
+                $query->where('estado', 'activo')
+                      ->orWhere(function($query) {
+                          $query->whereDate('fecha_inicio', '<=', now())
+                                ->whereDate('fecha_fin', '>=', now());
+                      });
+            })
+            ->whereHas('variant', function($query) {
+                $query->where('stock', 0)
+                      ->where('estado', 'preventa');
+            })
             ->with('variant.product')
             ->get()
             ->map(function ($preVenta) {
                 $product = $preVenta->variant->product;
+                // Agregamos propiedades para usarlas en la vista
                 $product->is_preventa = true;
                 $product->preventa_descuento = $preVenta->descuento;
                 return $product;
             });
 
-        // Combinamos los productos normales y los de pre-venta
-        $products = $lastProducts->merge($preVentaProducts);
+        // Combinamos las dos colecciones y ordenamos para que los productos en pre-venta aparezcan primero
+        $products = $preVentaProducts->merge($normalProducts)
+            ->sortByDesc(function ($product) {
+                return $product->is_preventa ? 1 : 0;
+            });
 
-
-        //Retornamos la vista welcome con las portadas
         return view('welcome', compact('covers', 'products'));
     }
 }
