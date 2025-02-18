@@ -108,4 +108,30 @@ class Product extends Model implements Auditable
             ->withPivot('features')
             ->withTimestamps();
     }
+
+    public function getDisplayVariantsAttribute()
+    {
+        $variants = $this->variants;
+
+        // Filtrar variantes disponibles para venta normal
+        $disponibles = $variants->filter(function ($variant) {
+            return $variant->stock > 0 && $variant->estado === 'disponible';
+        });
+
+        if ($disponibles->count() > 0) {
+            return $disponibles;
+        }
+
+        // Si ninguna variante tiene stock, chequeamos si todas están en preventa
+        $preventas = $variants->filter(function ($variant) {
+            return $variant->stock == 0 && $variant->estado === 'preventa';
+        });
+
+        if ($preventas->count() === $variants->count() && $variants->count() > 0) {
+            return $preventas;
+        }
+
+        // Por defecto, devolver todas (si hubiese un caso mixto, se podría ajustar la lógica)
+        return $variants;
+    }
 }
