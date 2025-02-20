@@ -23,7 +23,7 @@ return new class extends Migration
             //stock minimo
             $table->integer('stock_min')
                 ->unsigned()//no permita valores negativos
-                ->default(0);
+                ->default(0); 
 
 
             $table->foreignId('product_id')

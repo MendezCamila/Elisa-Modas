@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('cotizacions', function (Blueprint $table) {
-            $table->string('estado')->default('pendiente')->after('id'); // El estado por defecto será 'pendiente'.
+        Schema::create('cotizacions', function (Blueprint $table) {
+            $table->id();
+            $table->integer('supplier_id');
+            $table->integer('orden_compra_id');
+            $table->string('estado')->default('pendiente'); // El estado por defecto será 'pendiente'.
+
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cotizacions', function (Blueprint $table) {
-            $table->dropColumn('estado');
-        });
+        Schema::dropIfExists('detalle_cotizacions');
     }
 };
