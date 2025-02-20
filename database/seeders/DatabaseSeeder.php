@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('Camila492243')
         ]);
 
-        
+
 
         $this->call([
             PermissionSeeder::class,
@@ -38,6 +38,6 @@ class DatabaseSeeder extends Seeder
             OptionSeeder::class,
         ]);
 
-        Product::factory(100)->create();
+        Product::factory(10)->create();
     }
 }

@@ -30,6 +30,8 @@ class PermissionSeeder extends Seeder
             'administrar cotizaciones',
             'administrar ordenes de compra',
             'administrar auditoria',
+            //mas permisos
+            'administrar preventas',
 
         ];
 

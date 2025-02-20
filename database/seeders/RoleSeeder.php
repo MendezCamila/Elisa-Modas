@@ -27,6 +27,14 @@ class RoleSeeder extends Seeder
             'administrar productos',
             'administrar portadas',
             'administrar usuarios',
+            'administrar roles',
+            'administrar proveedores',
+            'administrar ventas',
+            'administrar cotizaciones',
+            'administrar ordenes de compra',
+            'administrar auditoria',
+            //mas permisos
+            'administrar preventas',
         ]);
 
         //recuperamos el usuario al cual le queremos dar el rol
