@@ -67,8 +67,8 @@ class PreVentaController extends Controller
         // Actualizamos el estado de la pre-venta a 'disponible' para indicar que ya se recibió el producto
         $preVenta->update(['estado' => 'disponible']);
 
-        /*Llamar al Job para enviar notificaciones a los clientes reservantes**
-        NotificarReservantesJob::dispatch($preVenta->id);*/
+        /*Llamar al Job para enviar notificaciones a los clientes reservantes**/
+        NotificarReservantesJob::dispatch($preVenta->id);
 
         session()->flash('swal', [
             'icon'  => 'success',

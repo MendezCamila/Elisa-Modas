@@ -143,7 +143,7 @@ class IndexTable extends DataTableComponent
             // Filtro por estado: Pagada o Pendiente
             SelectFilter::make('Estado', 'estado')
                 ->options([
-                    'pagada'    => 'Pagada',
+                    'pagado'    => 'Pagado',
                     'pendiente' => 'Pendiente',
                 ])
                 ->filter(function ($query, $value) {

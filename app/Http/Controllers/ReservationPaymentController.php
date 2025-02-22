@@ -90,7 +90,7 @@ class ReservationPaymentController extends Controller
                 // Recupera la reserva utilizando el ID pasado en la URL (external_reference)
                 $reserva = Reserva::findOrFail($id);
                 // Actualiza el estado de la reserva a "pagada"
-                $reserva->update(['estado' => 'pagada']);
+                $reserva->update(['estado' => 'pagado']);
 
                 // Descuenta el stock de la variante asociada a la preventa
                 if ($reserva->preVenta && $reserva->preVenta->variant) {
