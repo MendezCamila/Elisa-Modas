@@ -31,7 +31,7 @@
                             <th class="px-4 py-2 border">Cantidad Solicitada</th>
                             <th class="px-4 py-2 border">Precio</th>
                             <th class="px-4 py-2 border">Cantidad Ofrecida</th>
-                            <th class="px-4 py-2 border">No Disponible</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -59,10 +59,7 @@
                                         placeholder="Cantidad ofrecida"
                                         @if (!empty($detalleCotizaciones[$detalle->id]['no_disponible'])) disabled @endif />
                                 </td>
-                                <td class="px-4 py-2 border text-center">
-                                    <input type="checkbox"
-                                        wire:model.defer="detalleCotizaciones.{{ $detalle->id }}.no_disponible" />
-                                </td>
+                                
                             </tr>
                         @endforeach
                     </tbody>

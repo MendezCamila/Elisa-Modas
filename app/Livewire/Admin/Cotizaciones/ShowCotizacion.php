@@ -47,16 +47,17 @@ class ShowCotizacion extends Component
     ]);
 
     foreach ($this->detalleCotizaciones as $detalleId => $valores) {
-        // Si el producto está disponible (no está marcado como no disponible)
-        if (empty($valores['no_disponible'])) { 
-            // Validar precio
-            if (is_null($valores['precio']) || !is_numeric($valores['precio']) || $valores['precio'] < 1) {
-                $this->addError("detalleCotizaciones.$detalleId.precio", 'El campo precio debe ser numérico y mayor a 0 cuando el producto está disponible.');
+        // Si el proveedor no ingresó precio o cantidad, el producto se considera "No disponible"
+        if (empty($valores['precio']) || empty($valores['cantidad'])) {
+            $valores['precio'] = null;
+            $valores['cantidad'] = null;
+        } else {
+            // Validar precio y cantidad si el proveedor sí ingresó valores
+            if (!is_numeric($valores['precio']) || $valores['precio'] < 1) {
+                $this->addError("detalleCotizaciones.$detalleId.precio", 'El campo precio debe ser numérico y mayor a 0.');
             }
-
-            // Validar cantidad
-            if (is_null($valores['cantidad']) || !is_numeric($valores['cantidad']) || $valores['cantidad'] < 1) {
-                $this->addError("detalleCotizaciones.$detalleId.cantidad", 'El campo cantidad debe ser numérico y mayor a 0 cuando el producto está disponible.');
+            if (!is_numeric($valores['cantidad']) || $valores['cantidad'] < 1) {
+                $this->addError("detalleCotizaciones.$detalleId.cantidad", 'El campo cantidad debe ser numérico y mayor a 0.');
             }
         }
     }
@@ -70,10 +71,10 @@ class ShowCotizacion extends Component
         $detalle = DetalleCotizacion::findOrFail($detalleId);
 
         $detalle->update([
-            'precio' => empty($valores['no_disponible']) ? $valores['precio'] : null,
-            'cantidad' => empty($valores['no_disponible']) ? $valores['cantidad'] : null,
+            'precio' => $valores['precio'],
+            'cantidad' => $valores['cantidad'],
             'tiempo_entrega' => $this->tiempo_entrega,
-            'disponible' => empty($valores['no_disponible']) ? 1 : 0,  // 1 si está disponible, 0 si no lo está
+            'disponible' => !is_null($valores['precio']) && !is_null($valores['cantidad']) ? 1 : 0, // Si precio y cantidad son null, "No disponible"
         ]);
     }
 
