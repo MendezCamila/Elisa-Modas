@@ -14,7 +14,11 @@
         </a>
     </x-slot>
 
-    {{-- Tabla de Prodcutos --}}
+    @livewire('admin.products.index-table')
+
+
+
+    {{-- Tabla de Prodcutos
     @if ($products->count())
         <div class="relative overflow-x-auto">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -71,6 +75,6 @@
             role="alert">
             <span class="font-medium">Info alert!</span> Todavia no hay productos registrados.
         </div>
-    @endif
+    @endif --}}
 
 </x-admin-layout>
