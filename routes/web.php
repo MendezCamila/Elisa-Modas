@@ -219,6 +219,8 @@ Route::middleware(['web', 'auth', 'can:administrar cotizaciones'])->prefix('admi
     Route::get('cotizaciones/generar', [CotizacionController::class, 'generar'])->name('cotizaciones.generar');
 });
 
+//ruta accesible sin el permiso de administrar Cotizaciones
+
 
 // Ruta accesible sin el permiso 'administrar ordenes de compra'
 Route::middleware(['web', 'auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -296,7 +298,5 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/welcome', [WelcomeController::class, 'index'])->name('welcome');
 });
