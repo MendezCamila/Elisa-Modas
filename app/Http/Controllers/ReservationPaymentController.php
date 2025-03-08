@@ -97,7 +97,7 @@ class ReservationPaymentController extends Controller
                     $reserva->preVenta->variant->decrement('stock', $reserva->cantidad);
                 }
 
-                return view('reservations.payment-success', compact('payment', 'reserva'));
+                return view('admin.reservas.payment-success', compact('payment', 'reserva'));
             }
 
             return 'Pago rechazado';
